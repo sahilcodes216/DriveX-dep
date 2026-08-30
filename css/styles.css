@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+:root {
+  --color-primary: #001136;
+  --color-primary-container: #0a2558;
+  --color-on-primary: #ffffff;
+  --color-secondary: #fb7800;
+  --color-secondary-hover: #e06900;
+  --color-on-secondary: #ffffff;
+  --color-tertiary: #002850;
+  --color-tertiary-accent: #1e90ff;
+  --color-background: #f8f9ff;
+  --color-surface: #ffffff;
+  --color-surface-container: #e5eeff;
+  --color-surface-container-high: #dce9ff;
+  --color-on-surface: #0b1c30;
+  --color-on-surface-variant: #44464f;
+  --color-outline: #757780;
+  --color-outline-variant: #c5c6d1;
+  --color-success: #10b981;
+  --color-error: #ba1a1a;
+  
+  --font-headline: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  
+  --shadow-ambient: 0 12px 24px -4px rgba(10, 37, 88, 0.08), 0 4px 12px -2px rgba(10, 37, 88, 0.04);
+  --shadow-hover: 0 20px 32px -8px rgba(10, 37, 88, 0.14), 0 8px 16px -4px rgba(10, 37, 88, 0.06);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-headline {
+  font-family: var(--font-headline);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  user-select: none;
+}
+
+.material-symbols-outlined.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.ambient-shadow {
+  box-shadow: var(--shadow-ambient);
+}
+
+.ambient-card {
+  background: #ffffff;
+  border: 1px solid rgba(197, 198, 209, 0.4);
+  box-shadow: var(--shadow-ambient);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ambient-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+}
+
+.glass-nav {
+  background: rgba(248, 249, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #001136 0%, #0a2558 60%, #1e3a8a 100%);
+}
+
+/* Leaflet Map Styling */
+#leaflet-location-map {
+  width: 100%;
+  height: 260px;
+  border-radius: 1rem;
+  z-index: 1;
+}
+
+.custom-map-pin {
+  transition: transform 0.2s ease;
+}
+
+.custom-map-pin:hover {
+  transform: scale(1.15);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+.pulse-cta {
+  animation: pulseGlow 2.5s infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(251, 120, 0, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(251, 120, 0, 0); }
+}
+
+/* Step Indicator */
+.step-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-item:not(:last-child)::after {
+  content: '';
+  height: 2px;
+  flex: 1;
+  background-color: #e2e8f0;
+  margin: 0 0.75rem;
+}
+
+.step-item.active .step-number {
+  background-color: var(--color-secondary);
+  color: #ffffff;
+}
+
+.step-item.completed .step-number {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.step-number {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+/* Toast Container */
+#toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 320px;
+  max-width: 450px;
+  background: #0b1c30;
+  color: #ffffff;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-left: 4px solid var(--color-secondary);
+}
+
+/* ==========================================================================
+   AI CUSTOMER ASSISTANT ("DRIVEBOT") STYLING
+   ========================================================================== */
+
+#ai-chat-trigger {
+  box-shadow: 0 8px 30px rgba(0, 17, 54, 0.25), 0 4px 12px rgba(251, 120, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#ai-chat-trigger:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0, 17, 54, 0.35), 0 6px 18px rgba(251, 120, 0, 0.4);
+}
+
+.ai-pulse-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 2px solid #fb7800;
+  animation: aiPulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  pointer-events: none;
+}
+
+@keyframes aiPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 0; }
+  100% { transform: scale(0.95); opacity: 0; }
+}
+
+#ai-chat-panel {
+  box-shadow: 0 20px 50px rgba(0, 17, 54, 0.25), 0 10px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: slideUpAi 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpAi {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#ai-messages-container::-webkit-scrollbar {
+  width: 5px;
+}
+#ai-messages-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 17, 54, 0.15);
+  border-radius: 9999px;
+}
+
+/* Mobile Responsiveness for AI Chat Panel */
+@media (max-width: 640px) {
+  #ai-chat-panel {
+    width: calc(100vw - 1.5rem) !important;
+    height: calc(100vh - 5rem) !important;
+    bottom: 4.5rem !important;
+    right: 0.75rem !important;
+  }
+}
+
+/* ================= ZOMATO-STYLE VIDEO INTRO SPLASH SCREEN ================= */
+#intro-splash {
+  background-color: #000000;
+  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1), transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), filter 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform, filter;
+}
+
+#intro-splash.splash-dismissing {
+  opacity: 0;
+  transform: scale(1.05);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+#splash-video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  filter: brightness(0.95) contrast(1.05);
+}
+
+@keyframes splashPulseGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(251, 120, 0, 0.4); }
+  50% { box-shadow: 0 0 35px rgba(251, 120, 0, 0.85); }
+}
+
+.splash-glow-btn {
+  animation: splashPulseGlow 3s infinite ease-in-out;
+}
+
+

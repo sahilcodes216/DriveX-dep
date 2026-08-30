@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DriveX - Rent Cars, Bikes & Scooties On Demand | RENT. RIDE. REPEAT.</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <!-- Tailwind CSS CDN + Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#001136',
+            'primary-container': '#0a2558',
+            'on-primary': '#ffffff',
+            'secondary': '#fb7800',
+            'secondary-hover': '#e06900',
+            'on-secondary': '#ffffff',
+            'tertiary': '#002850',
+            'tertiary-accent': '#1e90ff',
+            'background': '#f8f9ff',
+            'surface': '#ffffff',
+            'surface-container': '#e5eeff',
+            'surface-container-high': '#dce9ff',
+            'surface-container-low': '#eff4ff',
+            'on-surface': '#0b1c30',
+            'on-surface-variant': '#44464f',
+            'outline': '#757780',
+            'outline-variant': '#c5c6d1'
+          },
+          fontFamily: {
+            headline: ['Plus Jakarta Sans', 'sans-serif'],
+            body: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="bg-background text-on-surface font-body antialiased flex flex-col min-h-screen">
+
+  <!-- ================= VIDEO INTRO SPLASH SCREEN (CLEAR VIDEO) ================= -->
+  <div id="intro-splash" class="fixed inset-0 z-[99999] overflow-hidden bg-black transition-all duration-700 select-none cursor-pointer" onclick="window.dismissSplash()" title="Click to skip intro">
+    <video id="splash-video" class="w-full h-full object-cover" playsinline muted autoplay preload="auto">
+      <source src="Video Project 1.mp4" type="video/mp4"/>
+      Your browser does not support the video tag.
+    </video>
+    <!-- Skip Intro Button -->
+    <button onclick="event.stopPropagation(); window.dismissSplash();" class="absolute top-6 right-6 z-[100000] bg-white/20 hover:bg-white/40 text-white border border-white/40 px-5 py-2.5 rounded-full font-bold text-xs backdrop-blur-md transition-all shadow-lg flex items-center gap-2 cursor-pointer">
+      <span>Skip Intro</span>
+      <span class="material-symbols-outlined text-sm">arrow_forward</span>
+    </button>
+  </div>
+
+  <!-- ================= TOP STICKY NAVIGATION ================= -->
+  <header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/60 shadow-sm transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3 group select-none">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-950 via-blue-700 to-sky-500 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300 relative overflow-hidden border border-white/20">
+          <svg class="w-7 h-7 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 18H50C70 18 85 30 85 50C85 70 70 82 50 82H18V18Z" stroke="white" stroke-width="9" stroke-linejoin="round"/>
+            <path d="M28 58L38 42H58L68 58H28Z" fill="white"/>
+            <circle cx="38" cy="64" r="5" fill="#001136"/>
+            <circle cx="58" cy="64" r="5" fill="#001136"/>
+            <path d="M10 50H78" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-baseline gap-0.5">
+            <span class="font-headline font-black text-2xl text-primary tracking-tight block leading-none">DRIVE</span>
+            <span class="font-headline font-black text-2.5xl text-blue-600 italic tracking-tighter block leading-none transform -skew-x-6">X</span>
+          </div>
+          <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-1">RENT. RIDE. REPEAT.</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-2 bg-surface/80 p-1.5 rounded-full border border-outline-variant/40 shadow-sm">
+        <a href="#" data-view="home" class="nav-link text-secondary font-bold border-b-2 border-secondary pb-1 px-3.5 py-2 rounded-lg cursor-pointer">Home</a>
+        <a href="#" data-view="fleet" class="nav-link text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3.5 py-2 rounded-lg transition-all cursor-pointer">Fleet Catalog</a>
+        <a href="#" data-view="why-us" class="nav-link text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3.5 py-2 rounded-lg transition-all cursor-pointer">Why DriveX</a>
+        <a href="#" data-view="bookings" class="nav-link text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3.5 py-2 rounded-lg transition-all cursor-pointer">My Bookings</a>
+      </nav>
+
+      <!-- Active Location & User Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        
+        <!-- File Complaint Button -->
+        <button onclick="window.aiAssistant.openComplaintModal()" class="hidden md:flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-xs font-bold transition-all active:scale-95 shadow-sm">
+          <span class="material-symbols-outlined text-amber-600 text-sm">report_problem</span>
+          <span>File Complaint</span>
+        </button>
+
+        <!-- Active City Location Pill -->
+        <button onclick="openAddressModal()" id="active-location-btn" title="Click to change location" class="hidden sm:flex items-center gap-1 bg-surface-container-low border border-outline-variant/60 hover:border-secondary px-2.5 py-1 rounded-full text-xs font-semibold text-primary transition-all max-w-[160px] sm:max-w-[210px] cursor-pointer">
+          <span class="material-symbols-outlined text-secondary text-sm shrink-0">location_on</span>
+          <span id="active-header-city" class="truncate text-[11px] font-semibold text-primary min-w-0">Mumbai Downtown</span>
+          <span class="material-symbols-outlined text-xs text-on-surface-variant shrink-0">keyboard_arrow_down</span>
+        </button>
+
+        <!-- Phone Login CTA -->
+        <button id="header-login-btn" onclick="openLoginModal()" class="bg-secondary hover:bg-secondary-hover text-on-secondary font-semibold text-xs px-4 py-2.5 rounded-full shadow-md transition-all active:scale-95 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">smartphone</span>
+          Phone OTP Login
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1">
+
+    <!-- ================= VIEW 1: HOME ================= -->
+    <section id="view-home" class="view-section">
+      
+      <!-- HERO SECTION -->
+      <div class="relative overflow-hidden hero-gradient text-on-primary py-16 md:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+          
+          <!-- Hero Text -->
+          <div class="lg:col-span-7">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold text-orange-300 mb-6 border border-white/20">
+              <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
+              India Operations • Delhi NCR, Maharashtra & Gujarat Hubs with Google Maps Support
+            </div>
+            <h1 class="font-headline font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-tight mb-6">
+              Drive Anywhere in India. <br/>
+              <span class="text-secondary">Rent Scooties, Bikes & Cars</span> On Demand.
+            </h1>
+            <p class="text-blue-100 text-base sm:text-lg max-w-2xl mb-8 leading-relaxed">
+              Doorstep vehicle delivery across Delhi NCR, Maharashtra, and Gujarat with Google Maps district location support.
+            </p>
+
+            <div class="grid grid-cols-3 gap-4 text-xs font-medium text-blue-100 max-w-lg mb-4">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-lg">local_shipping</span> Doorstep Delivery
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-lg">shield</span> Zero Security Deposit
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-lg">pin_drop</span> Google Maps Hubs
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Search & Reservation Box -->
+          <div class="lg:col-span-5">
+            <div class="bg-surface text-on-surface p-6 sm:p-8 rounded-3xl ambient-shadow border border-outline-variant/50">
+              <h3 class="font-headline font-bold text-xl text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">search</span>
+                Select Rental Location & Dates
+              </h3>
+
+              <div class="space-y-4">
+                
+                <!-- State, District & City Cascaded Selection -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div>
+                    <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">State</label>
+                    <select class="india-state-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-2.5 py-2 text-xs font-medium focus:ring-2 focus:ring-tertiary-accent focus:outline-none"></select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">District</label>
+                    <select class="india-district-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-2.5 py-2 text-xs font-medium focus:ring-2 focus:ring-tertiary-accent focus:outline-none"></select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">City / Hub</label>
+                    <select class="india-city-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-2.5 py-2 text-xs font-medium focus:ring-2 focus:ring-tertiary-accent focus:outline-none"></select>
+                  </div>
+                </div>
+
+                <!-- Dates Grid -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Pickup Date</label>
+                    <input type="date" id="pickup-date-input" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-medium"/>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Return Date</label>
+                    <input type="date" id="return-date-input" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-medium"/>
+                  </div>
+                </div>
+
+                <!-- Vehicle Type -->
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Vehicle Category</label>
+                  <select id="hero-category-select" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-xs font-medium">
+                    <option value="scooty">Scooty / Scooters</option>
+                    <option value="bike">Bikes / Motorcycles</option>
+                    <option value="cars">Cars</option>
+                  </select>
+                </div>
+
+                <!-- Search CTA Button -->
+                <button onclick="handleHeroSearch()" class="w-full bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-3.5 rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2 text-sm pulse-cta">
+                  <span class="material-symbols-outlined">search</span>
+                  Find Vehicles in Selected City
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FEATURED VEHICLES SECTION -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
+          <div>
+            <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-1">Top Rated Scooties, Bikes & Cars</span>
+            <h2 class="font-headline font-extrabold text-3xl text-primary">Featured Fleet</h2>
+          </div>
+          <button onclick="navigateTo('fleet')" class="text-primary font-bold text-sm hover:text-secondary flex items-center gap-1">
+            View Full Indian Catalog (${FLEET_DATA.length})
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
+
+        <div id="featured-fleet-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Featured vehicles rendered dynamically -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= VIEW 2: FLEET CATALOG ================= -->
+    <section id="view-fleet" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
+        <div>
+          <h1 class="font-headline font-extrabold text-3xl sm:text-4xl text-primary mb-2">Delhi NCR, Maharashtra & Gujarat Rental Fleet</h1>
+          <p class="text-on-surface-variant text-sm">Choose from Activa, Ntorq, RE Classic 350, Thar 4x4, Nexon EV, and Fortuner.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <div class="relative w-full sm:w-64">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-sm">search</span>
+            <input type="text" id="fleet-search-input" placeholder="Search Scooty, Bike, Car, Activa..." class="w-full bg-surface border border-outline-variant rounded-full pl-9 pr-4 py-2 text-sm focus:outline-none"/>
+          </div>
+
+          <select id="fleet-sort-select" class="w-full sm:w-auto bg-surface border border-outline-variant rounded-full px-4 py-2 text-sm font-medium">
+            <option value="popular">Sort: Most Popular</option>
+            <option value="price_low">Sort: Price (Low to High)</option>
+            <option value="price_high">Sort: Price (High to Low)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8">
+        <button onclick="filterCategory('scooty')" data-cat="scooty" class="cat-filter-btn bg-primary text-on-primary font-semibold px-5 py-2.5 rounded-full text-sm shadow-sm transition-all whitespace-nowrap">🛵 Scooty</button>
+        <button onclick="filterCategory('bike')" data-cat="bike" class="cat-filter-btn bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-medium px-5 py-2.5 rounded-full text-sm transition-all whitespace-nowrap">🏍️ Bikes</button>
+        <button onclick="filterCategory('cars')" data-cat="cars" class="cat-filter-btn bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-medium px-5 py-2.5 rounded-full text-sm transition-all whitespace-nowrap">🚗 Cars</button>
+      </div>
+
+      <div id="fleet-catalog-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: WHY US ================= -->
+    <section id="view-why-us" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-2">Delhi NCR, Maharashtra & Gujarat Operations</span>
+        <h1 class="font-headline font-extrabold text-4xl text-primary mb-4">Why Drivers Trust DriveX</h1>
+        <p class="text-on-surface-variant text-base">Transparent pricing in Indian Rupees (₹), Fastag inclusion, and doorstep delivery across 100+ cities.</p>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: MY BOOKINGS ================= -->
+    <section id="view-bookings" class="view-section hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="font-headline font-extrabold text-3xl text-primary">My Bookings Dashboard</h1>
+          <p class="text-on-surface-variant text-sm">Manage active trips, track vehicle delivery, and download GST tax invoices.</p>
+        </div>
+        <button onclick="navigateTo('fleet')" class="bg-secondary text-on-secondary px-5 py-2.5 rounded-full font-bold text-sm shadow-sm hover:bg-secondary-hover transition-all">
+          + Book Another Vehicle
+        </button>
+      </div>
+
+      <div id="my-bookings-list-container">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- ================= VIEW 5: BOOKING FLOW ================= -->
+    <section id="view-booking-flow" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      
+      <!-- Step Indicator Bar -->
+      <div class="max-w-4xl mx-auto mb-10">
+        <div class="flex items-center justify-between bg-surface p-4 rounded-2xl ambient-shadow border border-outline-variant/50">
+          <div id="step-indicator-1" class="step-item active">
+            <div class="step-number">1</div>
+            <span class="hidden sm:inline font-semibold text-xs text-on-surface">Duration & Add-ons</span>
+          </div>
+          <div id="step-indicator-2" class="step-item">
+            <div class="step-number">2</div>
+            <span class="hidden sm:inline font-semibold text-xs text-on-surface">Delivery Address</span>
+          </div>
+          <div id="step-indicator-3" class="step-item">
+            <div class="step-number">3</div>
+            <span class="hidden sm:inline font-semibold text-xs text-on-surface">Undertaking & KYC</span>
+          </div>
+          <div id="step-indicator-4" class="step-item">
+            <div class="step-number">4</div>
+            <span class="hidden sm:inline font-semibold text-xs text-on-surface">UPI & Payment</span>
+          </div>
+          <div id="step-indicator-5" class="step-item">
+            <div class="step-number">5</div>
+            <span class="hidden sm:inline font-semibold text-xs text-on-surface">Confirmation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- MAIN STEP CONTENT AREA (8 Cols) -->
+        <div class="lg:col-span-8">
+          
+          <!-- STEP 1: DURATION & PROTECTION -->
+          <div id="booking-step-1" class="booking-step-content space-y-6">
+            <div class="bg-surface p-6 rounded-2xl ambient-shadow border border-outline-variant/50">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-headline font-bold text-xl text-primary flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary">calendar_month</span>
+                  Rental Rate & Duration Mode
+                </h3>
+                <!-- Hourly vs Daily Mode Switcher -->
+                <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-2xl border border-outline-variant/50">
+                  <button onclick="setRentalMode('daily')" data-mode="daily" class="rental-mode-btn bg-secondary text-on-secondary font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all">
+                    <span id="mode-daily-btn-text">Daily Rate</span>
+                  </button>
+                  <button onclick="setRentalMode('hourly')" data-mode="hourly" class="rental-mode-btn bg-surface-container-low text-on-surface-variant font-medium px-4 py-2 rounded-xl text-xs hover:bg-surface-container transition-all">
+                    <span id="mode-hourly-btn-text">Hourly Rate</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Daily Duration Controls -->
+              <div id="daily-duration-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Pickup Date & Time</label>
+                  <div class="flex gap-2">
+                    <input type="date" id="flow-pickup-date" onchange="appState.booking.pickupDate = this.value; updateBookingCalculation();" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-sm font-medium"/>
+                    <select onchange="appState.booking.pickupTime = this.value;" class="bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-sm font-medium">
+                      <option>10:00 AM</option>
+                      <option>02:00 PM</option>
+                      <option>06:00 PM</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Return Date & Time</label>
+                  <div class="flex gap-2">
+                    <input type="date" id="flow-return-date" onchange="appState.booking.returnDate = this.value; updateBookingCalculation();" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-sm font-medium"/>
+                    <select onchange="appState.booking.returnTime = this.value;" class="bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-sm font-medium">
+                      <option>10:00 AM</option>
+                      <option>02:00 PM</option>
+                      <option>06:00 PM</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hourly Duration Controls -->
+              <div id="hourly-duration-container" class="hidden mt-4 bg-orange-50/60 p-4 rounded-2xl border border-secondary/30">
+                <div class="flex items-center justify-between mb-2">
+                  <label id="hourly-rate-label" class="text-xs font-bold text-primary">Hourly Rental Package</label>
+                  <span id="selected-hours-display" class="font-headline font-extrabold text-sm text-secondary">6 Hours</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <input type="range" id="hourly-range-input" min="1" max="24" value="6" oninput="appState.booking.selectedHours = parseInt(this.value); updateBookingCalculation();" class="w-full accent-secondary cursor-pointer"/>
+                </div>
+              </div>
+            </div>
+
+            <!-- Protection Package Selector -->
+            <div class="bg-surface p-6 rounded-2xl ambient-shadow border border-outline-variant/50">
+              <h3 class="font-headline font-bold text-xl text-primary mb-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">shield</span>
+                Select Protection Plan
+              </h3>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div onclick="selectProtectionPlan('basic')" data-plan="basic" class="protection-plan-card border border-outline-variant hover:border-primary/50 p-5 rounded-2xl cursor-pointer transition-all">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-headline font-bold text-base text-primary">Standard Protection</h4>
+                    <span class="text-xs font-bold bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">Included</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mb-3">₹5,000 max collision deductible excess. Security deposit applies.</p>
+                  <span class="text-xs font-bold text-gray-600">₹3,000 Refundable Deposit</span>
+                </div>
+
+                <div onclick="selectProtectionPlan('premium')" data-plan="premium" class="protection-plan-card border-2 border-secondary bg-orange-50/40 p-5 rounded-2xl cursor-pointer transition-all">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-headline font-bold text-base text-primary">Zero Liability</h4>
+                    <span class="text-xs font-bold bg-secondary text-on-secondary px-2.5 py-1 rounded-full">+₹399/day</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mb-3">₹0 excess deductible. Full glass, tire, and paint protection.</p>
+                  <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">check_circle</span> ₹0 Security Deposit Required
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Optional Add-ons -->
+            <div class="bg-surface p-6 rounded-2xl ambient-shadow border border-outline-variant/50">
+              <h3 class="font-headline font-bold text-xl text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">extension</span>
+                Optional Add-ons
+              </h3>
+
+              <div class="space-y-3">
+                <label class="flex items-center justify-between p-3.5 bg-surface-container-low rounded-xl cursor-pointer">
+                  <div class="flex items-center gap-3">
+                    <input type="checkbox" checked onchange="toggleAddon('doorstep')" class="w-4 h-4 text-secondary rounded"/>
+                    <div>
+                      <span class="font-semibold text-sm text-primary block">Doorstep Vehicle Delivery & Return</span>
+                      <span class="text-xs text-on-surface-variant">Vehicle delivered directly to your doorstep in city</span>
+                    </div>
+                  </div>
+                  <span class="font-bold text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full uppercase tracking-wider">FREE</span>
+                </label>
+
+                <label class="flex items-center justify-between p-3.5 bg-surface-container-low rounded-xl cursor-pointer">
+                  <div class="flex items-center gap-3">
+                    <input type="checkbox" checked onchange="toggleAddon('gps')" class="w-4 h-4 text-secondary rounded"/>
+                    <div>
+                      <span class="font-semibold text-sm text-primary block">Satellite GPS & Fastag Fast-Pass</span>
+                      <span class="text-xs text-on-surface-variant">Preloaded Fastag for highway toll booths & offline maps</span>
+                    </div>
+                  </div>
+                  <span class="font-bold text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full uppercase tracking-wider">FREE</span>
+                </label>
+
+                <label class="flex items-center justify-between p-3.5 bg-surface-container-low rounded-xl cursor-pointer">
+                  <div class="flex items-center gap-3">
+                    <input type="checkbox" onchange="toggleAddon('helmet')" class="w-4 h-4 text-secondary rounded"/>
+                    <div>
+                      <span class="font-semibold text-sm text-primary block flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-secondary text-base">sports_motorsports</span>
+                        DOT/ISI Certified Rider Helmet
+                      </span>
+                      <span class="text-xs text-on-surface-variant">Clean, sanitized high-grade safety helmet for rider protection</span>
+                    </div>
+                  </div>
+                  <span class="font-bold text-sm text-primary">+₹49 /day</span>
+                </label>
+              </div>
+            </div>
+
+            <button onclick="renderBookingStep(2)" class="w-full bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-4 rounded-2xl shadow-lg text-base flex items-center justify-center gap-2">
+              Continue to Delivery Address
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+
+          <!-- STEP 2: DELIVERY ADDRESS & MAP -->
+          <div id="booking-step-2" class="booking-step-content hidden space-y-6">
+            <div class="bg-surface p-6 rounded-2xl ambient-shadow border border-outline-variant/50">
+              <h3 class="font-headline font-bold text-xl text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">location_city</span>
+                Delhi NCR, Maharashtra & Gujarat Delivery Address
+              </h3>
+
+              <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant mb-6">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-primary uppercase tracking-wider">Active Delivery Address</span>
+                  <button onclick="openAddressModal()" class="text-secondary font-bold text-xs underline flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">map</span> Open Interactive Map & City Selector
+                  </button>
+                </div>
+                <p id="summary-delivery-address" class="font-bold text-base text-primary">Marine Drive, Nariman Point, Mumbai, Maharashtra 400021</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <button onclick="renderBookingStep(1)" class="w-1/3 border border-outline-variant text-primary font-bold py-4 rounded-2xl hover:bg-surface-container-low text-sm">Back</button>
+              <button onclick="renderBookingStep(3)" class="w-2/3 bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-4 rounded-2xl shadow-lg text-base flex items-center justify-center gap-2">
+                Proceed to Undertaking & KYC
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3: CUSTOMER UNDERTAKING & KYC DOCUMENT UPLOAD -->
+          <div id="booking-step-3" class="booking-step-content hidden space-y-6">
+            
+            <!-- Undertaking Document Card -->
+            <div class="bg-surface p-6 sm:p-8 rounded-3xl ambient-shadow border border-outline-variant/60 relative overflow-hidden">
+              
+              <!-- Legal Header Banner -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-outline-variant">
+                <div>
+                  <div class="inline-flex items-center gap-1.5 bg-orange-100 text-orange-900 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mb-2">
+                    <span class="material-symbols-outlined text-sm text-secondary">gavel</span>
+                    Legal Contract & KYC Agreement
+                  </div>
+                  <h3 class="font-headline font-extrabold text-2xl text-primary tracking-tight">CUSTOMER UNDERTAKING FOR VEHICLE RENTAL</h3>
+                  <p class="text-xs text-on-surface-variant mt-1">Please review the rental undertaking, complete your details, sign, and upload identification documents.</p>
+                </div>
+                <div class="text-right flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-2 sm:pt-0 border-outline-variant/40">
+                  <span class="text-[11px] text-on-surface-variant font-semibold">Document Ref:</span>
+                  <span class="font-mono font-bold text-xs text-secondary bg-orange-50 px-2.5 py-1 rounded-lg border border-secondary/30">AGREE-2026-KYC</span>
+                </div>
+              </div>
+
+              <!-- Main Undertaking Text & Terms -->
+              <div class="bg-blue-50/40 p-5 rounded-2xl border border-blue-100 mb-8 space-y-4 text-sm leading-relaxed text-primary font-medium">
+                
+                <!-- Dynamic Intro Paragraph -->
+                <p class="text-base font-semibold text-primary border-b border-blue-200/60 pb-3">
+                  I, <strong id="undertaking-intro-name" class="text-secondary font-extrabold underline decoration-secondary px-1">________________________________</strong>, 
+                  hereby confirm that I am taking a <strong id="undertaking-intro-vehicle-type" class="text-primary font-extrabold bg-white px-2.5 py-0.5 rounded border border-blue-200 shadow-sm">Scooter / Bike / Car</strong> on rent from 
+                  <strong id="undertaking-intro-company" class="text-primary font-extrabold bg-white px-2.5 py-0.5 rounded border border-blue-200 shadow-sm">DriveX Mobility Pvt. Ltd.</strong>
+                </p>
+
+                <p class="font-bold text-xs uppercase tracking-wider text-on-surface-variant pt-1">I undertake that:</p>
+
+                <!-- 10 Bullet Terms -->
+                <ol class="space-y-3 text-xs sm:text-sm text-primary list-decimal pl-5 marker:font-bold marker:text-secondary">
+                  <li>I possess a <strong>valid driving licence</strong> appropriate for the vehicle being rented and will provide the required identification and licence documents.</li>
+                  <li>I will use the rented vehicle responsibly and strictly follow all <strong>traffic rules, road safety regulations, and applicable laws</strong>.</li>
+                  <li>I will not allow any other person to drive the rented vehicle without prior permission from the rental company.</li>
+                  <li>I will not use the vehicle for <strong>racing, illegal activities, overloading, dangerous driving, or any other unlawful purpose</strong>.</li>
+                  <li>I will be responsible for any <strong>traffic fines, challans, penalties, or legal consequences</strong> arising from my use of the vehicle during the rental period.</li>
+                  <li>I will take reasonable care of the vehicle and return it in the same condition in which it was received, subject to normal wear and tear.</li>
+                  <li>In case of any <strong>accident, theft, damage, breakdown, or loss</strong>, I will immediately inform the rental company and cooperate with the required procedures.</li>
+                  <li>I agree to pay the applicable <strong>rental charges, security deposit, late fees, damage charges, fuel charges, and other charges</strong> as mentioned in the rental agreement.</li>
+                  <li>I will not take the vehicle outside the permitted geographical area without prior permission from the rental company.</li>
+                  <li>I confirm that the information and documents provided by me are <strong>true and genuine</strong>.</li>
+                </ol>
+
+                <div class="bg-white p-4 rounded-xl border border-secondary/40 flex items-start gap-3 mt-4 shadow-sm">
+                  <input type="checkbox" id="undertaking-terms-agree" onchange="appState.booking.undertaking.agreed = this.checked;" class="w-5 h-5 text-secondary rounded cursor-pointer mt-0.5 accent-secondary"/>
+                  <label for="undertaking-terms-agree" class="text-xs sm:text-sm font-bold text-primary cursor-pointer select-none">
+                    I have read and understood the above terms and voluntarily agree to comply with them. <span class="text-rose-600">*</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- CUSTOMER DETAILS FORM -->
+              <div class="mb-8">
+                <div class="flex items-center gap-2 mb-4 pb-2 border-b border-outline-variant">
+                  <span class="material-symbols-outlined text-secondary">badge</span>
+                  <h4 class="font-headline font-bold text-lg text-primary uppercase tracking-wider">CUSTOMER DETAILS</h4>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Customer Name <span class="text-rose-600">*</span></label>
+                    <input type="text" id="undertaking-cust-name" oninput="updateUndertakingIntro();" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Mobile Number <span class="text-rose-600">*</span></label>
+                    <input type="tel" id="undertaking-cust-mobile" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                  </div>
+
+                  <div class="sm:col-span-2">
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Address <span class="text-rose-600">*</span></label>
+                    <input type="text" id="undertaking-cust-address" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Driving Licence No. <span class="text-rose-600">*</span></label>
+                    <input type="text" id="undertaking-cust-dl" placeholder="e.g. MH-0120230045678" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">ID Proof No. (Aadhar / Passport) <span class="text-rose-600">*</span></label>
+                    <input type="text" id="undertaking-cust-idproof" placeholder="e.g. 1234 5678 9012" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Vehicle Type</label>
+                    <select id="undertaking-vehicle-type-select" onchange="updateUndertakingIntro();" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none">
+                      <option value="Scooter">Scooter</option>
+                      <option value="Bike">Bike</option>
+                      <option value="Car">Car</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Vehicle Registration No.</label>
+                    <input type="text" id="undertaking-vehicle-reg" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Rental Start Date & Time</label>
+                    <input type="text" id="undertaking-start-datetime" readonly class="w-full bg-gray-100 border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-xs text-primary cursor-not-allowed"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Rental Return Date & Time</label>
+                    <input type="text" id="undertaking-return-datetime" readonly class="w-full bg-gray-100 border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-xs text-primary cursor-not-allowed"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Date</label>
+                    <input type="date" id="undertaking-date" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-xs text-primary"/>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Company Name</label>
+                    <input type="text" id="undertaking-company-name" oninput="updateUndertakingIntro();" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SIGNATURES BLOCK -->
+              <div class="mb-8 border-t border-outline-variant pt-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  
+                  <!-- Customer Signature Canvas & Field -->
+                  <div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant">
+                    <div class="flex items-center justify-between mb-2">
+                      <label class="font-bold text-xs text-primary uppercase tracking-wider">Customer Signature <span class="text-rose-600">*</span></label>
+                      <button type="button" onclick="clearSignatureCanvas()" class="text-[11px] font-semibold text-secondary hover:underline">Clear Canvas</button>
+                    </div>
+                    <canvas id="signature-canvas" width="300" height="90" class="w-full bg-white rounded-xl border border-outline-variant/80 cursor-crosshair shadow-inner mb-2"></canvas>
+                    <input type="text" id="undertaking-cust-signature-text" placeholder="Or type your full signature here" class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-xs font-semibold text-primary"/>
+                  </div>
+
+                  <!-- Company Representative Signature & Stamp -->
+                  <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-200 flex flex-col justify-between">
+                    <div>
+                      <span class="font-bold text-xs text-primary uppercase tracking-wider block mb-1">Company Representative Signature</span>
+                      <span class="text-[11px] text-on-surface-variant block mb-3">Authorized Verification Stamp</span>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm flex items-center justify-between">
+                      <div>
+                        <div class="flex items-center gap-1 font-bold text-xs text-emerald-700">
+                          <span class="material-symbols-outlined text-sm text-emerald-600">verified</span>
+                          Authorized Signatory
+                        </div>
+                        <span id="undertaking-stamp-company" class="text-[11px] font-semibold text-primary block mt-0.5">DriveX Mobility Pvt. Ltd.</span>
+                      </div>
+                      <div class="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700 font-black text-xs">
+                        SEAL
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- MANDATORY DOCUMENT UPLOADS (AADHAR & DRIVING LICENSE) -->
+              <div class="border-t-2 border-dashed border-secondary/30 pt-6">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 class="font-headline font-bold text-lg text-primary flex items-center gap-2">
+                      <span class="material-symbols-outlined text-secondary">cloud_upload</span>
+                      UPLOAD IDENTITY & LICENSE DOCUMENTS
+                    </h4>
+                    <p class="text-xs text-on-surface-variant">Please upload clear photos of your Aadhar Card and Driving License for verification.</p>
+                  </div>
+                  <span class="bg-secondary/10 text-secondary text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Mandatory Verification</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  
+                  <!-- UPLOAD 1: AADHAR CARD PHOTO -->
+                  <div class="bg-surface-container-low p-5 rounded-2xl border-2 border-dashed border-outline-variant hover:border-secondary transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary">badge</span>
+                        <span class="font-bold text-sm text-primary">Aadhar Card Photo <span class="text-rose-600">*</span></span>
+                      </div>
+                      <span id="aadhar-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending Upload</span>
+                    </div>
+
+                    <input type="file" id="aadhar-file-input" accept="image/*" class="hidden" onchange="handleDocUpload(event, 'aadhar')"/>
+
+                    <!-- Drag & Drop / Upload Target Box -->
+                    <div id="aadhar-dropzone" onclick="document.getElementById('aadhar-file-input').click()" class="bg-white p-4 rounded-xl border border-outline-variant/60 text-center cursor-pointer hover:bg-orange-50/30 transition-all flex flex-col items-center justify-center min-h-[120px]">
+                      <span class="material-symbols-outlined text-3xl text-secondary mb-1">add_a_photo</span>
+                      <span class="font-semibold text-xs text-primary block">Click or Drag Aadhar Card Photo</span>
+                      <span class="text-[11px] text-on-surface-variant">Supports JPG, PNG or PDF (Max 10MB)</span>
+                    </div>
+
+                    <!-- Uploaded Image Preview Box -->
+                    <div id="aadhar-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                          <span class="material-symbols-outlined text-sm">check_circle</span> Aadhar Card Uploaded
+                        </span>
+                        <button type="button" onclick="clearDocUpload('aadhar')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                      </div>
+                      <img id="aadhar-preview-img" src="" alt="Aadhar Card Preview" class="w-full h-32 object-cover rounded-lg border border-outline-variant"/>
+                    </div>
+
+                    <!-- Quick Sample Photo Loader for testing -->
+                    <div class="mt-3 flex justify-end">
+                      <button type="button" onclick="loadSampleDoc('aadhar')" class="text-[11px] font-semibold text-secondary hover:underline flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">auto_fix_high</span> Click to Demo Sample Aadhar
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- UPLOAD 2: DRIVING LICENSE PHOTO -->
+                  <div class="bg-surface-container-low p-5 rounded-2xl border-2 border-dashed border-outline-variant hover:border-secondary transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary">branding_watermark</span>
+                        <span class="font-bold text-sm text-primary">Driving License Photo <span class="text-rose-600">*</span></span>
+                      </div>
+                      <span id="dl-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending Upload</span>
+                    </div>
+
+                    <input type="file" id="dl-file-input" accept="image/*" class="hidden" onchange="handleDocUpload(event, 'dl')"/>
+
+                    <!-- Drag & Drop / Upload Target Box -->
+                    <div id="dl-dropzone" onclick="document.getElementById('dl-file-input').click()" class="bg-white p-4 rounded-xl border border-outline-variant/60 text-center cursor-pointer hover:bg-orange-50/30 transition-all flex flex-col items-center justify-center min-h-[120px]">
+                      <span class="material-symbols-outlined text-3xl text-secondary mb-1">directions_car</span>
+                      <span class="font-semibold text-xs text-primary block">Click or Drag Driving License Photo</span>
+                      <span class="text-[11px] text-on-surface-variant">Supports JPG, PNG or PDF (Max 10MB)</span>
+                    </div>
+
+                    <!-- Uploaded Image Preview Box -->
+                    <div id="dl-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                          <span class="material-symbols-outlined text-sm">check_circle</span> License Uploaded
+                        </span>
+                        <button type="button" onclick="clearDocUpload('dl')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                      </div>
+                      <img id="dl-preview-img" src="" alt="Driving License Preview" class="w-full h-32 object-cover rounded-lg border border-outline-variant"/>
+                    </div>
+
+                    <!-- Quick Sample Photo Loader for testing -->
+                    <div class="mt-3 flex justify-end">
+                      <button type="button" onclick="loadSampleDoc('dl')" class="text-[11px] font-semibold text-secondary hover:underline flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">auto_fix_high</span> Click to Demo Sample License
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Step Navigation Buttons -->
+            <div class="flex gap-4">
+              <button onclick="renderBookingStep(2)" class="w-1/3 border border-outline-variant text-primary font-bold py-4 rounded-2xl hover:bg-surface-container-low text-sm flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back
+              </button>
+              <button onclick="validateAndProceedToPayment()" class="w-2/3 bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-4 rounded-2xl shadow-xl text-base flex items-center justify-center gap-2 pulse-cta">
+                Accept Undertaking & Proceed to Payment
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- STEP 4: PAYMENT METHOD -->
+          <div id="booking-step-4" class="booking-step-content hidden space-y-6">
+            <div class="bg-surface p-6 rounded-2xl ambient-shadow border border-outline-variant/50">
+              <h3 class="font-headline font-bold text-xl text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">payments</span>
+                Select Payment Method
+              </h3>
+
+              <div class="space-y-3 mb-6">
+                <!-- Option 1: UPI Instant -->
+                <label class="flex items-center justify-between p-4 border-2 border-secondary bg-orange-50/40 rounded-2xl cursor-pointer">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="payment" value="upi_qr" checked onchange="setPaymentMethod('upi_qr')" class="w-4 h-4 text-secondary"/>
+                    <div>
+                      <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-secondary text-base">qr_code_scanner</span>
+                        UPI Instant (PhonePe / Google Pay / Paytm / BHIM)
+                        <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">RECOMMENDED</span>
+                      </span>
+                      <span class="text-xs text-on-surface-variant">Instant verification via QR code scan or UPI ID</span>
+                    </div>
+                  </div>
+                </label>
+
+                <!-- Option 2: Cards -->
+                <label class="flex items-center justify-between p-4 border border-outline-variant hover:border-secondary bg-surface-container-low rounded-2xl cursor-pointer transition-all">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="payment" value="card" onchange="setPaymentMethod('card')" class="w-4 h-4 text-secondary"/>
+                    <div>
+                      <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-secondary text-base">credit_card</span>
+                        Credit / Debit Card (Visa / Mastercard / RuPay / Diners)
+                      </span>
+                      <span class="text-xs text-on-surface-variant">All Indian & International bank cards supported</span>
+                    </div>
+                  </div>
+                </label>
+
+                <!-- Option 3: Net Banking -->
+                <label class="flex items-center justify-between p-4 border border-outline-variant hover:border-secondary bg-surface-container-low rounded-2xl cursor-pointer transition-all">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="payment" value="netbanking" onchange="setPaymentMethod('netbanking')" class="w-4 h-4 text-secondary"/>
+                    <div>
+                      <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-secondary text-base">account_balance</span>
+                        Net Banking (SBI, HDFC, ICICI, Axis, Kotak + 50 Banks)
+                      </span>
+                      <span class="text-xs text-on-surface-variant">Direct bank transfer via secure net banking portal</span>
+                    </div>
+                  </div>
+                </label>
+
+                <!-- Option 4: Wallets -->
+                <label class="flex items-center justify-between p-4 border border-outline-variant hover:border-secondary bg-surface-container-low rounded-2xl cursor-pointer transition-all">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="payment" value="wallet" onchange="setPaymentMethod('wallet')" class="w-4 h-4 text-secondary"/>
+                    <div>
+                      <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-secondary text-base">account_balance_wallet</span>
+                        Wallets (Paytm / Mobikwik / Amazon Pay / Freecharge)
+                      </span>
+                      <span class="text-xs text-on-surface-variant">Instant 1-click checkout from linked wallets</span>
+                    </div>
+                  </div>
+                </label>
+
+                <!-- Option 5: Cash on Delivery / Pay at Pickup -->
+                <label class="flex items-center justify-between p-4 border border-outline-variant hover:border-secondary bg-surface-container-low rounded-2xl cursor-pointer transition-all">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="payment" value="cod" onchange="setPaymentMethod('cod')" class="w-4 h-4 text-secondary"/>
+                    <div>
+                      <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-secondary text-base">handshake</span>
+                        Pay at Delivery / Pickup (Cash / POS Card Swipe)
+                        <span class="bg-blue-100 text-blue-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">PAY AT PICKUP</span>
+                      </span>
+                      <span class="text-xs text-on-surface-variant">Pay when vehicle executive arrives at your doorstep</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <button onclick="renderBookingStep(3)" class="w-1/3 border border-outline-variant text-primary font-bold py-4 rounded-2xl hover:bg-surface-container-low text-sm">Back</button>
+              <button onclick="processPayment()" class="w-2/3 bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-4 rounded-2xl shadow-xl text-base flex items-center justify-center gap-2 pulse-cta">
+                Pay Now & Confirm Booking
+                <span class="material-symbols-outlined">lock</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 5: CONFIRMATION SCREEN -->
+          <div id="booking-step-5" class="booking-step-content hidden space-y-6">
+            <div class="bg-surface p-8 rounded-3xl ambient-shadow border border-emerald-200 text-center relative overflow-hidden">
+              <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <span class="material-symbols-outlined text-4xl">check_circle</span>
+              </div>
+              <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Booking Confirmed</span>
+              <h2 class="font-headline font-extrabold text-3xl text-primary mt-3 mb-1">Reservation Confirmed!</h2>
+              <p class="text-xs text-on-surface-variant mb-6">Booking Reference: <span id="conf-booking-id" class="font-mono font-bold text-primary">DRV-IN-9842-X</span></p>
+
+              <div class="bg-surface-container-low p-6 rounded-2xl border border-outline-variant text-left grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-center">
+                <img id="conf-vehicle-image" src="" alt="Vehicle" class="w-full h-28 object-cover rounded-xl bg-surface-container"/>
+                <div class="sm:col-span-2">
+                  <h4 id="conf-vehicle-name" class="font-headline font-bold text-xl text-primary mb-1">Mahindra Thar LX 4x4</h4>
+                  <p class="text-xs text-on-surface-variant mb-2">Pickup: <span id="conf-pickup-date" class="font-semibold text-primary">2026-08-28</span></p>
+                  <p class="text-xs text-on-surface-variant mb-2">Return: <span id="conf-return-date" class="font-semibold text-primary">2026-08-31</span></p>
+                  <div class="flex items-center justify-between border-t border-outline-variant pt-2 mt-2">
+                    <span class="text-xs text-on-surface-variant">Amount Paid:</span>
+                    <span id="conf-total-paid" class="font-headline font-extrabold text-lg text-primary">₹8,945.00</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="navigateTo('bookings')" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-primary-container">
+                  <span class="material-symbols-outlined text-sm">dashboard</span> View In My Bookings
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- LIVE PRICE BREAKDOWN SIDEBAR (4 Cols) -->
+        <div class="lg:col-span-4">
+          <div class="bg-surface p-6 rounded-3xl ambient-shadow border border-outline-variant/50 sticky top-24">
+            <h4 class="font-headline font-bold text-lg text-primary mb-4 pb-3 border-b border-outline-variant flex items-center justify-between">
+              Rental Summary
+              <span id="summary-days-count" class="text-xs bg-surface-container text-primary font-semibold px-2.5 py-1 rounded-full">3 Days</span>
+            </h4>
+
+            <div class="flex items-center gap-3 mb-4 pb-4 border-b border-outline-variant/60">
+              <img id="summary-vehicle-image" src="" alt="Car" class="w-16 h-12 object-cover rounded-lg bg-surface-container"/>
+              <div>
+                <h5 id="summary-vehicle-name" class="font-headline font-bold text-sm text-primary">Mahindra Thar LX 4x4</h5>
+                <p id="summary-vehicle-category" class="text-xs text-on-surface-variant">Adventure SUV</p>
+                <span id="summary-daily-rate" class="text-xs font-bold text-secondary">₹2,499/day</span>
+              </div>
+            </div>
+
+            <div class="space-y-2.5 text-xs mb-4">
+              <div class="flex justify-between text-on-surface-variant">
+                <span>Base Vehicle Rate</span>
+                <span id="summary-base-total" class="font-semibold text-primary">₹7,497.00</span>
+              </div>
+              <div class="flex justify-between text-on-surface-variant">
+                <span id="summary-protection-name">Zero Liability</span>
+                <span id="summary-protection-total" class="font-semibold text-primary">₹1,197.00</span>
+              </div>
+              <div class="flex justify-between text-on-surface-variant">
+                <span>Selected Add-ons</span>
+                <span id="summary-addons-total" class="font-semibold text-primary">₹946.00</span>
+              </div>
+              <div class="flex justify-between text-on-surface-variant">
+                <span>GST Tax (18%)</span>
+                <span id="summary-taxes-total" class="font-semibold text-primary">₹1,735.00</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant mb-4 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-on-surface-variant block font-medium">Grand Total</span>
+                <span id="summary-deposit-info" class="text-[11px] text-emerald-600 font-bold">₹0 Deposit</span>
+              </div>
+              <span id="summary-grand-total" class="font-headline font-extrabold text-2xl text-primary">₹11,375.00</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-primary text-on-primary border-t border-white/10 mt-20 pt-12 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-900 to-sky-500 text-white flex items-center justify-center font-bold shadow-md">
+            <span class="font-headline font-black text-xl">D<span class="text-sky-300 italic">X</span></span>
+          </div>
+          <div>
+            <span class="font-headline font-black text-xl tracking-tight text-white block leading-none">DRIVEX</span>
+            <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-0.5">RENT. RIDE. REPEAT.</span>
+          </div>
+        </div>
+        <p class="text-xs text-blue-200 leading-relaxed mb-4">Doorstep vehicle rental platform offering Scooties, Bikes, EVs, SUVs & Luxury Cars across Delhi NCR, Maharashtra & Gujarat.</p>
+        <span class="text-xs text-secondary font-semibold">24/7 Support Helpline: 1800-DRIVEX-IN (1800-374839)</span>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-white/10 text-center text-xs text-blue-300">
+      © 2026 DriveX Vehicle Rental Systems Pvt. Ltd. All rights reserved. • RENT. RIDE. REPEAT.
+    </div>
+  </footer>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- REAL PHONE OTP LOGIN MODAL -->
+  <div id="login-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-surface rounded-3xl p-8 max-w-md w-full ambient-shadow relative animate-fade-in">
+      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
+          <span class="material-symbols-outlined text-3xl">smartphone</span>
+        </div>
+        <h3 class="font-headline font-bold text-2xl text-primary">Login / Register</h3>
+        <p class="text-xs text-on-surface-variant">Enter your 10-digit Indian mobile number to receive a REAL SMS OTP code.</p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-on-surface-variant mb-1">Mobile Phone Number (India)</label>
+          <div class="flex gap-2">
+            <span class="bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-sm font-bold flex items-center text-primary">+91</span>
+            <input type="tel" id="user-phone-input" value="9876543210" placeholder="98765 43210" maxlength="10" required class="flex-1 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-sm font-bold tracking-wider"/>
+          </div>
+        </div>
+
+        <button onclick="sendRealSmsOtp()" class="w-full bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-3.5 rounded-xl shadow-md text-sm transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-sm">sms</span>
+          Send Real SMS OTP Code
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OTP VERIFICATION MODAL -->
+  <div id="otp-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-surface rounded-3xl p-8 max-w-md w-full ambient-shadow relative animate-fade-in text-center">
+      <button onclick="closeOtpModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="w-14 h-14 bg-orange-100 text-secondary rounded-2xl flex items-center justify-center mx-auto mb-3">
+        <span class="material-symbols-outlined text-3xl">mark_email_unread</span>
+      </div>
+      <h3 class="font-headline font-bold text-2xl text-primary mb-1">Enter 6-Digit SMS OTP</h3>
+      <p class="text-xs text-on-surface-variant mb-3">SMS OTP Sent to <span id="otp-sent-phone-display" class="font-bold text-primary">+91 9876543210</span></p>
+
+      <!-- Instant Real SMS Simulation Banner -->
+      <div id="otp-real-simulated-banner" class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold py-2 px-3 rounded-xl mb-4 text-center">
+        [REAL SMS GATEWAY TRIGGERED] OTP: 894201
+      </div>
+
+      <div class="flex justify-center gap-2 mb-6">
+        <input type="text" maxlength="1" value="8" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
+        <input type="text" maxlength="1" value="9" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
+        <input type="text" maxlength="1" value="4" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
+        <input type="text" maxlength="1" value="2" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
+        <input type="text" maxlength="1" value="0" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
+        <input type="text" maxlength="1" value="1" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
+      </div>
+
+      <button onclick="verifyOtpSubmit()" class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-3.5 rounded-xl text-sm mb-4">
+        Verify Phone & Continue
+      </button>
+      <div id="otp-resend-timer" class="text-xs text-on-surface-variant font-medium">Resend OTP in 60s</div>
+    </div>
+  </div>
+
+  <!-- MAP LOCATION & ADDRESS MODAL (DELHI NCR, MAHARASHTRA & GUJARAT) -->
+  <div id="address-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-surface rounded-3xl p-6 sm:p-8 max-w-2xl w-full ambient-shadow relative animate-fade-in max-h-[90vh] overflow-y-auto">
+      <button onclick="closeAddressModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <h3 class="font-headline font-bold text-2xl text-primary mb-1 flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary">map</span>
+        Delhi NCR, Maharashtra & Gujarat Location Picker
+      </h3>
+      <p class="text-xs text-on-surface-variant mb-4">Drag the map pin to set exact doorstep delivery location or choose State, District & City below.</p>
+
+      <!-- Leaflet Interactive Map Container -->
+      <div class="relative mb-4">
+        <div id="leaflet-location-map"></div>
+        <button onclick="detectCurrentGPSLocation()" class="absolute bottom-3 right-3 z-10 bg-white text-primary hover:bg-surface-container-low px-3 py-2 rounded-xl text-xs font-bold shadow-lg border border-outline-variant flex items-center gap-1">
+          <span class="material-symbols-outlined text-secondary text-sm">my_location</span>
+          Detect My Current GPS
+        </button>
+      </div>
+      
+      <div id="map-coords-display" class="text-xs font-mono text-primary font-semibold mb-4 bg-surface-container-low p-2 rounded-lg text-center">
+        GPS Pin: 19.0760, 72.8777 (Mumbai Downtown)
+      </div>
+
+      <form onsubmit="savePanIndiaAddressSubmit(event)" class="space-y-4">
+        
+        <!-- State, District & City Cascaded Selects -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">State</label>
+            <select class="india-state-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-semibold"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">District</label>
+            <select class="india-district-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-semibold"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">City / Delivery Hub</label>
+            <select class="india-city-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-semibold"></select>
+          </div>
+        </div>
+
+        <!-- House / Flat & Street -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Flat / House No. & Building</label>
+            <input type="text" id="addr-flat-no" value="Flat 402, Sea View Apartments" required class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-medium"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Street & Locality</label>
+            <input type="text" id="addr-street" value="Marine Drive, Nariman Point" required class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-medium"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Pincode</label>
+            <input type="text" id="addr-pincode" value="400021" maxlength="6" required class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-medium"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Landmark (Optional)</label>
+            <input type="text" id="addr-landmark" value="Near Trident Hotel" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-medium"/>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-primary text-on-primary font-bold py-3 rounded-xl text-sm hover:bg-primary-container">
+          Save Delivery Address & Pin Location
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- UPI QR MODAL -->
+  <div id="upi-qr-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-surface rounded-3xl p-8 max-w-md w-full ambient-shadow relative animate-fade-in text-center">
+      <button onclick="closeUpiQrModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-secondary text-2xl">qr_code_2</span>
+        <h3 class="font-headline font-bold text-2xl text-primary">Scan & Pay via UPI</h3>
+      </div>
+      <p class="text-xs text-on-surface-variant mb-4">Total Payable: <span id="qr-modal-amount" class="font-headline font-bold text-lg text-primary">₹11,375</span></p>
+
+      <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-secondary inline-block mb-4 shadow-md relative">
+        <img src="images/gpay_upi_qr.png" alt="Google Pay UPI QR Code" class="w-52 h-52 mx-auto object-contain rounded-xl shadow-sm border border-gray-100 p-1"/>
+        <div class="mt-2.5 text-xs text-primary font-bold flex items-center justify-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Scan with Google Pay / PhonePe / Paytm
+        </div>
+        <div class="mt-1 text-[11px] text-gray-600 font-mono font-semibold">Total Amount: <span class="text-primary font-bold text-sm" id="qr-card-billing-amount">₹11,375</span></div>
+      </div>
+
+      <div class="flex items-center justify-center gap-2 text-xs font-semibold text-orange-600 mb-6 bg-orange-50 py-2 px-3 rounded-full">
+        <span class="material-symbols-outlined text-sm">schedule</span>
+        Timer: <span id="upi-timer-display" class="font-mono font-bold">04:59</span> remaining
+      </div>
+
+      <button onclick="simulatePaymentSuccess()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-md flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">verified</span>
+        Simulate Payment Success
+      </button>
+    </div>
+  </div>
+
+  <!-- BOOKING CANCELLATION CONFIRMATION MODAL -->
+  <div id="cancel-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-surface rounded-3xl p-8 max-w-md w-full ambient-shadow relative animate-fade-in text-center">
+      <button onclick="closeCancelModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-3xl">event_busy</span>
+      </div>
+
+      <h3 class="font-headline font-bold text-2xl text-primary mb-1">Confirm Cancellation</h3>
+      <p class="text-xs text-on-surface-variant mb-4">Booking ID: <span id="cancel-modal-booking-id" class="font-bold font-mono text-primary">DRV-IN-9842-X</span></p>
+
+      <div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant mb-6 text-left space-y-2 text-xs">
+        <div class="flex justify-between">
+          <span class="text-on-surface-variant">Vehicle Reserved:</span>
+          <span id="cancel-modal-vehicle-name" class="font-bold text-primary">Mahindra Thar LX 4x4</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-on-surface-variant">Cancellation Policy:</span>
+          <span class="font-bold text-emerald-600">Free (>2h before pickup)</span>
+        </div>
+        <div class="flex justify-between border-t border-outline-variant pt-2">
+          <span class="text-on-surface-variant font-bold">100% Refund Amount:</span>
+          <span id="cancel-modal-refund-amount" class="font-headline font-extrabold text-base text-primary">₹8,945</span>
+        </div>
+        <p class="text-[11px] text-gray-500 italic mt-1">100% refund will be credited to your UPI account within 10 minutes.</p>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="closeCancelModal()" class="w-1/2 border border-outline-variant text-primary font-bold py-3 rounded-xl text-xs hover:bg-surface-container-low">
+          Keep Booking
+        </button>
+        <button onclick="confirmCancelAction()" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-xs shadow-md">
+          Yes, Cancel & Refund
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOMER COMPLAINT & GRIEVANCE MODAL -->
+  <div id="complaint-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-surface rounded-3xl p-6 sm:p-8 max-w-lg w-full ambient-shadow relative animate-fade-in">
+      <button onclick="window.aiAssistant.closeComplaintModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold shrink-0">
+          ⚠️
+        </div>
+        <div>
+          <h3 class="font-headline font-bold text-xl text-primary leading-tight">Customer Grievance & Complaint Desk</h3>
+          <p class="text-xs text-on-surface-variant">Write your issue & DriveBot AI will provide an instant resolution</p>
+        </div>
+      </div>
+
+      <form id="complaint-form" onsubmit="window.aiAssistant.submitComplaintForm(event)" class="space-y-4 text-left">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-primary mb-1">Customer Name</label>
+            <input type="text" id="complaint-name" value="Aarav Sharma" required class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-xs text-primary font-medium focus:border-secondary outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-primary mb-1">Contact Phone</label>
+            <input type="tel" id="complaint-phone" value="9876543210" required class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-xs text-primary font-medium focus:border-secondary outline-none"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-primary mb-1">Booking Ref ID (Optional)</label>
+            <input type="text" id="complaint-booking-id" value="DRV-IN-9842-X" placeholder="e.g. DRV-IN-9842-X" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-xs text-primary font-mono font-medium focus:border-secondary outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-primary mb-1">Complaint Category</label>
+            <select id="complaint-category" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-xs text-primary font-medium focus:border-secondary outline-none">
+              <option value="Vehicle Breakdown / RSA">🚨 Vehicle Breakdown / RSA</option>
+              <option value="Security Deposit & Refund">💰 Security Deposit & Refund</option>
+              <option value="Delivery Delay / Late Pickup">🚚 Delivery Delay / Late Pickup</option>
+              <option value="Vehicle Condition / Cleanliness">✨ Vehicle Condition / Cleanliness</option>
+              <option value="Billing & Overcharge Dispute">💳 Billing & Overcharge Dispute</option>
+              <option value="Driver / Delivery Executive Issue">👤 Delivery Executive Behavior</option>
+              <option value="Other Service Grievance">⚠️ Other Grievance</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-primary mb-1">Write your Complaint in detail *</label>
+          <textarea id="complaint-details" rows="4" required placeholder="Explain what happened (e.g., 'Vehicle tire got flat near Western Express Highway' or 'My deposit hasn't been credited back yet')..." class="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3 text-xs text-primary focus:border-secondary outline-none leading-relaxed"></textarea>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-[11px] text-amber-800 flex items-start gap-2">
+          <span class="material-symbols-outlined text-amber-600 text-base shrink-0">bolt</span>
+          <span>DriveBot AI will analyze your grievance immediately, generate a priority tracking ticket ID, and issue an instant automated solution or dispatch roadside assistance!</span>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button type="button" onclick="window.aiAssistant.closeComplaintModal()" class="w-1/3 border border-outline-variant text-primary font-bold py-3 rounded-xl text-xs hover:bg-surface-container-low">
+            Cancel
+          </button>
+          <button type="submit" class="w-2/3 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-xs shadow-md flex items-center justify-center gap-1.5 active:scale-95">
+            <span class="material-symbols-outlined text-sm">send</span>
+            Submit Complaint & Get Solution
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  <!-- ================= VEHICLE PHOTO & CONTENT CUSTOMIZATION MODAL ================= -->
+  <div id="customize-vehicle-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-surface rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-outline-variant my-8 relative animate-fade-in">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-outline-variant">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary">
+            <span class="material-symbols-outlined text-2xl">tune</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-lg text-primary flex items-center gap-2">
+              Customize Vehicle Card
+              <span id="customize-vehicle-cat-badge" class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Scooty</span>
+            </h3>
+            <p id="customize-vehicle-name-subtitle" class="text-xs text-on-surface-variant">Honda Activa 6G 110cc</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeCustomizeModal()" class="text-on-surface-variant hover:text-primary p-2 rounded-full hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); saveVehicleCustomization();" class="mt-5 space-y-5">
+        <input type="hidden" id="customize-vehicle-id"/>
+
+        <!-- Section 1: Replace Vehicle Photo -->
+        <div class="space-y-3">
+          <label class="block text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-secondary text-base">add_a_photo</span>
+            1. Replace Vehicle Photo
+          </label>
+
+          <!-- Current Photo & Live Preview Box -->
+          <div class="relative rounded-2xl overflow-hidden h-44 bg-surface-container-high border border-outline-variant/80 group">
+            <img id="customize-photo-preview" src="" alt="Vehicle Preview" class="w-full h-full object-cover"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-3">
+              <span class="text-white text-xs font-semibold flex items-center gap-1 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-lg">
+                <span class="material-symbols-outlined text-sm">visibility</span> Live Photo Preview
+              </span>
+            </div>
+          </div>
+
+          <!-- File Upload Option & Drag/Drop -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div onclick="document.getElementById('customize-file-input').click()" class="bg-surface-container-low hover:bg-orange-50/40 p-3.5 rounded-xl border border-dashed border-secondary/50 hover:border-secondary cursor-pointer transition-all flex flex-col items-center justify-center text-center group">
+              <input type="file" id="customize-file-input" accept="image/*" class="hidden" onchange="handleCustomPhotoUpload(event)"/>
+              <span class="material-symbols-outlined text-2xl text-secondary mb-1 group-hover:scale-110 transition-transform">upload_file</span>
+              <span class="font-bold text-xs text-primary">Upload Photo from PC / Mobile</span>
+              <span class="text-[10px] text-on-surface-variant mt-0.5">Supports JPG, PNG, WebP</span>
+            </div>
+
+            <!-- Direct URL Option -->
+            <div class="bg-surface-container-low p-3.5 rounded-xl border border-outline-variant/60 flex flex-col justify-center">
+              <label class="block text-[11px] font-bold text-primary mb-1">Or Paste Image URL</label>
+              <input type="url" id="customize-url-input" oninput="updatePhotoPreviewFromUrl(this.value)" placeholder="https://example.com/photo.jpg" class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-lg px-2.5 py-1.5 text-xs text-primary outline-none"/>
+            </div>
+          </div>
+
+          <!-- Sample Preset Photos Row -->
+          <div class="flex items-center gap-2 pt-1 overflow-x-auto pb-1">
+            <span class="text-[11px] font-bold text-on-surface-variant shrink-0">Presets:</span>
+            <button type="button" onclick="setPresetPhoto('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80', 'Custom Honda Activa 6G')" class="text-[11px] bg-surface-container-low hover:bg-surface-container text-primary font-medium px-2.5 py-1 rounded-lg border border-outline-variant/60 shrink-0">Scooty 1</button>
+            <button type="button" onclick="setPresetPhoto('https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80', 'Harley Davidson Cruiser')" class="text-[11px] bg-surface-container-low hover:bg-surface-container text-primary font-medium px-2.5 py-1 rounded-lg border border-outline-variant/60 shrink-0">Cruiser Bike</button>
+            <button type="button" onclick="setPresetPhoto('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80', 'Custom Supercar Edition')" class="text-[11px] bg-surface-container-low hover:bg-surface-container text-primary font-medium px-2.5 py-1 rounded-lg border border-outline-variant/60 shrink-0">Sports Car</button>
+            <button type="button" onclick="setPresetPhoto('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80', 'Mahindra Thar 4x4 Offroader')" class="text-[11px] bg-surface-container-low hover:bg-surface-container text-primary font-medium px-2.5 py-1 rounded-lg border border-outline-variant/60 shrink-0">Thar SUV</button>
+          </div>
+        </div>
+
+        <!-- Section 2: Custom Text & Vehicle Name Content -->
+        <div class="space-y-3 pt-3 border-t border-outline-variant">
+          <label class="block text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-secondary text-base">edit_note</span>
+            2. Custom Vehicle Name & Badge Content
+          </label>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-primary mb-1">Edit Vehicle Display Name</label>
+              <input type="text" id="customize-name-input" placeholder="e.g. Honda Activa 6G 110cc, VIP Edition" class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl px-3.5 py-2.5 text-xs text-primary font-bold outline-none"/>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-primary mb-1">Vehicle Registration No. (Plate Number)</label>
+              <input type="text" id="customize-reg-no-input" placeholder="e.g. MH-01-DR-8899, DL-03-CB-1234" class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl px-3.5 py-2.5 text-xs text-primary font-bold outline-none"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-primary mb-1">Custom Tag / Badge Text</label>
+            <input type="text" id="customize-tag-input" placeholder="e.g. My Custom Activa, VIP Edition, Supercharged" class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl px-3.5 py-2.5 text-xs text-primary outline-none"/>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-primary mb-1">Custom Text / Description (Fuel, Charge, Helmet, Owner Notes)</label>
+            <textarea id="customize-text-input" rows="3" placeholder="Add custom description, fuel specs, charging details, helmet inclusion, owner contact, or extra notes..." class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl p-3 text-xs text-primary outline-none resize-none"></textarea>
+          </div>
+        </div>
+
+        <!-- Section 3: Custom Rental Rates (Price per Day & Hour) -->
+        <div class="space-y-3 pt-3 border-t border-outline-variant">
+          <label class="block text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-secondary text-base">payments</span>
+            3. Custom Rental Rates (₹ Rates)
+          </label>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-primary mb-1">Daily Rental Price (₹/day)</label>
+              <div class="relative">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-on-surface-variant">₹</span>
+                <input type="number" id="customize-price-day-input" min="1" placeholder="e.g. 299" class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl pl-7 pr-3 py-2 text-xs text-primary font-bold outline-none"/>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-primary mb-1">Hourly Rental Price (₹/hour)</label>
+              <div class="relative">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-on-surface-variant">₹</span>
+                <input type="number" id="customize-price-hour-input" min="1" placeholder="e.g. 49" class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl pl-7 pr-3 py-2 text-xs text-primary font-bold outline-none"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex items-center justify-between pt-4 border-t border-outline-variant gap-3">
+          <button type="button" onclick="resetVehicleCustomization()" class="border border-rose-300 text-rose-700 hover:bg-rose-50 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-1 transition-colors">
+            <span class="material-symbols-outlined text-sm">restart_alt</span>
+            Reset Defaults
+          </button>
+
+          <div class="flex gap-2">
+            <button type="button" onclick="closeCustomizeModal()" class="border border-outline-variant text-primary font-bold px-4 py-2.5 rounded-xl text-xs hover:bg-surface-container-low transition-colors">
+              Cancel
+            </button>
+            <button type="submit" class="bg-secondary hover:bg-secondary-hover text-on-secondary font-bold px-5 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-1.5 transition-all active:scale-95">
+              <span class="material-symbols-outlined text-sm">check</span>
+              Save Customization
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="vehicle-reviews-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-surface rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-outline-variant my-8 relative animate-fade-in max-h-[90vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-outline-variant shrink-0">
+        <div class="flex items-center gap-3 min-w-0">
+          <img id="review-modal-vehicle-img" src="" alt="Vehicle" class="w-14 h-12 object-cover rounded-xl bg-surface-container shrink-0 border border-outline-variant/60"/>
+          <div class="min-w-0">
+            <h3 id="review-modal-vehicle-name" class="font-headline font-bold text-lg text-primary truncate">Honda Activa 6G</h3>
+            <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+              <span id="review-modal-vehicle-cat" class="bg-primary/10 text-primary font-bold text-[10px] px-2 py-0.5 rounded-full uppercase">Scooty</span>
+              <span id="review-modal-total-count-subtitle" class="font-medium">420 Verified Reviews</span>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="closeVehicleReviewsModal()" class="text-on-surface-variant hover:text-primary p-2 rounded-full hover:bg-surface-container-low transition-colors shrink-0">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="flex-1 overflow-y-auto space-y-6 pt-5 pr-1">
+        
+        <!-- Ratings Breakdown Card -->
+        <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/60 grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
+          
+          <!-- Overall Rating Score -->
+          <div class="sm:col-span-5 text-center sm:border-r border-outline-variant/60 sm:pr-4">
+            <span id="review-modal-avg-rating" class="font-headline font-extrabold text-4xl text-primary block leading-none mb-1">4.89</span>
+            <div id="review-modal-star-row" class="flex justify-center text-amber-500 text-lg mb-1">
+              ★★★★★
+            </div>
+            <p class="text-xs text-on-surface-variant font-medium">Based on <span id="review-modal-breakdown-count" class="font-bold text-primary">420</span> customer reviews</p>
+          </div>
+
+          <!-- Star Distribution Bars -->
+          <div class="sm:col-span-7 space-y-1.5 text-xs font-semibold text-on-surface-variant">
+            <div class="flex items-center gap-2">
+              <span class="w-8 shrink-0">5 ★</span>
+              <div class="flex-1 bg-surface-container h-2.5 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 88%;"></div>
+              </div>
+              <span class="w-10 text-right text-[11px] font-mono">88%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-8 shrink-0">4 ★</span>
+              <div class="flex-1 bg-surface-container h-2.5 rounded-full overflow-hidden">
+                <div class="bg-amber-400 h-full rounded-full" style="width: 9%;"></div>
+              </div>
+              <span class="w-10 text-right text-[11px] font-mono">9%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-8 shrink-0">3 ★</span>
+              <div class="flex-1 bg-surface-container h-2.5 rounded-full overflow-hidden">
+                <div class="bg-amber-300 h-full rounded-full" style="width: 2%;"></div>
+              </div>
+              <span class="w-10 text-right text-[11px] font-mono">2%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-8 shrink-0">2 ★</span>
+              <div class="flex-1 bg-surface-container h-2.5 rounded-full overflow-hidden">
+                <div class="bg-gray-300 h-full rounded-full" style="width: 1%;"></div>
+              </div>
+              <span class="w-10 text-right text-[11px] font-mono">1%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-8 shrink-0">1 ★</span>
+              <div class="flex-1 bg-surface-container h-2.5 rounded-full overflow-hidden">
+                <div class="bg-gray-200 h-full rounded-full" style="width: 0%;"></div>
+              </div>
+              <span class="w-10 text-right text-[11px] font-mono">0%</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Satisfaction Badges Row -->
+        <div class="grid grid-cols-3 gap-3 text-center text-xs font-semibold text-primary">
+          <div class="bg-emerald-50 border border-emerald-200/60 p-2.5 rounded-xl">
+            <span class="text-emerald-700 font-bold block text-sm mb-0.5">✨ 99% Clean</span>
+            <span class="text-[10px] text-emerald-800">100% Sanitized</span>
+          </div>
+          <div class="bg-blue-50 border border-blue-200/60 p-2.5 rounded-xl">
+            <span class="text-blue-700 font-bold block text-sm mb-0.5">🚚 98% On-Time</span>
+            <span class="text-[10px] text-blue-800">Doorstep Delivery</span>
+          </div>
+          <div class="bg-amber-50 border border-amber-200/60 p-2.5 rounded-xl">
+            <span class="text-amber-700 font-bold block text-sm mb-0.5">⚡ 100% Deposit</span>
+            <span class="text-[10px] text-amber-800">Instant Refund</span>
+          </div>
+        </div>
+
+        <!-- Write Your Own Review Card -->
+        <div class="bg-surface-container-low/80 border border-secondary/30 p-4 rounded-2xl space-y-3">
+          <h4 class="font-headline font-bold text-sm text-primary flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-secondary text-base">rate_review</span>
+              Share Your Rental Experience
+            </span>
+            <span class="text-[11px] font-semibold text-secondary">Verified Customer</span>
+          </h4>
+
+          <form onsubmit="submitNewVehicleReview(event)" class="space-y-3">
+            <input type="hidden" id="add-review-vehicle-id"/>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-primary mb-1">Your Name</label>
+                <input type="text" id="add-review-user-name" placeholder="Aarav Sharma" required class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl px-3 py-2 text-xs outline-none"/>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-primary mb-1">City / Location</label>
+                <input type="text" id="add-review-location" placeholder="Mumbai Downtown" required class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl px-3 py-2 text-xs outline-none"/>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-primary mb-1">Star Rating</label>
+              <select id="add-review-rating-select" class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl px-3 py-2 text-xs font-bold text-amber-600 outline-none">
+                <option value="5">★★★★★ (5.0 - Excellent)</option>
+                <option value="4">★★★★☆ (4.0 - Very Good)</option>
+                <option value="3">★★★☆☆ (3.0 - Average)</option>
+                <option value="2">★★☆☆☆ (2.0 - Poor)</option>
+                <option value="1">★☆☆☆☆ (1.0 - Terrible)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-primary mb-1">Your Written Review</label>
+              <textarea id="add-review-text" rows="2" placeholder="Tell other customers about vehicle condition, pick-up smoothness, cleanliness, and performance..." required class="w-full bg-surface border border-outline-variant focus:border-secondary rounded-xl p-2.5 text-xs outline-none resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-2.5 rounded-xl text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-sm">send</span>
+              Post Customer Review
+            </button>
+          </form>
+        </div>
+
+        <!-- Verified Reviews List Container -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-headline font-bold text-sm text-primary flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-emerald-600 text-base">verified</span>
+              Customer Reviews Feed
+            </h4>
+            <span class="text-[11px] text-on-surface-variant font-medium">Sorted by Most Recent</span>
+          </div>
+
+          <div id="vehicle-reviews-list-container" class="space-y-3">
+            <!-- Dynamic customer review items rendered here -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- ================= DRIVENA AI ASSISTANT WIDGET & DRAWER ================= -->
+  <!-- Floating AI Assistant Launcher Button -->
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    <div id="ai-trigger-tooltip" class="hidden sm:flex items-center gap-2 bg-primary text-on-primary text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-white/20 animate-fade-in pointer-events-none">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      Need help? Ask AI Assistant
+    </div>
+    
+    <button id="ai-chat-trigger" onclick="window.aiAssistant.toggleChat()" class="relative bg-gradient-to-r from-primary via-primary-container to-secondary text-white p-3.5 rounded-full shadow-2xl flex items-center justify-center group active:scale-95 transition-all">
+      <div class="ai-pulse-ring"></div>
+      <span class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">smart_toy</span>
+      
+      <!-- Notification Badge -->
+      <span id="ai-trigger-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-secondary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">1</span>
+    </button>
+  </div>
+
+  <!-- AI Assistant Chat Modal Panel -->
+  <div id="ai-chat-panel" class="fixed bottom-24 right-6 z-50 w-96 sm:w-[420px] h-[580px] bg-surface border border-outline-variant/80 rounded-3xl shadow-2xl hidden flex-col overflow-hidden animate-fade-in transition-all">
+    
+    <!-- Panel Header -->
+    <div class="bg-gradient-to-r from-primary to-primary-container text-white p-4 flex items-center justify-between border-b border-white/10 shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="relative w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-xl shadow-inner">
+          🤖
+          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-primary"></span>
+        </div>
+        <div>
+          <h3 class="font-headline font-bold text-sm text-white flex items-center gap-1.5 leading-tight">
+            DriveBot AI
+            <span class="bg-secondary/20 text-secondary border border-secondary/40 text-[9px] font-bold px-1.5 py-0.5 rounded-md tracking-wider uppercase">Support</span>
+          </h3>
+          <p class="text-[11px] text-white/70 font-medium">Delhi NCR, Maharashtra & Gujarat AI Assistant</p>
+        </div>
+      </div>
+
+      <!-- Header Controls -->
+      <div class="flex items-center gap-1">
+        <button onclick="window.aiAssistant.openComplaintModal()" title="Write & Submit Complaint" class="text-amber-300 hover:text-white bg-amber-500/20 hover:bg-amber-500/30 px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">report_problem</span>
+          <span class="hidden sm:inline">Complain</span>
+        </button>
+        <button id="ai-sound-btn" onclick="window.aiAssistant.toggleMute()" title="Toggle Sound / TTS" class="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-lg">volume_up</span>
+        </button>
+        <button onclick="window.aiAssistant.clearChat()" title="Reset Chat" class="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-lg">refresh</span>
+        </button>
+        <button onclick="window.aiAssistant.toggleChat()" title="Close Assistant" class="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="ai-messages-container" class="flex-1 overflow-y-auto p-4 space-y-3 bg-surface-container-low/40">
+      <!-- Messages rendered dynamically by js/ai-assistant.js -->
+    </div>
+
+    <!-- Panel Input Bar -->
+    <div class="p-3 bg-surface border-t border-outline-variant/60 shrink-0">
+      <form onsubmit="event.preventDefault(); window.aiAssistant.handleSendMessage();" class="flex items-center gap-2">
+        <button type="button" id="ai-mic-btn" onclick="window.aiAssistant.toggleVoiceInput()" title="Voice Input" class="bg-surface-container-low hover:bg-surface-container border border-outline-variant/60 text-on-surface-variant p-2.5 rounded-xl transition-all flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-xl">mic</span>
+        </button>
+        
+        <input type="text" id="ai-chat-input" placeholder="Ask about cars, scooties, prices, documents..." class="flex-1 bg-surface-container-low border border-outline-variant/60 focus:border-secondary focus:ring-1 focus:ring-secondary rounded-xl px-3.5 py-2.5 text-xs text-primary placeholder:text-gray-400 outline-none transition-all"/>
+        
+        <button type="submit" id="ai-send-btn" class="bg-secondary hover:bg-secondary-hover text-on-secondary p-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-xl">send</span>
+        </button>
+      </form>
+      <div class="mt-2 text-[10px] text-gray-400 text-center flex items-center justify-center gap-1">
+        <span class="material-symbols-outlined text-[12px] text-emerald-500">lock</span>
+        Powered by DriveX Smart Rental Engine • RENT. RIDE. REPEAT.
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/india-locations.js"></script>
+  <script src="js/fleet-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/ai-assistant.js"></script>
+</body>
+</html>
+
