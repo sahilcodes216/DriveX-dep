@@ -221,7 +221,7 @@ class DriveXAIAssistant {
 
   processUserQuery(query) {
     const q = query.toLowerCase();
-    const currentCity = appState.location?.selectedCity || 'Mumbai Downtown';
+    const currentCity = appState.location?.selectedCity || 'Mumbai';
 
     // 0. COMPLAINT & ISSUE LODGING INTENT
     if (q.includes('complain') || q.includes('complaint') || q.includes('issue') || q.includes('problem') || q.includes('bad service') || q.includes('breakdown') || q.includes('damage') || q.includes('dispute') || q.includes('lodge') || q.includes('report')) {

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block');
 
 :root {
   --color-primary: #001136;
@@ -43,13 +43,41 @@ h1, h2, h3, h4, h5, h6, .font-headline {
 }
 
 .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   vertical-align: middle;
   user-select: none;
+  font-display: block;
 }
 
 .material-symbols-outlined.filled {
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Bulletproof FOUC Prevention: hide raw text ligatures completely until icon font is active */
+html:not(.fonts-loaded) .material-symbols-outlined {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+html.fonts-loaded .material-symbols-outlined {
+  visibility: visible !important;
+  opacity: 1;
+  transition: opacity 0.12s ease-in;
 }
 
 .ambient-shadow {

@@ -12,7 +12,25 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"/>
+  <script>
+    (function() {
+      function markLoaded() {
+        document.documentElement.classList.add('fonts-loaded');
+      }
+      if ('fonts' in document) {
+        document.fonts.load('24px "Material Symbols Outlined"').then(markLoaded).catch(markLoaded);
+        document.fonts.ready.then(function() {
+          if (document.fonts.check('16px "Material Symbols Outlined"')) {
+            markLoaded();
+          }
+        });
+        setTimeout(markLoaded, 2000);
+      } else {
+        markLoaded();
+      }
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {

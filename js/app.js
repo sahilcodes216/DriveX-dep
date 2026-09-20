@@ -13,23 +13,22 @@ let appState = {
   searchQuery: "",
   sortBy: "popular",
   
-  // Location State (Delhi NCR, Maharashtra & Gujarat)
+  // Location State (Pan-India)
   location: {
     selectedState: "Maharashtra",
-    selectedDistrict: "Mumbai City",
-    selectedCity: "Mumbai Downtown",
+    selectedCity: "Mumbai",
     lat: 19.0760,
     lng: 72.8777,
-    formattedAddress: "Marine Drive, Nariman Point, Mumbai, Maharashtra 400021",
-    pincode: "400021",
-    landmark: "Near Trident Hotel"
+    formattedAddress: "Mumbai, Maharashtra 400001",
+    pincode: "400001",
+    landmark: ""
   },
   
   booking: {
     vehicle: FLEET_DATA[0],
     rentalMode: "daily", // 'daily' or 'hourly'
     selectedHours: 6,
-    pickupCity: "Mumbai Downtown",
+    pickupCity: "Mumbai",
     pickupDate: getTomorrowDateString(1),
     pickupTime: "10:00 AM",
     returnDate: getTomorrowDateString(4),
@@ -38,11 +37,10 @@ let appState = {
     address: {
       flatNo: "Flat 402, Sea View Apartments",
       street: "Marine Drive, Nariman Point",
-      city: "Mumbai Downtown",
-      district: "Mumbai City",
+      city: "Mumbai",
       state: "Maharashtra",
-      pincode: "400021",
-      landmark: "Near Trident Hotel"
+      pincode: "400001",
+      landmark: ""
     },
     protectionPlan: PROTECTION_PLANS[1], // default Zero Liability
     selectedAddons: ["doorstep", "gps"],
@@ -179,66 +177,51 @@ function initRouting() {
   });
 }
 
-// Location Selector & Google Maps Cascading Logic
+// Location Selector — State → City cascade (no district level)
 function initPanIndiaLocationSelectors() {
   const stateSelects = document.querySelectorAll(".india-state-select");
-  
+
   stateSelects.forEach(stateSelect => {
-    // Populate States (Delhi (NCR), Maharashtra, Gujarat)
-    stateSelect.innerHTML = getAvailableStates().map(st => 
+    stateSelect.innerHTML = getAvailableStates().map(st =>
       `<option value="${st}" ${st === appState.location.selectedState ? 'selected' : ''}>${st}</option>`
     ).join("");
 
     stateSelect.addEventListener("change", (e) => {
       appState.location.selectedState = e.target.value;
-      updateDistrictAndCityDropdowns();
+      // Reset city when state changes
+      appState.location.selectedCity = null;
+      updateCityDropdown();
     });
   });
 
-  updateDistrictAndCityDropdowns();
+  updateCityDropdown();
 }
 
 function updateDistrictAndCityDropdowns() {
-  const stateName = appState.location.selectedState || "Maharashtra";
-  const districts = getDistrictsForState(stateName);
-  
-  let currentDistObj = districts.find(d => d.name === appState.location.selectedDistrict);
-  if (!currentDistObj && districts.length > 0) {
-    currentDistObj = districts[0];
-    appState.location.selectedDistrict = currentDistObj.name;
-  }
-  
-  // District Dropdown
-  const districtSelects = document.querySelectorAll(".india-district-select");
-  districtSelects.forEach(districtSelect => {
-    districtSelect.innerHTML = districts.map(dist => 
-      `<option value="${dist.name}" ${dist.name === appState.location.selectedDistrict ? 'selected' : ''}>${dist.name}</option>`
-    ).join("");
-
-    districtSelect.onchange = (e) => {
-      appState.location.selectedDistrict = e.target.value;
-      updateCityDropdownForCurrentDistrict();
-    };
-  });
-
-  updateCityDropdownForCurrentDistrict();
+  // Kept for backward-compatibility; delegates to updateCityDropdown()
+  updateCityDropdown();
 }
 
 function updateCityDropdownForCurrentDistrict() {
-  const stateName = appState.location.selectedState || "Maharashtra";
-  const districtName = appState.location.selectedDistrict;
-  const cities = getCitiesForDistrict(stateName, districtName);
+  // Kept for backward-compatibility; delegates to updateCityDropdown()
+  updateCityDropdown();
+}
 
+function updateCityDropdown() {
+  const stateName = appState.location.selectedState || "Maharashtra";
+  const cities = getCitiesForState(stateName);
+
+  // Default city selection
   let currentCityObj = cities.find(c => c.name === appState.location.selectedCity);
   if (!currentCityObj && cities.length > 0) {
     currentCityObj = cities[0];
     appState.location.selectedCity = currentCityObj.name;
   }
 
-  // City Dropdown
+  // Populate city dropdowns
   const citySelects = document.querySelectorAll(".india-city-select");
   citySelects.forEach(citySelect => {
-    citySelect.innerHTML = cities.map(city => 
+    citySelect.innerHTML = cities.map(city =>
       `<option value="${city.name}" ${city.name === appState.location.selectedCity ? 'selected' : ''}>${city.name}</option>`
     ).join("");
 
@@ -254,8 +237,7 @@ function updateCityDropdownForCurrentDistrict() {
 
 function selectCityLocation(cityName, triggerToast = true) {
   const stateName = appState.location.selectedState || "Maharashtra";
-  const districtName = appState.location.selectedDistrict;
-  const cityObj = findCityLocationObject(stateName, districtName, cityName);
+  const cityObj = findCityLocationObject(stateName, null, cityName);
 
   if (!cityObj) return;
 
@@ -1859,12 +1841,11 @@ function savePanIndiaAddressSubmit(e) {
   const flatNo = document.getElementById("addr-flat-no")?.value || "Flat 402, Sea View";
   const street = document.getElementById("addr-street")?.value || "Marine Drive";
   const state = appState.location.selectedState;
-  const district = appState.location.selectedDistrict;
   const city = appState.location.selectedCity;
   const pincode = document.getElementById("addr-pincode")?.value || "400021";
   const landmark = document.getElementById("addr-landmark")?.value || "Near Landmark";
 
-  appState.booking.address = { flatNo, street, city, district, state, pincode, landmark };
+  appState.booking.address = { flatNo, street, city, state, pincode, landmark };
   closeAddressModal();
   updateBookingCalculation();
   showToast(`Delivery Address Saved: ${city}, ${state} (${pincode})`);
@@ -2468,110 +2449,17 @@ function validateAndProceedToPayment() {
   renderBookingStep(4);
 }
 
-/* ================= INTRO SPLASH VIDEO CONTROLLER (PURE VIDEO) ================= */
-const TARGET_SPLASH_DURATION = 3.5; // Play video max 3.5 seconds
-let isSplashDismissed = false;
-
+/* ================= INTRO SPLASH VIDEO CONTROLLER (REMOVED) ================= */
 window.dismissSplash = function dismissSplash() {
-  if (isSplashDismissed) return;
-  isSplashDismissed = true;
-
-  const splashEl = document.getElementById("intro-splash");
-  const videoEl = document.getElementById("splash-video");
-
-  if (videoEl) {
-    try { videoEl.pause(); } catch(e) {}
-  }
-
-  // Restore full page scrolling immediately
   document.body.style.overflow = "auto";
   document.documentElement.style.overflow = "auto";
-
-  if (splashEl) {
-    splashEl.style.opacity = "0";
-    splashEl.style.pointerEvents = "none";
-    splashEl.classList.add("splash-dismissing");
-    setTimeout(() => {
-      splashEl.style.display = "none";
-      document.body.style.overflow = "auto";
-      document.documentElement.style.overflow = "auto";
-    }, 600);
-  } else {
-    document.body.style.overflow = "auto";
-    document.documentElement.style.overflow = "auto";
-  }
 };
-
-function dismissSplash() {
-  window.dismissSplash();
-}
-
+function dismissSplash() { window.dismissSplash(); }
 function initSplashIntro() {
-  const splashEl = document.getElementById("intro-splash");
-  const videoEl = document.getElementById("splash-video");
-
-  if (!splashEl) return;
-
-  isSplashDismissed = false;
-  document.body.style.overflow = "hidden";
-
-  // FAILSAFE: Automatically dismiss splash after 3.5 seconds no matter what!
-  const fallbackTimer = setTimeout(() => {
-    window.dismissSplash();
-  }, 3500);
-
-  if (videoEl) {
-    videoEl.currentTime = 0;
-    videoEl.muted = true;
-
-    const handleTimeUpdate = () => {
-      if (isSplashDismissed) return;
-      if (videoEl.currentTime >= TARGET_SPLASH_DURATION || videoEl.ended) {
-        videoEl.removeEventListener("timeupdate", handleTimeUpdate);
-        clearTimeout(fallbackTimer);
-        window.dismissSplash();
-      }
-    };
-
-    videoEl.addEventListener("timeupdate", handleTimeUpdate);
-    videoEl.addEventListener("ended", () => {
-      clearTimeout(fallbackTimer);
-      window.dismissSplash();
-    });
-    videoEl.addEventListener("error", () => {
-      clearTimeout(fallbackTimer);
-      window.dismissSplash();
-    });
-
-    videoEl.play().catch((err) => {
-      console.warn("Autoplay blocked by browser policy:", err);
-      clearTimeout(fallbackTimer);
-      window.dismissSplash();
-    });
-  }
-
-  // Click anywhere on splash screen to dismiss immediately
-  splashEl.onclick = () => {
-    clearTimeout(fallbackTimer);
-    window.dismissSplash();
-  };
+  document.body.style.overflow = "auto";
+  document.documentElement.style.overflow = "auto";
 }
-
-function replaySplash() {
-  const splashEl = document.getElementById("intro-splash");
-  if (splashEl) {
-    splashEl.classList.remove("splash-dismissing");
-    splashEl.style.display = "flex";
-    initSplashIntro();
-  }
-}
-
-// Auto-initialize splash screen when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initSplashIntro);
-} else {
-  initSplashIntro();
-}
+function replaySplash() {}
 
 // Local Storage & Sample Vehicle Reviews Repository
 function loadVehicleReviewsStore() {
@@ -2972,7 +2860,7 @@ function openVehicleReviewsModal(vehicleId) {
   if (userNameInput) userNameInput.value = appState.currentUser.name || "Aarav Sharma";
 
   const userLocInput = document.getElementById("add-review-location");
-  if (userLocInput) userLocInput.value = appState.location.selectedCity || "Mumbai Downtown";
+  if (userLocInput) userLocInput.value = appState.location.selectedCity || "Mumbai";
 
   renderVehicleReviewsList(vehicle);
 

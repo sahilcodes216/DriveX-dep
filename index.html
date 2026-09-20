@@ -17,8 +17,26 @@
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"/>
+  <script>
+    (function() {
+      function markLoaded() {
+        document.documentElement.classList.add('fonts-loaded');
+      }
+      if ('fonts' in document) {
+        document.fonts.load('24px "Material Symbols Outlined"').then(markLoaded).catch(markLoaded);
+        document.fonts.ready.then(function() {
+          if (document.fonts.check('16px "Material Symbols Outlined"')) {
+            markLoaded();
+          }
+        });
+        setTimeout(markLoaded, 2000);
+      } else {
+        markLoaded();
+      }
+    })();
+  </script>
   
   <!-- Leaflet Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -68,18 +86,7 @@
 </head>
 <body class="bg-background text-on-surface font-body antialiased flex flex-col min-h-screen">
 
-  <!-- ================= VIDEO INTRO SPLASH SCREEN (CLEAR VIDEO) ================= -->
-  <div id="intro-splash" class="fixed inset-0 z-[99999] overflow-hidden bg-black transition-all duration-700 select-none cursor-pointer" onclick="window.dismissSplash()" title="Click to skip intro">
-    <video id="splash-video" class="w-full h-full object-cover" playsinline muted autoplay preload="auto">
-      <source src="Video Project 1.mp4" type="video/mp4"/>
-      Your browser does not support the video tag.
-    </video>
-    <!-- Skip Intro Button -->
-    <button onclick="event.stopPropagation(); window.dismissSplash();" class="absolute top-6 right-6 z-[100000] bg-white/20 hover:bg-white/40 text-white border border-white/40 px-5 py-2.5 rounded-full font-bold text-xs backdrop-blur-md transition-all shadow-lg flex items-center gap-2 cursor-pointer">
-      <span>Skip Intro</span>
-      <span class="material-symbols-outlined text-sm">arrow_forward</span>
-    </button>
-  </div>
+
 
   <!-- ================= HAMBURGER DRAWER MENU ================= -->
   <!-- Backdrop Overlay -->
@@ -248,7 +255,7 @@
         <!-- Active City Location Pill -->
         <button onclick="openAddressModal()" id="active-location-btn" title="Click to change location" class="hidden sm:flex items-center gap-1 bg-surface-container-low border border-outline-variant/60 hover:border-secondary px-2.5 py-1.5 rounded-full text-xs font-semibold text-primary transition-all max-w-[160px] sm:max-w-[210px] cursor-pointer">
           <span class="material-symbols-outlined text-secondary text-sm shrink-0">location_on</span>
-          <span id="active-header-city" class="truncate text-[11px] font-semibold text-primary min-w-0">Mumbai Downtown</span>
+          <span id="active-header-city" class="truncate text-[11px] font-semibold text-primary min-w-0">Mumbai</span>
           <span class="material-symbols-outlined text-xs text-on-surface-variant shrink-0">keyboard_arrow_down</span>
         </button>
 
@@ -295,15 +302,11 @@
 
               <div class="space-y-4">
                 
-                <!-- State, District & City Cascaded Selection -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <!-- State & City Selection -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div>
                     <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">State</label>
                     <select class="india-state-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-2.5 py-2 text-xs font-medium focus:ring-2 focus:ring-tertiary-accent focus:outline-none"></select>
-                  </div>
-                  <div>
-                    <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">District</label>
-                    <select class="india-district-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-2.5 py-2 text-xs font-medium focus:ring-2 focus:ring-tertiary-accent focus:outline-none"></select>
                   </div>
                   <div>
                     <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">City / Hub</label>
@@ -1701,20 +1704,16 @@
       </div>
       
       <div id="map-coords-display" class="text-xs font-mono text-primary font-semibold mb-4 bg-surface-container-low p-2 rounded-lg text-center">
-        GPS Pin: 19.0760, 72.8777 (Mumbai Downtown)
+        GPS Pin: 19.0760, 72.8777 (Mumbai)
       </div>
 
       <form onsubmit="savePanIndiaAddressSubmit(event)" class="space-y-4">
         
-        <!-- State, District & City Cascaded Selects -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <!-- State & City Selects -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-on-surface-variant mb-1">State</label>
             <select class="india-state-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-semibold"></select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-on-surface-variant mb-1">District</label>
-            <select class="india-district-select w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-xs font-semibold"></select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-on-surface-variant mb-1">City / Delivery Hub</label>
