@@ -1,5 +1,5 @@
 /**
- * DriveX - Intelligent AI Customer Assistant Engine ("DriveBot")
+ * DriveX - Intelligent AI Customer Assistant Engine ("Zip")
  * Handles natural language customer queries, fleet recommendations,
  * location coverage, booking assistance, safety policies, complaint registration & instant solutions.
  */
@@ -7,7 +7,6 @@
 class DriveXAIAssistant {
   constructor() {
     this.isOpen = false;
-    this.isMuted = false;
     this.isListening = false;
     this.recognition = null;
     this.messages = [];
@@ -33,13 +32,29 @@ class DriveXAIAssistant {
   init() {
     this.initSpeechRecognition();
     this.addInitialWelcomeMessage();
+    this.initLauncherInteractions();
+  }
+
+  initLauncherInteractions() {
+    const trigger = document.getElementById('ai-chat-trigger');
+    const tooltip = document.getElementById('ai-trigger-tooltip');
+    if (trigger && tooltip) {
+      trigger.addEventListener('mouseenter', () => {
+        if (!this.isOpen) {
+          tooltip.classList.add('flash-active');
+        }
+      });
+      trigger.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('flash-active');
+      });
+    }
   }
 
   addInitialWelcomeMessage() {
     this.messages = [
       {
         sender: 'bot',
-        text: `Hello! 👋 I'm **DriveBot**, your AI Assistant for **DriveX** *(RENT. RIDE. REPEAT.)*.\n\nHow can I assist your journey today? You can ask me about available cars/scooters, daily rates, doorstep delivery in your city, required documents, or active bookings!\n\n*Have an issue? Click '⚠️ Submit Complaint' below to write your issue and get an instant AI resolution.*`,
+        text: `Hello! 👋 I'm **Zip**, your AI Assistant.\n\nHow can I help you?`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         suggestions: [
           "🚗 Rent Car under ₹2000",
@@ -113,44 +128,25 @@ class DriveXAIAssistant {
     }
   }
 
-  toggleMute() {
-    this.isMuted = !this.isMuted;
-    const muteBtn = document.getElementById('ai-sound-btn');
-    if (muteBtn) {
-      muteBtn.innerHTML = `<span class="material-symbols-outlined text-lg">${this.isMuted ? 'volume_off' : 'volume_up'}</span>`;
-      muteBtn.title = this.isMuted ? "Sound Off (Muted)" : "Sound On (Speech synthesis)";
-    }
-  }
-
-  speakText(text) {
-    if (this.isMuted || !('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel(); // Stop current speech
-    
-    // Clean markdown stars/formatting for speech synthesis
-    const cleanText = text.replace(/[*_#`]/g, '').replace(/\[.*?\]\(.*?\)/g, '');
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.lang = 'en-IN';
-    window.speechSynthesis.speak(utterance);
-  }
-
   toggleChat() {
     this.isOpen = !this.isOpen;
     const panel = document.getElementById('ai-chat-panel');
     const badge = document.getElementById('ai-trigger-badge');
+    const tooltip = document.getElementById('ai-trigger-tooltip');
 
     if (panel) {
       if (this.isOpen) {
         panel.classList.remove('hidden');
         panel.classList.add('flex');
         if (badge) badge.classList.add('hidden');
+        if (tooltip) tooltip.style.display = 'none';
         this.renderMessages();
         const input = document.getElementById('ai-chat-input');
         if (input) input.focus();
       } else {
         panel.classList.add('hidden');
         panel.classList.remove('flex');
+        if (tooltip) tooltip.style.display = '';
       }
     }
   }
@@ -180,7 +176,6 @@ class DriveXAIAssistant {
       const response = this.processUserQuery(query);
       this.messages.push(response);
       this.renderMessages();
-      this.speakText(response.rawText || response.text);
     }, 600);
   }
 
@@ -189,12 +184,10 @@ class DriveXAIAssistant {
     if (!container) return;
     const typingHtml = `
       <div id="ai-typing-indicator" class="flex gap-2.5 items-end max-w-[85%] animate-fade-in">
-        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold shrink-0">
-          🤖
-        </div>
+        <img src="images/zip_icon.svg" alt="Zip" class="w-8 h-8 rounded-full object-contain shrink-0 shadow-sm"/>
         <div class="bg-surface-container-low border border-outline-variant/50 p-3 rounded-2xl rounded-bl-none text-xs text-on-surface-variant flex items-center gap-1.5 shadow-sm">
           <span class="w-2 h-2 bg-secondary rounded-full animate-ping"></span>
-          <span class="font-medium text-primary">DriveBot is analyzing...</span>
+          <span class="font-medium text-primary">Zip is thinking...</span>
         </div>
       </div>
     `;
@@ -215,7 +208,7 @@ class DriveXAIAssistant {
     if (q.includes('complain') || q.includes('complaint') || q.includes('issue') || q.includes('problem') || q.includes('bad service') || q.includes('breakdown') || q.includes('damage') || q.includes('dispute') || q.includes('lodge') || q.includes('report')) {
       return {
         sender: 'bot',
-        text: `⚠️ **Customer Grievance & Complaint Desk:**\n\nWe are extremely sorry for any inconvenience caused! You can write your specific complaint in detail, and DriveBot will issue an instant resolution & priority support ticket for you.`,
+        text: `⚠️ **Customer Grievance & Complaint Desk:**\n\nWe are extremely sorry for any inconvenience caused! You can write your specific complaint in detail, and Zip will issue an instant resolution & priority support ticket for you.`,
         actionButton: {
           label: "✍️ Write & Submit Your Complaint",
           action: "window.aiAssistant.openComplaintModal()"
@@ -306,15 +299,15 @@ class DriveXAIAssistant {
     }
 
     // 4. SUV & THAR / LUXURY CARS
-    if (q.includes('suv') || q.includes('thar') || q.includes('creta') || q.includes('xuv') || q.includes('luxury') || q.includes('fortuner') || q.includes('bmw') || q.includes('mercedes')) {
-      const suvs = FLEET_DATA.filter(v => v.category === 'suv' || v.category === 'luxury' || v.name.toLowerCase().includes('thar') || v.name.toLowerCase().includes('creta'));
+    if (q.includes('suv') || q.includes('thar') || q.includes('creta') || q.includes('xuv') || q.includes('luxury') || q.includes('fortuner') || q.includes('scorpio') || q.includes('seltos')) {
+      const suvs = FLEET_DATA.filter(v => v.category === 'cars' && (v.name.toLowerCase().includes('thar') || v.name.toLowerCase().includes('scorpio') || v.name.toLowerCase().includes('fortuner') || v.name.toLowerCase().includes('creta') || v.name.toLowerCase().includes('seltos') || v.name.toLowerCase().includes('brezza') || v.name.toLowerCase().includes('punch')));
       return {
         sender: 'bot',
-        text: `🏔️ Looking for power, comfort, & style? Check out our top **SUVs & Luxury Fleet**:`,
+        text: `🏔️ Looking for power, comfort, & style? Check out our top **SUVs & Cars**:`,
         vehicles: suvs.slice(0, 3),
         actionButton: {
-          label: "Explore All SUVs",
-          action: "showCategory('suv')"
+          label: "Explore All Cars & SUVs",
+          action: "showCategory('cars')"
         },
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         suggestions: ["🛡️ Zero Liability Plan", "📍 Airport Delivery", "📜 Undertaking Terms"]
@@ -323,14 +316,14 @@ class DriveXAIAssistant {
 
     // 5. CAR RENTAL GENERAL
     if (q.includes('car') || q.includes('four wheeler') || q.includes('sedan') || q.includes('swift') || q.includes('hatchback')) {
-      const cars = FLEET_DATA.filter(v => v.category === 'car' || v.category === 'suv' || v.category === 'luxury');
+      const cars = FLEET_DATA.filter(v => v.category === 'cars');
       return {
         sender: 'bot',
         text: `🚘 We have a wide range of hatchbacks, sedans, & SUVs available in **${currentCity}**:`,
         vehicles: cars.slice(0, 3),
         actionButton: {
           label: "Browse Full Car Fleet",
-          action: "showCategory('car')"
+          action: "showCategory('cars')"
         },
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         suggestions: ["🚗 Hatchbacks under ₹1500", "⚡ Nexon EV", "📜 Required Docs"]
@@ -461,7 +454,7 @@ class DriveXAIAssistant {
     // Smart default response
     return {
       sender: 'bot',
-      text: `I'm here to help with your rental! You can ask me about:\n\n• **Vehicle recommendations** (e.g. *"Show SUVs under ₹3000"* or *"Rent Honda Activa"*)\n• **City coverage** (e.g. *"Is service in Pune or Goa?"*)\n• **Documents required** (Driving License & Aadhaar rules)\n• **Security deposit & cancellation policy**\n• **Submitting a customer complaint & getting instant solution**`,
+      text: `I'm **Zip**, your AI Assistant! I'm here to help with your rental questions:\n\n• **Vehicle recommendations** (e.g. *"Show SUVs under ₹3000"* or *"Rent Honda Activa"*)\n• **City coverage** (e.g. *"Is service in Pune or Mumbai?"*)\n• **Documents required** (Driving License & Aadhaar rules)\n• **Security deposit & cancellation policy**\n• **Submitting a customer complaint & getting instant solution**`,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       suggestions: [
         "🚗 Cars under ₹2000",
@@ -573,7 +566,6 @@ class DriveXAIAssistant {
         suggestions: ["📦 Track Ticket Status", "📞 Helpline Number", "🚗 Return to Home"]
       });
       this.renderMessages();
-      this.speakText(`Your complaint has been submitted under ticket ID ${ticketId}. Resolution has been generated.`);
     }, 400);
 
     // Show toast notification
@@ -662,9 +654,7 @@ class DriveXAIAssistant {
 
         const botHtml = `
           <div class="flex gap-2.5 items-start max-w-[90%] animate-fade-in">
-            <div class="w-8 h-8 rounded-xl bg-primary text-on-primary flex items-center justify-center text-xs font-bold shrink-0 shadow-sm mt-0.5">
-              🤖
-            </div>
+            <img src="images/zip_icon.svg" alt="Zip" class="w-8 h-8 rounded-full object-contain shrink-0 shadow-sm mt-0.5"/>
             <div class="bg-surface-container-low border border-outline-variant/50 p-3 rounded-2xl rounded-tl-none text-xs text-on-surface leading-relaxed shadow-sm font-body">
               <div>${formattedText}</div>
               ${vehiclesCardHtml}
@@ -722,8 +712,11 @@ class DriveXAIAssistant {
 
 // Global Category Helper for AI Action Buttons
 function showCategory(category) {
-  if (typeof selectCategory === 'function') {
-    selectCategory(category);
+  const cat = (category === 'car' || category === 'suv' || category === 'luxury') ? 'cars' : category;
+  if (typeof filterCategory === 'function') {
+    filterCategory(cat);
+  } else if (typeof selectCategory === 'function') {
+    selectCategory(cat);
   }
   if (typeof navigateTo === 'function') {
     navigateTo('fleet');

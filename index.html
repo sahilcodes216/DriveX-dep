@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DriveX - Rent Cars, Bikes & Scooties On Demand | RENT. RIDE. REPEAT.</title>
   
+  <!-- Favicon & Touch Icons -->
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png"/>
+  <link rel="manifest" href="site.webmanifest"/>
+  <meta name="theme-color" content="#001136"/>
+  
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -13,6 +22,12 @@
   
   <!-- Leaflet Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <!-- Firebase SDK (Auth + Storage + Firestore) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <!-- Tailwind CSS CDN + Config -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -66,49 +81,95 @@
     </button>
   </div>
 
-  <!-- ================= TOP STICKY NAVIGATION ================= -->
-  <header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/60 shadow-sm transition-all duration-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      
-      <!-- Brand Logo -->
-      <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3 group select-none">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-950 via-blue-700 to-sky-500 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300 relative overflow-hidden border border-white/20">
-          <svg class="w-7 h-7 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 18H50C70 18 85 30 85 50C85 70 70 82 50 82H18V18Z" stroke="white" stroke-width="9" stroke-linejoin="round"/>
-            <path d="M28 58L38 42H58L68 58H28Z" fill="white"/>
-            <circle cx="38" cy="64" r="5" fill="#001136"/>
-            <circle cx="58" cy="64" r="5" fill="#001136"/>
-            <path d="M10 50H78" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"/>
-          </svg>
-        </div>
+  <!-- ================= HAMBURGER DRAWER MENU ================= -->
+  <!-- Backdrop Overlay -->
+  <div id="hamburger-drawer-overlay" class="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300 select-none" onclick="closeHamburgerMenu()"></div>
+
+  <!-- Left Sidebar Drawer -->
+  <aside id="hamburger-drawer" class="fixed top-0 left-0 z-[9999] h-full w-72 sm:w-80 bg-surface border-r border-outline-variant/60 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col overflow-y-auto">
+    <!-- Drawer Header -->
+    <div class="p-5 bg-gradient-to-r from-primary to-primary-container text-white flex items-center justify-between border-b border-white/10 shrink-0">
+      <div class="flex items-center gap-2.5 select-none">
+        <img src="images/favicon.png" alt="DriveX Emblem" class="w-9 h-9 object-contain drop-shadow-sm"/>
         <div>
-          <div class="flex items-baseline gap-0.5">
-            <span class="font-headline font-black text-2xl text-primary tracking-tight block leading-none">DRIVE</span>
-            <span class="font-headline font-black text-2.5xl text-blue-600 italic tracking-tighter block leading-none transform -skew-x-6">X</span>
-          </div>
-          <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-1">RENT. RIDE. REPEAT.</span>
+          <span class="font-headline font-black text-lg text-white leading-none block">DRIVE<span class="text-blue-400 italic">X</span></span>
+          <span class="text-[8px] font-black text-secondary tracking-widest uppercase block mt-0.5">RENT. RIDE. REPEAT.</span>
         </div>
+      </div>
+      <button onclick="closeHamburgerMenu()" aria-label="Close menu" class="text-white/80 hover:text-white p-1.5 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+    </div>
+
+    <!-- Drawer Navigation Options -->
+    <div class="p-4 space-y-2 flex-1">
+      <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3 pt-1 pb-1">Main Navigation</div>
+      
+      <a href="#" data-view="home" onclick="closeHamburgerMenu(); navigateTo('home')" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">home</span>
+        <span>Home</span>
       </a>
 
-      <!-- Desktop Nav Links -->
-      <nav class="hidden md:flex items-center gap-2 bg-surface/80 p-1.5 rounded-full border border-outline-variant/40 shadow-sm">
-        <a href="#" data-view="home" class="nav-link text-secondary font-bold border-b-2 border-secondary pb-1 px-3.5 py-2 rounded-lg cursor-pointer">Home</a>
-        <a href="#" data-view="fleet" class="nav-link text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3.5 py-2 rounded-lg transition-all cursor-pointer">Fleet Catalog</a>
-        <a href="#" data-view="why-us" class="nav-link text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3.5 py-2 rounded-lg transition-all cursor-pointer">Why DriveX</a>
-        <a href="#" data-view="bookings" class="nav-link text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3.5 py-2 rounded-lg transition-all cursor-pointer">My Bookings</a>
-      </nav>
+      <a href="#" data-view="fleet" onclick="closeHamburgerMenu(); navigateTo('fleet')" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">directions_car</span>
+        <span>Fleet Catalog</span>
+      </a>
 
-      <!-- Active Location & User Actions -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        
-        <!-- File Complaint Button -->
-        <button onclick="window.aiAssistant.openComplaintModal()" class="hidden md:flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-xs font-bold transition-all active:scale-95 shadow-sm">
-          <span class="material-symbols-outlined text-amber-600 text-sm">report_problem</span>
-          <span>File Complaint</span>
+      <a href="#" data-view="why-us" onclick="closeHamburgerMenu(); navigateTo('why-us')" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">verified_user</span>
+        <span>Why DriveX</span>
+      </a>
+
+      <a href="#" data-view="bookings" onclick="closeHamburgerMenu(); navigateTo('bookings')" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">confirmation_number</span>
+        <span>My Bookings</span>
+      </a>
+
+      <hr class="border-outline-variant/40 my-3"/>
+
+      <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3 pb-1">Grievance & Support</div>
+      
+      <button onclick="closeHamburgerMenu(); window.aiAssistant.openComplaintModal()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-bold bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 transition-all shadow-sm">
+        <span class="material-symbols-outlined text-xl text-amber-600">report_problem</span>
+        <span>File Complaint</span>
+      </button>
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="p-4 border-t border-outline-variant/60 bg-surface-container-low/50 text-xs text-gray-500 text-center shrink-0">
+      <p class="font-semibold text-primary">DriveX Smart Rental Engine</p>
+      <p class="text-[10px] text-gray-400 mt-0.5">Delhi NCR • Maharashtra • Gujarat</p>
+    </div>
+  </aside>
+
+  <!-- ================= TOP STICKY NAVIGATION ================= -->
+  <header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/60 shadow-sm transition-all duration-200">
+    <div class="w-full px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+      
+      <!-- Top Left: Hamburger Button & Brand Logo -->
+      <div class="flex items-center gap-3">
+        <!-- Hamburger Menu Button -->
+        <button id="hamburger-menu-btn" onclick="toggleHamburgerMenu()" title="Open Navigation Menu" class="p-2.5 rounded-2xl bg-surface-container-low hover:bg-surface-container border border-outline-variant/60 text-primary hover:text-secondary transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-sm">
+          <span class="material-symbols-outlined text-2xl">menu</span>
         </button>
 
+        <!-- Brand Logo -->
+        <a href="#" onclick="navigateTo('home')" class="flex items-center gap-2.5 group select-none">
+          <img src="images/favicon.png" alt="DriveX Emblem" class="w-11 h-11 object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-sm"/>
+          <div>
+            <div class="flex items-baseline gap-0.5">
+              <span class="font-headline font-black text-2xl text-primary tracking-tight block leading-none">DRIVE</span>
+              <span class="font-headline font-black text-2.5xl text-blue-600 italic tracking-tighter block leading-none transform -skew-x-6">X</span>
+            </div>
+            <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-1">RENT. RIDE. REPEAT.</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Top Right: Location Pill & User Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
         <!-- Active City Location Pill -->
-        <button onclick="openAddressModal()" id="active-location-btn" title="Click to change location" class="hidden sm:flex items-center gap-1 bg-surface-container-low border border-outline-variant/60 hover:border-secondary px-2.5 py-1 rounded-full text-xs font-semibold text-primary transition-all max-w-[160px] sm:max-w-[210px] cursor-pointer">
+        <button onclick="openAddressModal()" id="active-location-btn" title="Click to change location" class="hidden sm:flex items-center gap-1 bg-surface-container-low border border-outline-variant/60 hover:border-secondary px-2.5 py-1.5 rounded-full text-xs font-semibold text-primary transition-all max-w-[160px] sm:max-w-[210px] cursor-pointer">
           <span class="material-symbols-outlined text-secondary text-sm shrink-0">location_on</span>
           <span id="active-header-city" class="truncate text-[11px] font-semibold text-primary min-w-0">Mumbai Downtown</span>
           <span class="material-symbols-outlined text-xs text-on-surface-variant shrink-0">keyboard_arrow_down</span>
@@ -129,41 +190,28 @@
     <!-- ================= VIEW 1: HOME ================= -->
     <section id="view-home" class="view-section">
       
-      <!-- HERO SECTION -->
-      <div class="relative overflow-hidden hero-gradient text-on-primary py-16 md:py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+      <!-- HERO SECTION WITH CUSTOM BACKGROUND IMAGE -->
+      <div class="relative overflow-hidden hero-drivex-bg text-on-primary py-12 md:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           
-          <!-- Hero Text -->
-          <div class="lg:col-span-7">
-            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold text-orange-300 mb-6 border border-white/20">
-              <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
-              India Operations • Delhi NCR, Maharashtra & Gujarat Hubs with Google Maps Support
+          <!-- LEFT SIDE: Quick Search & Reservation Box (Moved to Left Side in Off-White Space) -->
+          <div class="lg:col-span-6 xl:col-span-5 flex flex-col justify-between">
+            
+            <!-- Live Fleet Status Badge -->
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <div class="inline-flex items-center gap-2 bg-primary/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold text-orange-300 border border-orange-400/30 shadow-md">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Pan-India Live Fleet • 41+ Verified Vehicles</span>
+              </div>
+              <span class="text-[11px] font-bold text-primary hidden sm:inline-flex items-center gap-1 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-gray-200 shadow-sm">
+                <span class="material-symbols-outlined text-xs text-orange-500">speed</span>
+                2-Min Booking
+              </span>
             </div>
-            <h1 class="font-headline font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-tight mb-6">
-              Drive Anywhere in India. <br/>
-              <span class="text-secondary">Rent Scooties, Bikes & Cars</span> On Demand.
-            </h1>
-            <p class="text-blue-100 text-base sm:text-lg max-w-2xl mb-8 leading-relaxed">
-              Doorstep vehicle delivery across Delhi NCR, Maharashtra, and Gujarat with Google Maps district location support.
-            </p>
 
-            <div class="grid grid-cols-3 gap-4 text-xs font-medium text-blue-100 max-w-lg mb-4">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-secondary text-lg">local_shipping</span> Doorstep Delivery
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-secondary text-lg">shield</span> Zero Security Deposit
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-secondary text-lg">pin_drop</span> Google Maps Hubs
-              </div>
-            </div>
-          </div>
-
-          <!-- Quick Search & Reservation Box -->
-          <div class="lg:col-span-5">
-            <div class="bg-surface text-on-surface p-6 sm:p-8 rounded-3xl ambient-shadow border border-outline-variant/50">
-              <h3 class="font-headline font-bold text-xl text-primary mb-4 flex items-center gap-2">
+            <!-- Main Reservation Card -->
+            <div class="bg-white/95 text-on-surface p-6 sm:p-7 rounded-3xl shadow-2xl border border-outline-variant/60 backdrop-blur-md">
+              <h3 class="font-headline font-extrabold text-xl text-primary mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-secondary">search</span>
                 Select Rental Location & Dates
               </h3>
@@ -214,7 +262,34 @@
                   Find Vehicles in Selected City
                 </button>
               </div>
+
+              <!-- Category Quick-Select Pills -->
+              <div class="mt-4 pt-3 border-t border-gray-200">
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Quick Filter Fleet:</div>
+                <div class="grid grid-cols-3 gap-2">
+                  <button type="button" onclick="quickSelectHeroCategory('scooty')" id="hero-pill-scooty" class="hero-cat-pill bg-surface-container-low hover:bg-surface-container border border-outline-variant/60 hover:border-secondary p-2 rounded-xl text-left transition-all cursor-pointer">
+                    <div class="text-xs font-bold text-primary truncate">🛵 Scooties</div>
+                    <div class="text-[9px] text-gray-500 truncate">12 Models • ₹289+</div>
+                  </button>
+
+                  <button type="button" onclick="quickSelectHeroCategory('bike')" id="hero-pill-bike" class="hero-cat-pill bg-surface-container-low hover:bg-surface-container border border-outline-variant/60 hover:border-secondary p-2 rounded-xl text-left transition-all cursor-pointer">
+                    <div class="text-xs font-bold text-primary truncate">🏍️ Bikes</div>
+                    <div class="text-[9px] text-gray-500 truncate">13 Models • ₹349+</div>
+                  </button>
+
+                  <button type="button" onclick="quickSelectHeroCategory('cars')" id="hero-pill-cars" class="hero-cat-pill bg-surface-container-low hover:bg-surface-container border border-outline-variant/60 hover:border-secondary p-2 rounded-xl text-left transition-all cursor-pointer">
+                    <div class="text-xs font-bold text-primary truncate">🚗 Cars & SUVs</div>
+                    <div class="text-[9px] text-gray-500 truncate">16 Models • ₹1,149+</div>
+                  </button>
+                </div>
+              </div>
             </div>
+
+          </div>
+
+          <!-- RIGHT SIDE: Clear View of Background Graphic Collage -->
+          <div class="lg:col-span-6 xl:col-span-7 hidden lg:block min-h-[420px]">
+            <!-- Clear view displaying background_DriveX.png artwork -->
           </div>
 
         </div>
@@ -228,7 +303,7 @@
             <h2 class="font-headline font-extrabold text-3xl text-primary">Featured Fleet</h2>
           </div>
           <button onclick="navigateTo('fleet')" class="text-primary font-bold text-sm hover:text-secondary flex items-center gap-1">
-            View Full Indian Catalog (${FLEET_DATA.length})
+            View Full Indian Catalog (<span id="featured-catalog-count">40+</span>)
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>
@@ -476,7 +551,101 @@
 
           <!-- STEP 2: DELIVERY ADDRESS & MAP -->
           <div id="booking-step-2" class="booking-step-content hidden space-y-6">
+            
+            <!-- Question: Nationality / Residency Status -->
             <div class="bg-surface p-6 rounded-2xl ambient-shadow border border-outline-variant/50">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-secondary">travel_explore</span>
+                <h3 class="font-headline font-bold text-lg text-primary">Are you an International Visitor / Foreign National?</h3>
+              </div>
+              <p class="text-xs text-on-surface-variant mb-4">Please let us know your residency type to assist with delivery and verification requirements.</p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label onclick="setCustomerResidency('indian')" id="residency-option-indian" class="residency-card flex items-center gap-3 p-4 rounded-xl border-2 border-secondary bg-orange-50/40 cursor-pointer transition-all hover:bg-orange-50/70">
+                  <input type="radio" name="customer-residency" value="indian" checked class="w-4 h-4 text-secondary accent-secondary"/>
+                  <div>
+                    <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
+                      <span>🇮🇳</span> Indian Resident
+                    </span>
+                    <span class="text-[11px] text-on-surface-variant">Permanent citizen or resident in India</span>
+                  </div>
+                </label>
+
+                <label onclick="setCustomerResidency('foreigner')" id="residency-option-foreigner" class="residency-card flex items-center gap-3 p-4 rounded-xl border-2 border-outline-variant bg-white cursor-pointer transition-all hover:border-violet-400 hover:bg-violet-50/30">
+                  <input type="radio" name="customer-residency" value="foreigner" class="w-4 h-4 text-violet-600 accent-violet-600"/>
+                  <div>
+                    <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
+                      <span>🌐</span> Foreign National / Tourist
+                    </span>
+                    <span class="text-[11px] text-on-surface-variant">Visiting India (Hotel stay & Visa required)</span>
+                  </div>
+                </label>
+              </div>
+
+              <!-- FOREIGN NATIONAL HOTEL STAY & BILL UPLOAD (Dynamic) -->
+              <div id="foreigner-stay-container" class="hidden mt-6 pt-5 border-t border-violet-200 space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-violet-600">hotel</span>
+                    <div>
+                      <h4 class="font-bold text-sm text-primary">Where are you staying in India?</h4>
+                      <p class="text-[11px] text-on-surface-variant">Please provide your hotel/stay details and upload your hotel bill or booking voucher.</p>
+                    </div>
+                  </div>
+                  <span class="bg-violet-100 text-violet-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Required for Foreigners</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Hotel / Accommodation Name <span class="text-rose-600">*</span></label>
+                    <input type="text" id="foreigner-hotel-name" oninput="syncHotelToDeliveryAddress()" placeholder="e.g. The Taj Mahal Palace / Grand Hyatt" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Room No. & Hotel Address / Area <span class="text-rose-600">*</span></label>
+                    <input type="text" id="foreigner-hotel-address" oninput="syncHotelToDeliveryAddress()" placeholder="e.g. Room 402, Apollo Bunder, Colaba, Mumbai" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                  </div>
+                </div>
+
+                <!-- Proof of Stay: Hotel Bill Upload -->
+                <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-violet-200 hover:border-violet-500 transition-all">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-violet-600">receipt_long</span>
+                      <span class="font-bold text-sm text-primary">Hotel Bill / Booking Voucher Proof <span class="text-rose-600">*</span></span>
+                    </div>
+                    <span id="foreigner-hotel-bill-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending</span>
+                  </div>
+
+                  <input type="file" id="foreigner-hotel-bill-file-input" accept="image/*,.pdf" class="hidden" onchange="handleDocUpload(event, 'foreigner-hotel-bill')"/>
+
+                  <div id="foreigner-hotel-bill-dropzone" onclick="document.getElementById('foreigner-hotel-bill-file-input').click()" class="bg-violet-50/40 p-4 rounded-xl border border-violet-200/60 text-center cursor-pointer hover:bg-violet-100/40 transition-all flex flex-col items-center justify-center min-h-[100px]">
+                    <span class="material-symbols-outlined text-2xl text-violet-600 mb-1">cloud_upload</span>
+                    <span class="font-semibold text-xs text-primary block">Click to Upload Hotel Bill or Booking Voucher</span>
+                    <span class="text-[10px] text-on-surface-variant">JPG, PNG or PDF (Max 10MB)</span>
+                  </div>
+
+                  <div id="foreigner-hotel-bill-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">check_circle</span> Hotel Bill Uploaded
+                      </span>
+                      <button type="button" onclick="clearDocUpload('foreigner-hotel-bill')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                    </div>
+                    <img id="foreigner-hotel-bill-preview-img" src="" alt="Hotel Bill Preview" class="w-full h-28 object-cover rounded-lg border border-outline-variant"/>
+                  </div>
+
+                  <div class="mt-2 flex justify-end">
+                    <button type="button" onclick="loadSampleDoc('foreigner-hotel-bill')" class="text-[10px] font-semibold text-violet-600 hover:underline flex items-center gap-1">
+                      <span class="material-symbols-outlined text-xs">auto_fix_high</span> Demo Sample Bill
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Delivery Address Card (Shown for Indian Residents, hidden for Foreigners) -->
+            <div id="indian-delivery-address-card" class="bg-surface p-6 rounded-2xl ambient-shadow border border-outline-variant/50">
               <h3 class="font-headline font-bold text-xl text-primary mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-secondary">location_city</span>
                 Delhi NCR, Maharashtra & Gujarat Delivery Address
@@ -495,7 +664,7 @@
 
             <div class="flex gap-4">
               <button onclick="renderBookingStep(1)" class="w-1/3 border border-outline-variant text-primary font-bold py-4 rounded-2xl hover:bg-surface-container-low text-sm">Back</button>
-              <button onclick="renderBookingStep(3)" class="w-2/3 bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-4 rounded-2xl shadow-lg text-base flex items-center justify-center gap-2">
+              <button onclick="proceedToKYCStep()" class="w-2/3 bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-4 rounded-2xl shadow-lg text-base flex items-center justify-center gap-2">
                 Proceed to Undertaking & KYC
                 <span class="material-symbols-outlined">arrow_forward</span>
               </button>
@@ -665,98 +834,343 @@
                 </div>
               </div>
 
-              <!-- MANDATORY DOCUMENT UPLOADS (AADHAR & DRIVING LICENSE) -->
-              <div class="border-t-2 border-dashed border-secondary/30 pt-6">
-                <div class="flex items-center justify-between mb-4">
+              <!-- ========== IDENTITY VERIFICATION SECTION ========== -->
+              <div class="border-t-2 border-dashed border-blue-300/50 pt-6 mt-6">
+                <div class="flex items-center justify-between mb-5">
                   <div>
                     <h4 class="font-headline font-bold text-lg text-primary flex items-center gap-2">
-                      <span class="material-symbols-outlined text-secondary">cloud_upload</span>
-                      UPLOAD IDENTITY & LICENSE DOCUMENTS
+                      <span class="material-symbols-outlined text-secondary">verified_user</span>
+                      IDENTITY VERIFICATION
                     </h4>
-                    <p class="text-xs text-on-surface-variant">Please upload clear photos of your Aadhar Card and Driving License for verification.</p>
+                    <p class="text-xs text-on-surface-variant">Select your nationality type and provide verification details with supporting documents.</p>
                   </div>
-                  <span class="bg-secondary/10 text-secondary text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Mandatory Verification</span>
+                  <span class="bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Required</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Nationality Toggle Switch -->
+                <div class="flex items-center gap-2 bg-surface-container-low p-1.5 rounded-2xl border border-outline-variant/50 mb-6 w-fit">
+                  <button onclick="switchVerificationType('indian')" id="verify-tab-indian" class="verify-tab-btn bg-primary text-on-primary font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">flag</span>
+                    Indian Citizen
+                  </button>
+                  <button onclick="switchVerificationType('foreigner')" id="verify-tab-foreigner" class="verify-tab-btn bg-surface-container-low text-on-surface-variant font-medium px-5 py-2.5 rounded-xl text-xs hover:bg-surface-container transition-all flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">public</span>
+                    Foreign National
+                  </button>
+                </div>
+
+                <!-- ===== INDIAN CITIZEN VERIFICATION ===== -->
+                <div id="verify-indian-section" class="space-y-5">
                   
-                  <!-- UPLOAD 1: AADHAR CARD PHOTO -->
-                  <div class="bg-surface-container-low p-5 rounded-2xl border-2 border-dashed border-outline-variant hover:border-secondary transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                      <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-secondary">badge</span>
-                        <span class="font-bold text-sm text-primary">Aadhar Card Photo <span class="text-rose-600">*</span></span>
+                  <!-- Personal Verification Details -->
+                  <div class="bg-gradient-to-br from-blue-50/60 to-surface-container-low p-5 rounded-2xl border border-blue-200/60">
+                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-blue-200/50">
+                      <span class="material-symbols-outlined text-secondary text-lg">person_check</span>
+                      <h5 class="font-headline font-bold text-sm text-primary uppercase tracking-wider">Personal Verification Details</h5>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Full Name <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-indian-name" placeholder="Enter full name as on Aadhar" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
                       </div>
-                      <span id="aadhar-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending Upload</span>
-                    </div>
 
-                    <input type="file" id="aadhar-file-input" accept="image/*" class="hidden" onchange="handleDocUpload(event, 'aadhar')"/>
-
-                    <!-- Drag & Drop / Upload Target Box -->
-                    <div id="aadhar-dropzone" onclick="document.getElementById('aadhar-file-input').click()" class="bg-white p-4 rounded-xl border border-outline-variant/60 text-center cursor-pointer hover:bg-orange-50/30 transition-all flex flex-col items-center justify-center min-h-[120px]">
-                      <span class="material-symbols-outlined text-3xl text-secondary mb-1">add_a_photo</span>
-                      <span class="font-semibold text-xs text-primary block">Click or Drag Aadhar Card Photo</span>
-                      <span class="text-[11px] text-on-surface-variant">Supports JPG, PNG or PDF (Max 10MB)</span>
-                    </div>
-
-                    <!-- Uploaded Image Preview Box -->
-                    <div id="aadhar-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
-                      <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
-                          <span class="material-symbols-outlined text-sm">check_circle</span> Aadhar Card Uploaded
-                        </span>
-                        <button type="button" onclick="clearDocUpload('aadhar')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Age <span class="text-rose-600">*</span></label>
+                        <input type="number" id="verify-indian-age" placeholder="e.g. 25" min="18" max="99" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
                       </div>
-                      <img id="aadhar-preview-img" src="" alt="Aadhar Card Preview" class="w-full h-32 object-cover rounded-lg border border-outline-variant"/>
-                    </div>
 
-                    <!-- Quick Sample Photo Loader for testing -->
-                    <div class="mt-3 flex justify-end">
-                      <button type="button" onclick="loadSampleDoc('aadhar')" class="text-[11px] font-semibold text-secondary hover:underline flex items-center gap-1">
-                        <span class="material-symbols-outlined text-xs">auto_fix_high</span> Click to Demo Sample Aadhar
-                      </button>
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Father's Name <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-indian-father" placeholder="Enter father's full name" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                      </div>
+
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Mother's Name <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-indian-mother" placeholder="Enter mother's full name" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-secondary focus:outline-none"/>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- UPLOAD 2: DRIVING LICENSE PHOTO -->
-                  <div class="bg-surface-container-low p-5 rounded-2xl border-2 border-dashed border-outline-variant hover:border-secondary transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                      <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-secondary">branding_watermark</span>
-                        <span class="font-bold text-sm text-primary">Driving License Photo <span class="text-rose-600">*</span></span>
+                  <!-- Indian Document Uploads: Aadhar Card & Driving License -->
+                  <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/60">
+                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-outline-variant/50">
+                      <span class="material-symbols-outlined text-secondary text-lg">upload_file</span>
+                      <h5 class="font-headline font-bold text-sm text-primary uppercase tracking-wider">Upload Verification Documents (Indian)</h5>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                      <!-- Indian Upload: Aadhar Card -->
+                      <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-outline-variant hover:border-secondary transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-secondary">badge</span>
+                            <span class="font-bold text-sm text-primary">Aadhar Card <span class="text-rose-600">*</span></span>
+                          </div>
+                          <span id="verify-indian-aadhar-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending</span>
+                        </div>
+
+                        <input type="file" id="verify-indian-aadhar-file-input" accept="image/*,.pdf" class="hidden" onchange="handleDocUpload(event, 'verify-indian-aadhar')"/>
+
+                        <div id="verify-indian-aadhar-dropzone" onclick="document.getElementById('verify-indian-aadhar-file-input').click()" class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/60 text-center cursor-pointer hover:bg-orange-50/30 transition-all flex flex-col items-center justify-center min-h-[100px]">
+                          <span class="material-symbols-outlined text-2xl text-secondary mb-1">add_a_photo</span>
+                          <span class="font-semibold text-xs text-primary block">Click to Upload Aadhar Card</span>
+                          <span class="text-[10px] text-on-surface-variant">JPG, PNG or PDF (Max 10MB)</span>
+                        </div>
+
+                        <div id="verify-indian-aadhar-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                              <span class="material-symbols-outlined text-sm">check_circle</span> Aadhar Uploaded
+                            </span>
+                            <button type="button" onclick="clearDocUpload('verify-indian-aadhar')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                          </div>
+                          <img id="verify-indian-aadhar-preview-img" src="" alt="Aadhar Preview" class="w-full h-28 object-cover rounded-lg border border-outline-variant"/>
+                        </div>
+
+                        <div class="mt-2 flex justify-end">
+                          <button type="button" onclick="loadSampleDoc('verify-indian-aadhar')" class="text-[10px] font-semibold text-secondary hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs">auto_fix_high</span> Demo Sample
+                          </button>
+                        </div>
                       </div>
-                      <span id="dl-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending Upload</span>
-                    </div>
 
-                    <input type="file" id="dl-file-input" accept="image/*" class="hidden" onchange="handleDocUpload(event, 'dl')"/>
+                      <!-- Indian Upload: Driving License -->
+                      <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-outline-variant hover:border-secondary transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-secondary">directions_car</span>
+                            <span class="font-bold text-sm text-primary">Driving License <span class="text-rose-600">*</span></span>
+                          </div>
+                          <span id="verify-indian-dl-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending</span>
+                        </div>
 
-                    <!-- Drag & Drop / Upload Target Box -->
-                    <div id="dl-dropzone" onclick="document.getElementById('dl-file-input').click()" class="bg-white p-4 rounded-xl border border-outline-variant/60 text-center cursor-pointer hover:bg-orange-50/30 transition-all flex flex-col items-center justify-center min-h-[120px]">
-                      <span class="material-symbols-outlined text-3xl text-secondary mb-1">directions_car</span>
-                      <span class="font-semibold text-xs text-primary block">Click or Drag Driving License Photo</span>
-                      <span class="text-[11px] text-on-surface-variant">Supports JPG, PNG or PDF (Max 10MB)</span>
-                    </div>
+                        <input type="file" id="verify-indian-dl-file-input" accept="image/*,.pdf" class="hidden" onchange="handleDocUpload(event, 'verify-indian-dl')"/>
 
-                    <!-- Uploaded Image Preview Box -->
-                    <div id="dl-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
-                      <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
-                          <span class="material-symbols-outlined text-sm">check_circle</span> License Uploaded
-                        </span>
-                        <button type="button" onclick="clearDocUpload('dl')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                        <div id="verify-indian-dl-dropzone" onclick="document.getElementById('verify-indian-dl-file-input').click()" class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/60 text-center cursor-pointer hover:bg-orange-50/30 transition-all flex flex-col items-center justify-center min-h-[100px]">
+                          <span class="material-symbols-outlined text-2xl text-secondary mb-1">directions_car</span>
+                          <span class="font-semibold text-xs text-primary block">Click to Upload Driving License</span>
+                          <span class="text-[10px] text-on-surface-variant">JPG, PNG or PDF (Max 10MB)</span>
+                        </div>
+
+                        <div id="verify-indian-dl-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                              <span class="material-symbols-outlined text-sm">check_circle</span> License Uploaded
+                            </span>
+                            <button type="button" onclick="clearDocUpload('verify-indian-dl')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                          </div>
+                          <img id="verify-indian-dl-preview-img" src="" alt="Driving License Preview" class="w-full h-28 object-cover rounded-lg border border-outline-variant"/>
+                        </div>
+
+                        <div class="mt-2 flex justify-end">
+                          <button type="button" onclick="loadSampleDoc('verify-indian-dl')" class="text-[10px] font-semibold text-secondary hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs">auto_fix_high</span> Demo Sample
+                          </button>
+                        </div>
                       </div>
-                      <img id="dl-preview-img" src="" alt="Driving License Preview" class="w-full h-32 object-cover rounded-lg border border-outline-variant"/>
-                    </div>
 
-                    <!-- Quick Sample Photo Loader for testing -->
-                    <div class="mt-3 flex justify-end">
-                      <button type="button" onclick="loadSampleDoc('dl')" class="text-[11px] font-semibold text-secondary hover:underline flex items-center gap-1">
-                        <span class="material-symbols-outlined text-xs">auto_fix_high</span> Click to Demo Sample License
-                      </button>
+                      <!-- Indian Upload: Customer Photo / Selfie -->
+                      <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-outline-variant hover:border-secondary transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-secondary">face</span>
+                            <span class="font-bold text-sm text-primary">Customer Photo <span class="text-rose-600">*</span></span>
+                          </div>
+                          <span id="verify-indian-photo-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending</span>
+                        </div>
+
+                        <input type="file" id="verify-indian-photo-file-input" accept="image/*" class="hidden" onchange="handleDocUpload(event, 'verify-indian-photo')"/>
+
+                        <div id="verify-indian-photo-dropzone" onclick="document.getElementById('verify-indian-photo-file-input').click()" class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/60 text-center cursor-pointer hover:bg-orange-50/30 transition-all flex flex-col items-center justify-center min-h-[100px]">
+                          <span class="material-symbols-outlined text-2xl text-secondary mb-1">camera_front</span>
+                          <span class="font-semibold text-xs text-primary block">Click to Upload Photo / Selfie</span>
+                          <span class="text-[10px] text-on-surface-variant">JPG, PNG (Max 10MB)</span>
+                        </div>
+
+                        <div id="verify-indian-photo-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                              <span class="material-symbols-outlined text-sm">check_circle</span> Photo Uploaded
+                            </span>
+                            <button type="button" onclick="clearDocUpload('verify-indian-photo')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                          </div>
+                          <img id="verify-indian-photo-preview-img" src="" alt="Customer Photo Preview" class="w-full h-28 object-cover rounded-lg border border-outline-variant"/>
+                        </div>
+
+                        <div class="mt-2 flex justify-end">
+                          <button type="button" onclick="loadSampleDoc('verify-indian-photo')" class="text-[10px] font-semibold text-secondary hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs">auto_fix_high</span> Demo Sample
+                          </button>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
-
                 </div>
+
+                <!-- ===== FOREIGNER VERIFICATION ===== -->
+                <div id="verify-foreigner-section" class="hidden space-y-5">
+                  
+                  <!-- Foreigner Personal Details -->
+                  <div class="bg-gradient-to-br from-violet-50/60 to-surface-container-low p-5 rounded-2xl border border-violet-200/60">
+                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-violet-200/50">
+                      <span class="material-symbols-outlined text-violet-600 text-lg">public</span>
+                      <h5 class="font-headline font-bold text-sm text-primary uppercase tracking-wider">Foreign National Verification Details</h5>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Full Name (as on Passport) <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-foreigner-name" placeholder="Enter full name as on passport" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                      </div>
+
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Age <span class="text-rose-600">*</span></label>
+                        <input type="number" id="verify-foreigner-age" placeholder="e.g. 30" min="18" max="99" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                      </div>
+
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Father's Name <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-foreigner-father" placeholder="Enter father's full name" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                      </div>
+
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Mother's Name <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-foreigner-mother" placeholder="Enter mother's full name" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                      </div>
+
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Nationality <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-foreigner-nationality" placeholder="e.g. American, British, German" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                      </div>
+
+                      <div>
+                        <label class="block font-bold text-on-surface-variant uppercase tracking-wider mb-1">Passport Number <span class="text-rose-600">*</span></label>
+                        <input type="text" id="verify-foreigner-passport-num" placeholder="e.g. A12345678" class="w-full bg-white border border-outline-variant rounded-xl px-3.5 py-2.5 font-semibold text-sm text-primary focus:ring-2 focus:ring-violet-500 focus:outline-none"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Foreigner Document Uploads: Passport & Visa -->
+                  <div class="bg-surface-container-low p-5 rounded-2xl border border-violet-200/40">
+                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-violet-200/40">
+                      <span class="material-symbols-outlined text-violet-600 text-lg">upload_file</span>
+                      <h5 class="font-headline font-bold text-sm text-primary uppercase tracking-wider">Upload Verification Documents (Foreigner)</h5>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                      <!-- Foreigner Upload: Passport -->
+                      <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-violet-200 hover:border-violet-500 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-violet-600">menu_book</span>
+                            <span class="font-bold text-sm text-primary">Passport <span class="text-rose-600">*</span></span>
+                          </div>
+                          <span id="verify-foreigner-passport-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending</span>
+                        </div>
+
+                        <input type="file" id="verify-foreigner-passport-file-input" accept="image/*,.pdf" class="hidden" onchange="handleDocUpload(event, 'verify-foreigner-passport')"/>
+
+                        <div id="verify-foreigner-passport-dropzone" onclick="document.getElementById('verify-foreigner-passport-file-input').click()" class="bg-violet-50/40 p-4 rounded-xl border border-violet-200/60 text-center cursor-pointer hover:bg-violet-100/40 transition-all flex flex-col items-center justify-center min-h-[100px]">
+                          <span class="material-symbols-outlined text-2xl text-violet-600 mb-1">menu_book</span>
+                          <span class="font-semibold text-xs text-primary block">Click to Upload Passport</span>
+                          <span class="text-[10px] text-on-surface-variant">JPG, PNG or PDF (Max 10MB)</span>
+                        </div>
+
+                        <div id="verify-foreigner-passport-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                              <span class="material-symbols-outlined text-sm">check_circle</span> Passport Uploaded
+                            </span>
+                            <button type="button" onclick="clearDocUpload('verify-foreigner-passport')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                          </div>
+                          <img id="verify-foreigner-passport-preview-img" src="" alt="Passport Preview" class="w-full h-28 object-cover rounded-lg border border-outline-variant"/>
+                        </div>
+
+                        <div class="mt-2 flex justify-end">
+                          <button type="button" onclick="loadSampleDoc('verify-foreigner-passport')" class="text-[10px] font-semibold text-violet-600 hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs">auto_fix_high</span> Demo Sample
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Foreigner Upload: Visa / E-Visa -->
+                      <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-violet-200 hover:border-violet-500 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-violet-600">airplane_ticket</span>
+                            <span class="font-bold text-sm text-primary">Visa / E-Visa <span class="text-rose-600">*</span></span>
+                          </div>
+                          <span id="verify-foreigner-visa-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending</span>
+                        </div>
+
+                        <input type="file" id="verify-foreigner-visa-file-input" accept="image/*,.pdf" class="hidden" onchange="handleDocUpload(event, 'verify-foreigner-visa')"/>
+
+                        <div id="verify-foreigner-visa-dropzone" onclick="document.getElementById('verify-foreigner-visa-file-input').click()" class="bg-violet-50/40 p-4 rounded-xl border border-violet-200/60 text-center cursor-pointer hover:bg-violet-100/40 transition-all flex flex-col items-center justify-center min-h-[100px]">
+                          <span class="material-symbols-outlined text-2xl text-violet-600 mb-1">policy</span>
+                          <span class="font-semibold text-xs text-primary block">Click to Upload Visa / E-Visa</span>
+                          <span class="text-[10px] text-on-surface-variant">JPG, PNG or PDF (Max 10MB)</span>
+                        </div>
+
+                        <div id="verify-foreigner-visa-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                              <span class="material-symbols-outlined text-sm">check_circle</span> Visa Uploaded
+                            </span>
+                            <button type="button" onclick="clearDocUpload('verify-foreigner-visa')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                          </div>
+                          <img id="verify-foreigner-visa-preview-img" src="" alt="Visa Preview" class="w-full h-28 object-cover rounded-lg border border-outline-variant"/>
+                        </div>
+
+                        <div class="mt-2 flex justify-end">
+                          <button type="button" onclick="loadSampleDoc('verify-foreigner-visa')" class="text-[10px] font-semibold text-violet-600 hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs">auto_fix_high</span> Demo Sample
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Foreigner Upload: Customer Photo / Selfie -->
+                      <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-violet-200 hover:border-violet-500 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-violet-600">face</span>
+                            <span class="font-bold text-sm text-primary">Customer Photo <span class="text-rose-600">*</span></span>
+                          </div>
+                          <span id="verify-foreigner-photo-upload-status" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">Pending</span>
+                        </div>
+
+                        <input type="file" id="verify-foreigner-photo-file-input" accept="image/*" class="hidden" onchange="handleDocUpload(event, 'verify-foreigner-photo')"/>
+
+                        <div id="verify-foreigner-photo-dropzone" onclick="document.getElementById('verify-foreigner-photo-file-input').click()" class="bg-violet-50/40 p-4 rounded-xl border border-violet-200/60 text-center cursor-pointer hover:bg-violet-100/40 transition-all flex flex-col items-center justify-center min-h-[100px]">
+                          <span class="material-symbols-outlined text-2xl text-violet-600 mb-1">camera_front</span>
+                          <span class="font-semibold text-xs text-primary block">Click to Upload Photo / Selfie</span>
+                          <span class="text-[10px] text-on-surface-variant">JPG, PNG (Max 10MB)</span>
+                        </div>
+
+                        <div id="verify-foreigner-photo-preview-box" class="hidden mt-3 bg-white p-3 rounded-xl border border-emerald-300">
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                              <span class="material-symbols-outlined text-sm">check_circle</span> Photo Uploaded
+                            </span>
+                            <button type="button" onclick="clearDocUpload('verify-foreigner-photo')" class="text-rose-600 hover:text-rose-800 font-bold text-xs">Remove</button>
+                          </div>
+                          <img id="verify-foreigner-photo-preview-img" src="" alt="Customer Photo Preview" class="w-full h-28 object-cover rounded-lg border border-outline-variant"/>
+                        </div>
+
+                        <div class="mt-2 flex justify-end">
+                          <button type="button" onclick="loadSampleDoc('verify-foreigner-photo')" class="text-[10px] font-semibold text-violet-600 hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs">auto_fix_high</span> Demo Sample
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
             </div>
@@ -837,21 +1251,6 @@
                         Wallets (Paytm / Mobikwik / Amazon Pay / Freecharge)
                       </span>
                       <span class="text-xs text-on-surface-variant">Instant 1-click checkout from linked wallets</span>
-                    </div>
-                  </div>
-                </label>
-
-                <!-- Option 5: Cash on Delivery / Pay at Pickup -->
-                <label class="flex items-center justify-between p-4 border border-outline-variant hover:border-secondary bg-surface-container-low rounded-2xl cursor-pointer transition-all">
-                  <div class="flex items-center gap-3">
-                    <input type="radio" name="payment" value="cod" onchange="setPaymentMethod('cod')" class="w-4 h-4 text-secondary"/>
-                    <div>
-                      <span class="font-bold text-sm text-primary block flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-secondary text-base">handshake</span>
-                        Pay at Delivery / Pickup (Cash / POS Card Swipe)
-                        <span class="bg-blue-100 text-blue-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">PAY AT PICKUP</span>
-                      </span>
-                      <span class="text-xs text-on-surface-variant">Pay when vehicle executive arrives at your doorstep</span>
                     </div>
                   </div>
                 </label>
@@ -956,9 +1355,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
       <div>
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-900 to-sky-500 text-white flex items-center justify-center font-bold shadow-md">
-            <span class="font-headline font-black text-xl">D<span class="text-sky-300 italic">X</span></span>
-          </div>
+          <img src="images/favicon.png" alt="DriveX Emblem" class="w-10 h-10 object-contain drop-shadow-md rounded-full bg-white p-0.5"/>
           <div>
             <span class="font-headline font-black text-xl tracking-tight text-white block leading-none">DRIVEX</span>
             <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-0.5">RENT. RIDE. REPEAT.</span>
@@ -976,6 +1373,10 @@
   <!-- ================= MODALS ================= -->
 
   <!-- REAL PHONE OTP LOGIN MODAL -->
+  <!-- Firebase reCAPTCHA Container (invisible, required by Firebase Phone Auth) -->
+  <div id="recaptcha-container"></div>
+
+  <!-- LOGIN MODAL (FIREBASE PHONE AUTH) -->
   <div id="login-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-surface rounded-3xl p-8 max-w-md w-full ambient-shadow relative animate-fade-in">
       <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
@@ -983,59 +1384,107 @@
       </button>
 
       <div class="text-center mb-6">
-        <div class="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
+        <div class="w-14 h-14 bg-gradient-to-br from-primary to-blue-700 text-on-primary rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
           <span class="material-symbols-outlined text-3xl">smartphone</span>
         </div>
         <h3 class="font-headline font-bold text-2xl text-primary">Login / Register</h3>
-        <p class="text-xs text-on-surface-variant">Enter your 10-digit Indian mobile number to receive a REAL SMS OTP code.</p>
+        <p class="text-xs text-on-surface-variant">Enter your mobile number to receive a <strong class="text-emerald-700">real SMS OTP</strong> via Firebase Authentication.</p>
+      </div>
+
+      <!-- Firebase Config Notice -->
+      <div id="firebase-config-notice" class="bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold p-3 rounded-xl mb-4 hidden">
+        <div class="flex items-start gap-2">
+          <span class="material-symbols-outlined text-amber-600 text-sm mt-0.5">warning</span>
+          <div>
+            <span class="font-bold block mb-0.5">Firebase Not Configured</span>
+            <span class="font-normal">Add your Firebase config in <code class="bg-amber-100 px-1 rounded">js/firebase-auth.js</code> to enable real SMS OTP. Currently using demo mode.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Display -->
+      <div id="login-error-display" class="hidden bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold p-3 rounded-xl mb-4">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-rose-500 text-sm">error</span>
+          <span id="login-error-text">Error message here</span>
+        </div>
       </div>
 
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-on-surface-variant mb-1">Mobile Phone Number (India)</label>
+          <label class="block text-xs font-semibold text-on-surface-variant mb-1">Mobile Phone Number</label>
           <div class="flex gap-2">
             <span class="bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-sm font-bold flex items-center text-primary">+91</span>
-            <input type="tel" id="user-phone-input" value="9876543210" placeholder="98765 43210" maxlength="10" required class="flex-1 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-sm font-bold tracking-wider"/>
+            <input type="tel" id="user-phone-input" placeholder="98765 43210" maxlength="10" required class="flex-1 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-sm font-bold tracking-wider focus:ring-2 focus:ring-secondary focus:outline-none"/>
           </div>
+          <p class="text-[10px] text-on-surface-variant mt-1.5 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs text-emerald-600">lock</span>
+            Secured by Firebase Authentication &amp; Google reCAPTCHA
+          </p>
         </div>
 
-        <button onclick="sendRealSmsOtp()" class="w-full bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-3.5 rounded-xl shadow-md text-sm transition-all flex items-center justify-center gap-2">
-          <span class="material-symbols-outlined text-sm">sms</span>
-          Send Real SMS OTP Code
+        <button id="send-otp-btn" onclick="sendRealSmsOtp()" class="w-full bg-secondary hover:bg-secondary-hover text-on-secondary font-bold py-3.5 rounded-xl shadow-md text-sm transition-all flex items-center justify-center gap-2 relative">
+          <span id="send-otp-btn-content" class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">sms</span>
+            Send OTP via SMS
+          </span>
+          <span id="send-otp-btn-loading" class="hidden flex items-center gap-2">
+            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            Sending OTP...
+          </span>
         </button>
+      </div>
+
+      <div class="mt-5 pt-4 border-t border-outline-variant/50 text-center">
+        <p class="text-[10px] text-on-surface-variant">By continuing, you agree to DriveX <a href="#" class="text-secondary font-bold hover:underline">Terms of Service</a> and <a href="#" class="text-secondary font-bold hover:underline">Privacy Policy</a>.</p>
       </div>
     </div>
   </div>
 
-  <!-- OTP VERIFICATION MODAL -->
+  <!-- OTP VERIFICATION MODAL (FIREBASE) -->
   <div id="otp-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-surface rounded-3xl p-8 max-w-md w-full ambient-shadow relative animate-fade-in text-center">
       <button onclick="closeOtpModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
         <span class="material-symbols-outlined">close</span>
       </button>
 
-      <div class="w-14 h-14 bg-orange-100 text-secondary rounded-2xl flex items-center justify-center mx-auto mb-3">
+      <div class="w-14 h-14 bg-gradient-to-br from-orange-100 to-amber-200 text-secondary rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
         <span class="material-symbols-outlined text-3xl">mark_email_unread</span>
       </div>
-      <h3 class="font-headline font-bold text-2xl text-primary mb-1">Enter 6-Digit SMS OTP</h3>
-      <p class="text-xs text-on-surface-variant mb-3">SMS OTP Sent to <span id="otp-sent-phone-display" class="font-bold text-primary">+91 9876543210</span></p>
+      <h3 class="font-headline font-bold text-2xl text-primary mb-1">Verify Your Phone</h3>
+      <p class="text-xs text-on-surface-variant mb-1">A 6-digit code was sent via SMS to</p>
+      <p class="text-sm font-bold text-primary mb-4" id="otp-sent-phone-display">+91 98765 43210</p>
 
-      <!-- Instant Real SMS Simulation Banner -->
-      <div id="otp-real-simulated-banner" class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold py-2 px-3 rounded-xl mb-4 text-center">
-        [REAL SMS GATEWAY TRIGGERED] OTP: 894201
+      <!-- Status Banner -->
+      <div id="otp-real-simulated-banner" class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold py-2.5 px-3 rounded-xl mb-4 text-center flex items-center justify-center gap-1.5">
+        <span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+        SMS sent successfully! Check your messages.
       </div>
 
-      <div class="flex justify-center gap-2 mb-6">
-        <input type="text" maxlength="1" value="8" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
-        <input type="text" maxlength="1" value="9" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
-        <input type="text" maxlength="1" value="4" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
-        <input type="text" maxlength="1" value="2" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
-        <input type="text" maxlength="1" value="0" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
-        <input type="text" maxlength="1" value="1" class="otp-digit-input w-11 h-12 text-center text-xl font-bold bg-surface-container-low border-2 border-secondary rounded-xl"/>
+      <!-- OTP Error Display -->
+      <div id="otp-error-display" class="hidden bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold p-3 rounded-xl mb-4">
+        <div class="flex items-center gap-2 justify-center">
+          <span class="material-symbols-outlined text-rose-500 text-sm">error</span>
+          <span id="otp-error-text">Incorrect OTP</span>
+        </div>
       </div>
 
-      <button onclick="verifyOtpSubmit()" class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-3.5 rounded-xl text-sm mb-4">
-        Verify Phone & Continue
+      <!-- OTP Input Boxes -->
+      <div class="flex justify-center gap-2.5 mb-6">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit-input w-12 h-14 text-center text-xl font-bold bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-secondary focus:ring-2 focus:ring-secondary/30 focus:outline-none transition-all" oninput="handleOtpInput(this, 0)" onkeydown="handleOtpKeydown(event, 0)" onfocus="this.select()"/>
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit-input w-12 h-14 text-center text-xl font-bold bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-secondary focus:ring-2 focus:ring-secondary/30 focus:outline-none transition-all" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKeydown(event, 1)" onfocus="this.select()"/>
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit-input w-12 h-14 text-center text-xl font-bold bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-secondary focus:ring-2 focus:ring-secondary/30 focus:outline-none transition-all" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKeydown(event, 2)" onfocus="this.select()"/>
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit-input w-12 h-14 text-center text-xl font-bold bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-secondary focus:ring-2 focus:ring-secondary/30 focus:outline-none transition-all" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKeydown(event, 3)" onfocus="this.select()"/>
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit-input w-12 h-14 text-center text-xl font-bold bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-secondary focus:ring-2 focus:ring-secondary/30 focus:outline-none transition-all" oninput="handleOtpInput(this, 4)" onkeydown="handleOtpKeydown(event, 4)" onfocus="this.select()"/>
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit-input w-12 h-14 text-center text-xl font-bold bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-secondary focus:ring-2 focus:ring-secondary/30 focus:outline-none transition-all" oninput="handleOtpInput(this, 5)" onkeydown="handleOtpKeydown(event, 5)" onfocus="this.select()"/>
+      </div>
+
+      <button id="verify-otp-btn" onclick="verifyOtpSubmit()" class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-3.5 rounded-xl text-sm mb-4 flex items-center justify-center gap-2 transition-all">
+        <span id="verify-otp-btn-content">Verify Phone & Continue</span>
+        <span id="verify-otp-btn-loading" class="hidden flex items-center gap-2">
+          <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          Verifying...
+        </span>
       </button>
       <div id="otp-resend-timer" class="text-xs text-on-surface-variant font-medium">Resend OTP in 60s</div>
     </div>
@@ -1057,7 +1506,7 @@
       <!-- Leaflet Interactive Map Container -->
       <div class="relative mb-4">
         <div id="leaflet-location-map"></div>
-        <button onclick="detectCurrentGPSLocation()" class="absolute bottom-3 right-3 z-10 bg-white text-primary hover:bg-surface-container-low px-3 py-2 rounded-xl text-xs font-bold shadow-lg border border-outline-variant flex items-center gap-1">
+        <button onclick="detectCurrentGPSLocation()" style="z-index: 1000;" class="absolute bottom-3 right-3 bg-white text-primary hover:bg-surface-container-low px-3 py-2 rounded-xl text-xs font-bold shadow-lg border border-outline-variant flex items-center gap-1 cursor-pointer">
           <span class="material-symbols-outlined text-secondary text-sm">my_location</span>
           Detect My Current GPS
         </button>
@@ -1202,7 +1651,7 @@
         </div>
         <div>
           <h3 class="font-headline font-bold text-xl text-primary leading-tight">Customer Grievance & Complaint Desk</h3>
-          <p class="text-xs text-on-surface-variant">Write your issue & DriveBot AI will provide an instant resolution</p>
+          <p class="text-xs text-on-surface-variant">Write your issue & Zip AI will provide an instant resolution</p>
         </div>
       </div>
 
@@ -1244,7 +1693,7 @@
 
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-[11px] text-amber-800 flex items-start gap-2">
           <span class="material-symbols-outlined text-amber-600 text-base shrink-0">bolt</span>
-          <span>DriveBot AI will analyze your grievance immediately, generate a priority tracking ticket ID, and issue an instant automated solution or dispatch roadside assistance!</span>
+          <span>Zip AI will analyze your grievance immediately, generate a priority tracking ticket ID, and issue an instant automated solution or dispatch roadside assistance!</span>
         </div>
 
         <div class="flex gap-3 pt-2">
@@ -1564,20 +2013,20 @@
 
   <div id="toast-container"></div>
 
-  <!-- ================= DRIVENA AI ASSISTANT WIDGET & DRAWER ================= -->
+  <!-- ================= DRIVEX AI ASSISTANT WIDGET & DRAWER ================= -->
   <!-- Floating AI Assistant Launcher Button -->
-  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-    <div id="ai-trigger-tooltip" class="hidden sm:flex items-center gap-2 bg-primary text-on-primary text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-white/20 animate-fade-in pointer-events-none">
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 ai-trigger-container group">
+    <div id="ai-trigger-tooltip" class="hidden sm:flex items-center gap-2 bg-primary text-on-primary text-xs font-semibold px-3.5 py-2 rounded-full shadow-xl border border-white/20 pointer-events-none">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      Need help? Ask AI Assistant
+      <span>Need help? Ask Zip</span>
     </div>
     
-    <button id="ai-chat-trigger" onclick="window.aiAssistant.toggleChat()" class="relative bg-gradient-to-r from-primary via-primary-container to-secondary text-white p-3.5 rounded-full shadow-2xl flex items-center justify-center group active:scale-95 transition-all">
+    <button id="ai-chat-trigger" onclick="window.aiAssistant.toggleChat()" aria-label="Ask Zip AI Assistant" class="relative w-14 h-14 rounded-full shadow-2xl flex items-center justify-center group active:scale-95 transition-all p-0">
       <div class="ai-pulse-ring"></div>
-      <span class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">smart_toy</span>
+      <img src="images/zip_icon.svg" alt="Zip AI Assistant" class="w-full h-full object-contain rounded-full group-hover:scale-105 group-hover:rotate-6 transition-all duration-300 drop-shadow-md"/>
       
       <!-- Notification Badge -->
-      <span id="ai-trigger-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-secondary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">1</span>
+      <span id="ai-trigger-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-secondary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm z-10">1</span>
     </button>
   </div>
 
@@ -1587,13 +2036,13 @@
     <!-- Panel Header -->
     <div class="bg-gradient-to-r from-primary to-primary-container text-white p-4 flex items-center justify-between border-b border-white/10 shrink-0">
       <div class="flex items-center gap-3">
-        <div class="relative w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-xl shadow-inner">
-          🤖
+        <div class="relative w-10 h-10 rounded-full flex items-center justify-center shadow-md">
+          <img src="images/zip_icon.svg" alt="Zip Assistant" class="w-10 h-10 rounded-full object-contain"/>
           <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-primary"></span>
         </div>
         <div>
           <h3 class="font-headline font-bold text-sm text-white flex items-center gap-1.5 leading-tight">
-            DriveBot AI
+            Zip Assistant
             <span class="bg-secondary/20 text-secondary border border-secondary/40 text-[9px] font-bold px-1.5 py-0.5 rounded-md tracking-wider uppercase">Support</span>
           </h3>
           <p class="text-[11px] text-white/70 font-medium">Delhi NCR, Maharashtra & Gujarat AI Assistant</p>
@@ -1606,14 +2055,11 @@
           <span class="material-symbols-outlined text-sm">report_problem</span>
           <span class="hidden sm:inline">Complain</span>
         </button>
-        <button id="ai-sound-btn" onclick="window.aiAssistant.toggleMute()" title="Toggle Sound / TTS" class="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors">
-          <span class="material-symbols-outlined text-lg">volume_up</span>
-        </button>
         <button onclick="window.aiAssistant.clearChat()" title="Reset Chat" class="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors">
           <span class="material-symbols-outlined text-lg">refresh</span>
         </button>
-        <button onclick="window.aiAssistant.toggleChat()" title="Close Assistant" class="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors">
-          <span class="material-symbols-outlined text-lg">close</span>
+        <button onclick="window.aiAssistant.toggleChat()" title="Collapse & Close Chat" class="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">keyboard_arrow_down</span>
         </button>
       </div>
     </div>
@@ -1630,7 +2076,7 @@
           <span class="material-symbols-outlined text-xl">mic</span>
         </button>
         
-        <input type="text" id="ai-chat-input" placeholder="Ask about cars, scooties, prices, documents..." class="flex-1 bg-surface-container-low border border-outline-variant/60 focus:border-secondary focus:ring-1 focus:ring-secondary rounded-xl px-3.5 py-2.5 text-xs text-primary placeholder:text-gray-400 outline-none transition-all"/>
+        <input type="text" id="ai-chat-input" placeholder="Ask Zip about cars, scooties, prices, documents..." class="flex-1 bg-surface-container-low border border-outline-variant/60 focus:border-secondary focus:ring-1 focus:ring-secondary rounded-xl px-3.5 py-2.5 text-xs text-primary placeholder:text-gray-400 outline-none transition-all"/>
         
         <button type="submit" id="ai-send-btn" class="bg-secondary hover:bg-secondary-hover text-on-secondary p-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center shrink-0">
           <span class="material-symbols-outlined text-xl">send</span>
@@ -1647,6 +2093,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/india-locations.js"></script>
   <script src="js/fleet-data.js"></script>
+  <script src="js/firebase-auth.js"></script>
   <script src="js/app.js"></script>
   <script src="js/ai-assistant.js"></script>
 </body>

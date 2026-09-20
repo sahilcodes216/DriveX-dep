@@ -75,7 +75,30 @@ h1, h2, h3, h4, h5, h6, .font-headline {
 }
 
 .hero-gradient {
-  background: linear-gradient(135deg, #001136 0%, #0a2558 60%, #1e3a8a 100%);
+  background: radial-gradient(circle at 25% 25%, rgba(14, 116, 233, 0.28) 0%, transparent 55%),
+              radial-gradient(circle at 85% 75%, rgba(251, 120, 0, 0.18) 0%, transparent 50%),
+              linear-gradient(135deg, #001136 0%, #0a2558 55%, #0b1f4d 100%);
+}
+
+.hero-drivex-bg {
+  background-image: url('../images/background_DriveX.png');
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+@media (max-width: 1024px) {
+  .hero-drivex-bg {
+    background-position: 75% center;
+  }
+}
+
+.hero-cat-pill {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hero-cat-pill:hover {
+  transform: translateY(-2px);
 }
 
 /* Leaflet Map Styling */
@@ -193,8 +216,42 @@ h1, h2, h3, h4, h5, h6, .font-headline {
 }
 
 /* ==========================================================================
-   AI CUSTOMER ASSISTANT ("DRIVEBOT") STYLING
+   AI CUSTOMER ASSISTANT ("ZIP") STYLING
    ========================================================================== */
+
+.ai-trigger-container {
+  position: relative;
+}
+
+#ai-trigger-tooltip {
+  opacity: 0;
+  transform: translateX(12px) scale(0.92);
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  white-space: nowrap;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ai-trigger-container:hover #ai-trigger-tooltip,
+.ai-trigger-container:focus-within #ai-trigger-tooltip,
+#ai-trigger-tooltip.flash-active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  pointer-events: auto;
+  animation: aiTooltipFlash 1.6s infinite ease-in-out;
+}
+
+@keyframes aiTooltipFlash {
+  0%, 100% {
+    box-shadow: 0 4px 18px rgba(0, 17, 54, 0.4), 0 0 0 0 rgba(251, 120, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(0, 17, 54, 0.55), 0 0 16px 3px rgba(251, 120, 0, 0.75);
+    border-color: rgba(251, 120, 0, 0.85);
+  }
+}
 
 #ai-chat-trigger {
   box-shadow: 0 8px 30px rgba(0, 17, 54, 0.25), 0 4px 12px rgba(251, 120, 0, 0.3);

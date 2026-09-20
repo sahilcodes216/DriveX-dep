@@ -112,6 +112,38 @@ document.addEventListener("DOMContentLoaded", () => {
   initEventListeners();
 });
 
+// Hamburger Menu Drawer Logic
+function toggleHamburgerMenu() {
+  const drawer = document.getElementById("hamburger-drawer");
+  if (!drawer) return;
+  const isOpen = !drawer.classList.contains("-translate-x-full");
+  if (isOpen) {
+    closeHamburgerMenu();
+  } else {
+    openHamburgerMenu();
+  }
+}
+
+function openHamburgerMenu() {
+  const overlay = document.getElementById("hamburger-drawer-overlay");
+  const drawer = document.getElementById("hamburger-drawer");
+  if (overlay) overlay.classList.remove("hidden");
+  if (drawer) drawer.classList.remove("-translate-x-full");
+}
+
+function closeHamburgerMenu() {
+  const overlay = document.getElementById("hamburger-drawer-overlay");
+  const drawer = document.getElementById("hamburger-drawer");
+  if (drawer) drawer.classList.add("-translate-x-full");
+  if (overlay) overlay.classList.add("hidden");
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeHamburgerMenu();
+  }
+});
+
 // Routing System
 function navigateTo(viewId) {
   appState.activeView = viewId;
@@ -126,9 +158,11 @@ function navigateTo(viewId) {
 
   document.querySelectorAll(".nav-link").forEach(link => {
     if (link.dataset.view === viewId) {
-      link.className = "nav-link text-secondary font-bold border-b-2 border-secondary pb-1 px-3.5 py-2 rounded-lg cursor-pointer";
+      link.classList.add("text-secondary", "font-bold", "bg-secondary/10");
+      link.classList.remove("text-on-surface-variant");
     } else {
-      link.className = "nav-link text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3.5 py-2 rounded-lg transition-all cursor-pointer";
+      link.classList.remove("text-secondary", "font-bold", "bg-secondary/10");
+      link.classList.add("text-on-surface-variant");
     }
   });
 }
@@ -251,24 +285,70 @@ function selectCityLocation(cityName, triggerToast = true) {
 // Leaflet Interactive Map Initialization
 function initLocationPickerMap() {
   const mapContainer = document.getElementById("leaflet-location-map");
-  if (!mapContainer || appState.mapInstance) return;
+  if (!mapContainer) return;
 
-  const defaultLat = appState.location.lat;
-  const defaultLng = appState.location.lng;
+  const defaultLat = appState.location.lat || 19.0760;
+  const defaultLng = appState.location.lng || 72.8777;
+
+  if (appState.mapInstance) {
+    setTimeout(() => {
+      appState.mapInstance.invalidateSize();
+      appState.mapInstance.setView([appState.location.lat, appState.location.lng], 13);
+      if (appState.markerInstance) {
+        appState.markerInstance.setLatLng([appState.location.lat, appState.location.lng]);
+      }
+    }, 150);
+    return;
+  }
 
   // Create Leaflet Map
-  appState.mapInstance = L.map('leaflet-location-map').setView([defaultLat, defaultLng], 13);
+  appState.mapInstance = L.map('leaflet-location-map', {
+    zoomControl: true,
+    scrollWheelZoom: true
+  }).setView([defaultLat, defaultLng], 13);
 
-  // Add OpenStreetMap Tile Layer
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // Reliable Google Maps Road Layer (Crisp Indian street names, landmarks, dual labels, zero 403 blocks)
+  const googleRoadLayer = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['0', '1', '2', '3'],
+    attribution: '&copy; Google Maps'
+  });
+
+  // CartoDB Voyager Layer (High-contrast clean streets, free and unblocked)
+  const cartoVoyagerLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20,
+    subdomains: 'abcd',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  });
+
+  // Esri Satellite Imagery Layer
+  const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19,
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(appState.mapInstance);
+    attribution: 'Tiles &copy; Esri World Imagery'
+  });
+
+  // Add Google Road Layer as default
+  googleRoadLayer.addTo(appState.mapInstance);
+
+  // Automatic tile fallback: If Google tile ever fails, load Carto Voyager
+  googleRoadLayer.on('tileerror', function(error, tile) {
+    if (error && error.coords) {
+      tile.src = `https://a.basemaps.cartocdn.com/rastertiles/voyager/${error.coords.z}/${error.coords.x}/${error.coords.y}.png`;
+    }
+  });
+
+  // Add Layer Selector in top-right
+  const baseMaps = {
+    "🗺️ Google Road": googleRoadLayer,
+    "🏙️ Clean Streets": cartoVoyagerLayer,
+    "🛰️ Satellite": satelliteLayer
+  };
+  L.control.layers(baseMaps, null, { position: 'topright' }).addTo(appState.mapInstance);
 
   // Custom Car Marker Icon
   const carIcon = L.divIcon({
     className: 'custom-map-pin',
-    html: `<div style="background: #fb7800; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2px solid white;">
+    html: `<div style="background: #fb7800; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(251,120,0,0.5); border: 2px solid white; cursor: grab;">
             <span class="material-symbols-outlined" style="font-size: 24px;">home_pin</span>
            </div>`,
     iconSize: [40, 40],
@@ -280,6 +360,8 @@ function initLocationPickerMap() {
     draggable: true,
     icon: carIcon
   }).addTo(appState.mapInstance);
+
+  appState.markerInstance.bindTooltip("📍 Drag pin to exact doorstep", { permanent: false, direction: 'top' });
 
   // Marker Drag End Listener
   appState.markerInstance.on('dragend', function (e) {
@@ -322,35 +404,98 @@ function detectCurrentGPSLocation() {
   }
 }
 
-// REAL SMS Phone OTP Authentication Flow
-function sendRealSmsOtp() {
+// REAL SMS Phone OTP Authentication Flow (Firebase-powered with demo fallback)
+let otpDemoMode = false; // Will be true if Firebase is not configured
+
+async function sendRealSmsOtp() {
   const phoneInput = document.getElementById("user-phone-input");
   if (!phoneInput) return;
 
-  const phone = phoneInput.value.trim();
-  if (phone.length < 10) {
-    showToast("Please enter a valid 10-digit Indian Mobile Number (+91)", "error");
+  const phone = phoneInput.value.trim().replace(/\s/g, '');
+  if (phone.length < 10 || !/^\d{10}$/.test(phone)) {
+    showLoginError("Please enter a valid 10-digit mobile number.");
     return;
   }
 
-  // Generate 6-digit OTP
-  const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  appState.currentUser.phone = phone;
-  appState.currentUser.otpCodeSent = generatedOtp;
+  // Clear previous errors
+  hideLoginError();
+  hideOtpError();
 
-  // Display Real SMS Simulation Banner for Instant Verification
-  showToast(`SMS Sent to +91 ${phone}! Real OTP Code: ${generatedOtp}`);
-  openOtpModal(phone, generatedOtp);
+  // Show loading state
+  setOtpSendLoading(true);
+
+  appState.currentUser.phone = phone;
+
+  // Try Firebase first, fallback to demo
+  if (typeof isFirebaseConfigured !== 'undefined' && isFirebaseConfigured) {
+    try {
+      await sendFirebaseOtp(phone);
+      otpDemoMode = false;
+      setOtpSendLoading(false);
+      openOtpModal(phone, null);
+      showToast(`Real SMS OTP sent to +91 ${phone}! Check your messages.`);
+    } catch (error) {
+      setOtpSendLoading(false);
+      showLoginError(error.message);
+    }
+  } else {
+    // Demo mode: generate random OTP and show it
+    otpDemoMode = true;
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    appState.currentUser.otpCodeSent = generatedOtp;
+
+    // Simulate network delay
+    setTimeout(() => {
+      setOtpSendLoading(false);
+      openOtpModal(phone, generatedOtp);
+      showToast(`Demo OTP sent to +91 ${phone}! Code: ${generatedOtp}`);
+    }, 800);
+  }
 }
 
-function openOtpModal(phone, otp) {
+function openOtpModal(phone, demoOtp) {
   const modal = document.getElementById("otp-modal");
   if (!modal) return;
-  
-  setText("otp-sent-phone-display", `+91 ${phone}`);
-  setText("otp-real-simulated-banner", `[REAL SMS GATEWAY TRIGGERED] OTP: ${otp}`);
-  
+
+  // Set phone display
+  const phoneDisplay = document.getElementById("otp-sent-phone-display");
+  if (phoneDisplay) phoneDisplay.textContent = `+91 ${phone}`;
+
+  // Set banner based on mode
+  const banner = document.getElementById("otp-real-simulated-banner");
+  if (banner) {
+    if (otpDemoMode && demoOtp) {
+      banner.className = "bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold py-2.5 px-3 rounded-xl mb-4 text-center flex items-center justify-center gap-1.5";
+      banner.innerHTML = `
+        <span class="material-symbols-outlined text-sm text-amber-600">info</span>
+        <span>Demo Mode — Your OTP is: <strong class="text-base tracking-widest">${demoOtp}</strong></span>
+      `;
+    } else {
+      banner.className = "bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold py-2.5 px-3 rounded-xl mb-4 text-center flex items-center justify-center gap-1.5";
+      banner.innerHTML = `
+        <span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+        <span>Real SMS sent successfully! Check your phone for the OTP.</span>
+      `;
+    }
+  }
+
+  // Clear OTP inputs
+  const otpInputs = document.querySelectorAll(".otp-digit-input");
+  otpInputs.forEach(inp => { inp.value = ""; });
+
+  // Hide any previous errors
+  hideOtpError();
+
+  // Close login modal, open OTP modal
+  closeLoginModal();
   modal.classList.remove("hidden");
+
+  // Focus first OTP input
+  setTimeout(() => {
+    const firstInput = document.querySelector(".otp-digit-input");
+    if (firstInput) firstInput.focus();
+  }, 300);
+
   startOtpTimer(60);
 }
 
@@ -364,42 +509,230 @@ function startOtpTimer(seconds) {
   if (appState.otpTimerInterval) clearInterval(appState.otpTimerInterval);
   let left = seconds;
   const timerText = document.getElementById("otp-resend-timer");
-  
+
   appState.otpTimerInterval = setInterval(() => {
     left--;
     if (timerText) timerText.innerText = `Resend OTP in ${left}s`;
     if (left <= 0) {
       clearInterval(appState.otpTimerInterval);
-      if (timerText) timerText.innerHTML = `<button onclick="sendRealSmsOtp()" class="text-secondary font-bold underline">Resend Real SMS OTP Now</button>`;
+      if (timerText) timerText.innerHTML = `<button onclick="resendOtp()" class="text-secondary font-bold underline hover:text-secondary-hover transition-all">Resend OTP</button>`;
     }
   }, 1000);
 }
 
-function verifyOtpSubmit() {
+function resendOtp() {
+  closeOtpModal();
+  openLoginModal();
+  // Pre-fill phone number
+  setTimeout(() => {
+    const phoneInput = document.getElementById("user-phone-input");
+    if (phoneInput && appState.currentUser.phone) {
+      phoneInput.value = appState.currentUser.phone;
+    }
+  }, 100);
+}
+
+async function verifyOtpSubmit() {
   const inputs = document.querySelectorAll(".otp-digit-input");
   let enteredOtp = "";
   inputs.forEach(inp => enteredOtp += inp.value);
 
-  if (enteredOtp.length === 6 && (enteredOtp === appState.currentUser.otpCodeSent || enteredOtp === "123456")) {
-    closeOtpModal();
-    closeLoginModal();
-    appState.currentUser.isLoggedIn = true;
-    
-    // Update Profile UI
-    setText("header-user-name", `+91 ${appState.currentUser.phone}`);
-    const loginBtn = document.getElementById("header-login-btn");
-    if (loginBtn) {
-      loginBtn.innerHTML = `
-        <span class="material-symbols-outlined text-sm">verified_user</span>
-        +91 ${appState.currentUser.phone.slice(-4)}
-      `;
-      loginBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-full shadow-md flex items-center gap-1.5";
-    }
-
-    showToast("Verified! Phone Authentication Successful.");
-  } else {
-    showToast("Incorrect OTP Code! Please check your SMS.", "error");
+  if (enteredOtp.length !== 6) {
+    showOtpError("Please enter the complete 6-digit OTP code.");
+    return;
   }
+
+  // Hide previous errors
+  hideOtpError();
+  setOtpVerifyLoading(true);
+
+  if (!otpDemoMode && typeof verifyFirebaseOtp === 'function') {
+    // Real Firebase verification
+    try {
+      const result = await verifyFirebaseOtp(enteredOtp);
+      setOtpVerifyLoading(false);
+      handleSuccessfulVerification(result.phoneNumber || `+91${appState.currentUser.phone}`, result.uid);
+    } catch (error) {
+      setOtpVerifyLoading(false);
+      showOtpError(error.message);
+
+      // Shake animation on OTP inputs
+      inputs.forEach(inp => {
+        inp.classList.add("ring-2", "ring-rose-400");
+        setTimeout(() => inp.classList.remove("ring-2", "ring-rose-400"), 2000);
+      });
+    }
+  } else {
+    // Demo mode verification
+    setTimeout(() => {
+      setOtpVerifyLoading(false);
+      if (enteredOtp === appState.currentUser.otpCodeSent || enteredOtp === "123456") {
+        handleSuccessfulVerification(`+91${appState.currentUser.phone}`, `demo_${Date.now()}`);
+      } else {
+        showOtpError("Incorrect OTP code! Please check and try again.");
+        inputs.forEach(inp => {
+          inp.classList.add("ring-2", "ring-rose-400");
+          setTimeout(() => inp.classList.remove("ring-2", "ring-rose-400"), 2000);
+        });
+      }
+    }, 600);
+  }
+}
+
+function handleSuccessfulVerification(phoneNumber, uid) {
+  closeOtpModal();
+  closeLoginModal();
+  appState.currentUser.isLoggedIn = true;
+  appState.currentUser.uid = uid;
+
+  // Save user profile to Firestore (if configured)
+  if (typeof saveUserToFirestore === 'function' && typeof isFirebaseConfigured !== 'undefined' && isFirebaseConfigured) {
+    saveUserToFirestore({
+      phone: appState.currentUser.phone,
+      uid: uid,
+      name: appState.currentUser.name
+    }).catch(err => console.error("[DriveX Firebase] User save error:", err));
+  }
+
+  // Update Profile UI
+  const loginBtn = document.getElementById("header-login-btn");
+  if (loginBtn) {
+    loginBtn.innerHTML = `
+      <span class="material-symbols-outlined text-sm">verified_user</span>
+      +91 ${appState.currentUser.phone.slice(-4)}
+    `;
+    loginBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-full shadow-md flex items-center gap-1.5 transition-all";
+    loginBtn.onclick = () => {
+      showToast(`Logged in as +91 ${appState.currentUser.phone}`, "info");
+    };
+  }
+
+  showToast("✅ Phone Verified Successfully! Welcome to DriveX.");
+}
+
+// OTP Input Handlers (auto-focus, backspace, paste, auto-submit)
+function handleOtpInput(input, index) {
+  // Allow only digits
+  input.value = input.value.replace(/[^0-9]/g, '');
+
+  const inputs = document.querySelectorAll(".otp-digit-input");
+
+  if (input.value.length === 1 && index < inputs.length - 1) {
+    inputs[index + 1].focus();
+  }
+
+  // Auto-submit when all 6 digits are filled
+  let fullOtp = '';
+  inputs.forEach(inp => fullOtp += inp.value);
+  if (fullOtp.length === 6) {
+    // Small delay for visual feedback
+    setTimeout(() => verifyOtpSubmit(), 300);
+  }
+}
+
+function handleOtpKeydown(event, index) {
+  const inputs = document.querySelectorAll(".otp-digit-input");
+
+  // Backspace: move to previous input
+  if (event.key === 'Backspace' && !inputs[index].value && index > 0) {
+    inputs[index - 1].focus();
+    inputs[index - 1].select();
+  }
+
+  // Arrow keys
+  if (event.key === 'ArrowLeft' && index > 0) {
+    event.preventDefault();
+    inputs[index - 1].focus();
+  }
+  if (event.key === 'ArrowRight' && index < inputs.length - 1) {
+    event.preventDefault();
+    inputs[index + 1].focus();
+  }
+
+  // Handle paste
+  if (event.key === 'v' && (event.ctrlKey || event.metaKey)) {
+    event.preventDefault();
+    navigator.clipboard.readText().then(text => {
+      const digits = text.replace(/[^0-9]/g, '').slice(0, 6);
+      digits.split('').forEach((digit, i) => {
+        if (inputs[i]) inputs[i].value = digit;
+      });
+      if (digits.length === 6) {
+        inputs[5].focus();
+        setTimeout(() => verifyOtpSubmit(), 300);
+      }
+    }).catch(() => {});
+  }
+}
+
+// Loading & Error UI Helpers
+function setOtpSendLoading(loading) {
+  const btn = document.getElementById("send-otp-btn");
+  const content = document.getElementById("send-otp-btn-content");
+  const loader = document.getElementById("send-otp-btn-loading");
+  if (btn) btn.disabled = loading;
+  if (content) content.classList.toggle("hidden", loading);
+  if (loader) loader.classList.toggle("hidden", !loading);
+}
+
+function setOtpVerifyLoading(loading) {
+  const btn = document.getElementById("verify-otp-btn");
+  const content = document.getElementById("verify-otp-btn-content");
+  const loader = document.getElementById("verify-otp-btn-loading");
+  if (btn) btn.disabled = loading;
+  if (content) content.classList.toggle("hidden", loading);
+  if (loader) loader.classList.toggle("hidden", !loading);
+}
+
+function showLoginError(message) {
+  const display = document.getElementById("login-error-display");
+  const text = document.getElementById("login-error-text");
+  if (display) display.classList.remove("hidden");
+  if (text) text.textContent = message;
+}
+
+function hideLoginError() {
+  const display = document.getElementById("login-error-display");
+  if (display) display.classList.add("hidden");
+}
+
+function showOtpError(message) {
+  const display = document.getElementById("otp-error-display");
+  const text = document.getElementById("otp-error-text");
+  if (display) display.classList.remove("hidden");
+  if (text) text.textContent = message;
+}
+
+function hideOtpError() {
+  const display = document.getElementById("otp-error-display");
+  if (display) display.classList.add("hidden");
+}
+
+// Quick Select Hero Category from Banner Island
+function quickSelectHeroCategory(cat) {
+  const heroSelect = document.getElementById("hero-category-select");
+  if (heroSelect) {
+    heroSelect.value = cat;
+  }
+
+  // Update visual state of category pills
+  document.querySelectorAll(".hero-cat-pill").forEach(p => {
+    p.classList.remove("border-secondary", "bg-white/25", "ring-2", "ring-secondary/50");
+    p.classList.add("bg-white/10", "border-white/20");
+  });
+
+  const activePill = document.getElementById(`hero-pill-${cat}`);
+  if (activePill) {
+    activePill.classList.remove("bg-white/10", "border-white/20");
+    activePill.classList.add("border-secondary", "bg-white/25", "ring-2", "ring-secondary/50");
+  }
+
+  const catNames = {
+    scooty: "🛵 Scooties (Petrol & Electric)",
+    bike: "🏍️ Bikes (Royal Enfield, Yamaha, KTM)",
+    cars: "🚗 Cars & SUVs (Thar, Creta, Nexon EV)"
+  };
+  showToast(`Selected: ${catNames[cat] || cat}`);
 }
 
 // Hero Search Handler
@@ -417,6 +750,11 @@ function renderFeaturedFleet() {
   const container = document.getElementById("featured-fleet-container");
   if (!container) return;
   
+  const countEl = document.getElementById("featured-catalog-count");
+  if (countEl && typeof FLEET_DATA !== "undefined") {
+    countEl.textContent = FLEET_DATA.length;
+  }
+
   const featured = FLEET_DATA.filter(v => v.featured).slice(0, 3);
   container.innerHTML = featured.map(v => createVehicleCardHtml(v)).join("");
 }
@@ -447,11 +785,12 @@ function renderFleetCatalog() {
     const matchesCat = appState.selectedCategory === "all" || v.category === appState.selectedCategory;
 
     // Search query filter:
-    // If user searched a category keyword like "scooty", "bike", or "cars", ONLY match items belonging to that category!
     let matchesSearch = true;
     if (rawQuery !== "") {
       if (isCategoryQuery) {
         matchesSearch = matchesCategoryIntent;
+      } else if (rawQuery === "ev" || rawQuery === "electric") {
+        matchesSearch = v.fuelType === "Electric";
       } else {
         matchesSearch = v.name.toLowerCase().includes(rawQuery) ||
                         v.categoryLabel.toLowerCase().includes(rawQuery) ||
@@ -562,11 +901,17 @@ function createVehicleCardHtml(v) {
   const isScootyOrBike = v.category === 'scooty' || v.category === 'bike';
   const helmetText = isScootyOrBike ? "⛑️ Free Sanitized Helmet Included" : "🚗 Doorstep Sanitized Delivery";
 
+  const fallbackImg = v.category === 'cars' 
+    ? 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=80'
+    : (v.category === 'scooty' 
+        ? 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop&q=80'
+        : 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&auto=format&fit=crop&q=80');
+
   return `
     <div class="ambient-card rounded-2xl overflow-hidden flex flex-col justify-between group">
       <!-- Image & Tag -->
       <div class="relative overflow-hidden h-48 bg-surface-container-high">
-        <img src="${displayImage}" alt="${displayName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+        <img src="${displayImage}" alt="${displayName}" onerror="this.onerror=null; this.src='${fallbackImg}';" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
         
         <div class="absolute top-3 left-3 flex flex-col gap-1">
           <div class="bg-primary text-on-primary text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
@@ -1068,8 +1413,6 @@ function processPayment() {
     confirmBookingSuccess("Net Banking (SBI / HDFC / ICICI / Axis)");
   } else if (method === "wallet") {
     confirmBookingSuccess("Paytm / Mobikwik / Amazon Pay Wallet");
-  } else if (method === "cod") {
-    confirmBookingSuccess("Pay at Vehicle Delivery / Pickup (Cash / POS Card Swipe)");
   } else {
     confirmBookingSuccess("Online Payment Gateway");
   }
@@ -1152,6 +1495,11 @@ function confirmBookingSuccess(paymentSummaryMethod) {
 
   renderBookingStep(5);
   showToast(`Booking Confirmed! Reference: ${newBooking.bookingId}`);
+
+  // Save complete booking to Firestore (if configured)
+  if (typeof saveBookingToFirestore === 'function' && typeof isFirebaseConfigured !== 'undefined' && isFirebaseConfigured) {
+    saveBookingToFirestore(newBooking).catch(err => console.error("[DriveX Firebase] Booking save error:", err));
+  }
 }
 
 let pendingCancelBookingId = null;
@@ -1484,7 +1832,18 @@ function openAddressModal() {
   const modal = document.getElementById("address-modal");
   if (!modal) return;
   modal.classList.remove("hidden");
-  setTimeout(() => initLocationPickerMap(), 200);
+  setTimeout(() => {
+    initLocationPickerMap();
+    if (appState.mapInstance) {
+      appState.mapInstance.invalidateSize();
+      if (appState.location && appState.location.lat && appState.location.lng) {
+        appState.mapInstance.setView([appState.location.lat, appState.location.lng], 13);
+        if (appState.markerInstance) {
+          appState.markerInstance.setLatLng([appState.location.lat, appState.location.lng]);
+        }
+      }
+    }
+  }, 150);
 }
 
 function closeAddressModal() {
@@ -1617,8 +1976,10 @@ function populateUndertakingFields() {
   setValue("undertaking-cust-name", u.customerName || appState.currentUser.name || "Aarav Sharma");
   setValue("undertaking-cust-mobile", u.mobileNumber || appState.currentUser.phone || "9876543210");
 
-  const formattedAddr = b.address ? `${b.address.flatNo}, ${b.address.street}, ${b.address.city}, ${b.address.state} ${b.address.pincode}` : appState.location.formattedAddress;
-  setValue("undertaking-cust-address", u.address || formattedAddr);
+  const defaultAddr = (customerResidency === 'foreigner' && appState.booking.formattedDeliveryAddress)
+    ? appState.booking.formattedDeliveryAddress
+    : (b.address ? `${b.address.flatNo}, ${b.address.street}, ${b.address.city}, ${b.address.state} ${b.address.pincode}` : appState.location.formattedAddress);
+  setValue("undertaking-cust-address", u.address || defaultAddr);
 
   setValue("undertaking-cust-dl", u.dlNumber || "MH-0120230045678");
   setValue("undertaking-cust-idproof", u.idProofNumber || "4521 8890 1234");
@@ -1724,17 +2085,77 @@ function clearSignatureCanvas() {
   }
 }
 
-// Document Upload Handlers (Aadhar & Driving License)
-function handleDocUpload(event, docType) {
+// Document Upload Handlers (Generic - supports all doc types + Firebase Storage upload)
+async function handleDocUpload(event, docType) {
   const file = event.target.files[0];
   if (!file) return;
 
+  // Validate file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    showToast("File too large! Maximum size is 10MB.", "error");
+    return;
+  }
+
+  // Step 1: Show local preview immediately (fast UX)
   const reader = new FileReader();
-  reader.onload = function(e) {
-    displayDocPreview(docType, e.target.result, file.name);
+  reader.onload = async function(e) {
+    const localDataUrl = e.target.result;
+    displayDocPreview(docType, localDataUrl, file.name);
+
+    // Step 2: Upload to Firebase Storage in background (if configured)
+    if (isFirebaseConfigured && typeof uploadDocToFirebase === 'function') {
+      try {
+        const statusPill = document.getElementById(`${docType}-upload-status`);
+        if (statusPill) {
+          statusPill.className = "text-[11px] font-bold bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full flex items-center gap-1";
+          statusPill.innerHTML = `<span class="material-symbols-outlined text-xs animate-spin">sync</span> Uploading...`;
+        }
+
+        const fileData = await uploadDocToFirebase(file, docType, appState?.currentUser?.phone);
+        
+        if (fileData && fileData.downloadURL) {
+          // Step 3: Save record to Firestore
+          if (typeof saveDocRecordToFirestore === 'function') {
+            await saveDocRecordToFirestore(docType, fileData, appState?.currentUser?.phone);
+          }
+
+          // Update status to cloud synced
+          if (statusPill) {
+            statusPill.className = "text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full flex items-center gap-1";
+            statusPill.innerHTML = `<span class="material-symbols-outlined text-xs">cloud_done</span> Saved to Cloud`;
+          }
+
+          // Store Firebase URL in state
+          storeDocUrl(docType, fileData.downloadURL);
+          
+          const label = DOC_TYPE_LABELS[docType] || docType;
+          showToast(`${label} saved to Firebase Cloud! ☁️`);
+        }
+      } catch (error) {
+        console.error("[DriveX] Firebase upload failed:", error);
+        // Still keep local preview — file is saved locally
+        const statusPill = document.getElementById(`${docType}-upload-status`);
+        if (statusPill) {
+          statusPill.className = "text-[11px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full flex items-center gap-1";
+          statusPill.innerHTML = `<span class="material-symbols-outlined text-xs">cloud_off</span> Local Only`;
+        }
+      }
+    }
   };
   reader.readAsDataURL(file);
 }
+
+const DOC_TYPE_LABELS = {
+  'aadhar': 'Aadhar Card',
+  'dl': 'Driving License',
+  'foreigner-hotel-bill': 'Hotel Bill / Proof of Stay',
+  'verify-indian-aadhar': 'Aadhar Card (Verification)',
+  'verify-indian-dl': 'Driving License (Verification)',
+  'verify-indian-photo': 'Customer Photo',
+  'verify-foreigner-passport': 'Passport',
+  'verify-foreigner-visa': 'Visa / E-Visa',
+  'verify-foreigner-photo': 'Customer Photo'
+};
 
 function displayDocPreview(docType, imgUrl, fileName) {
   const dropzone = document.getElementById(`${docType}-dropzone`);
@@ -1751,19 +2172,47 @@ function displayDocPreview(docType, imgUrl, fileName) {
     statusPill.innerHTML = `<span class="material-symbols-outlined text-xs">check_circle</span> Uploaded`;
   }
 
-  if (!appState.booking.undertaking) appState.booking.undertaking = {};
-  if (docType === "aadhar") appState.booking.undertaking.aadharPhoto = imgUrl;
-  if (docType === "dl") appState.booking.undertaking.dlPhoto = imgUrl;
+  // Store locally
+  storeDocUrl(docType, imgUrl);
 
-  showToast(`${docType === 'aadhar' ? 'Aadhar Card' : 'Driving License'} uploaded successfully!`);
+  const label = DOC_TYPE_LABELS[docType] || docType;
+  showToast(`${label} uploaded successfully!`);
+}
+
+// Centralized doc URL storage
+function storeDocUrl(docType, url) {
+  if (!appState.booking.undertaking) appState.booking.undertaking = {};
+  if (!appState.booking.verification) appState.booking.verification = {};
+  if (!appState.booking.stayDetails) appState.booking.stayDetails = {};
+
+  if (docType === "aadhar") appState.booking.undertaking.aadharPhoto = url;
+  if (docType === "dl") appState.booking.undertaking.dlPhoto = url;
+  if (docType === "foreigner-hotel-bill") appState.booking.stayDetails.hotelBillPhoto = url;
+  if (docType === "verify-indian-aadhar") appState.booking.verification.indianAadharPhoto = url;
+  if (docType === "verify-indian-dl") appState.booking.verification.indianDlPhoto = url;
+  if (docType === "verify-indian-photo" || docType === "verify-foreigner-photo") {
+    appState.booking.verification.customerPhoto = url;
+    appState.booking.undertaking.customerPhoto = url;
+  }
+  if (docType === "verify-foreigner-passport") appState.booking.verification.foreignerPassportPhoto = url;
+  if (docType === "verify-foreigner-visa") appState.booking.verification.foreignerVisaPhoto = url;
 }
 
 function loadSampleDoc(docType) {
-  const sampleAadhar = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80";
-  const sampleDL = "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80";
+  const sampleImages = {
+    'aadhar': "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+    'dl': "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80",
+    'foreigner-hotel-bill': "https://images.unsplash.com/photo-1554415707-9e49017a1430?auto=format&fit=crop&w=600&q=80",
+    'verify-indian-aadhar': "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+    'verify-indian-dl': "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80",
+    'verify-indian-photo': "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+    'verify-foreigner-passport': "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80",
+    'verify-foreigner-visa': "https://images.unsplash.com/photo-1587019158091-1a103c5dd17f?auto=format&fit=crop&w=600&q=80",
+    'verify-foreigner-photo': "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"
+  };
 
-  const sampleUrl = docType === "aadhar" ? sampleAadhar : sampleDL;
-  const fileName = docType === "aadhar" ? "sample_aadhar_card.jpg" : "sample_driving_license.jpg";
+  const sampleUrl = sampleImages[docType] || sampleImages['verify-indian-aadhar'];
+  const fileName = `sample_${docType.replace(/-/g, '_')}.jpg`;
   displayDocPreview(docType, sampleUrl, fileName);
 }
 
@@ -1781,15 +2230,138 @@ function clearDocUpload(docType) {
 
   if (statusPill) {
     statusPill.className = "text-[11px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full";
-    statusPill.innerText = "Pending Upload";
+    statusPill.innerText = "Pending";
   }
 
   if (appState.booking.undertaking) {
     if (docType === "aadhar") appState.booking.undertaking.aadharPhoto = null;
     if (docType === "dl") appState.booking.undertaking.dlPhoto = null;
+    if (docType === "verify-indian-photo" || docType === "verify-foreigner-photo") appState.booking.undertaking.customerPhoto = null;
   }
 
-  showToast(`Removed ${docType === 'aadhar' ? 'Aadhar' : 'License'} photo.`, "info");
+  if (appState.booking.stayDetails && docType === "foreigner-hotel-bill") {
+    appState.booking.stayDetails.hotelBillPhoto = null;
+  }
+
+  // Clear verification doc uploads
+  if (appState.booking.verification) {
+    if (docType === "verify-indian-aadhar") appState.booking.verification.indianAadharPhoto = null;
+    if (docType === "verify-indian-dl") appState.booking.verification.indianDlPhoto = null;
+    if (docType === "verify-indian-photo" || docType === "verify-foreigner-photo") appState.booking.verification.customerPhoto = null;
+    if (docType === "verify-foreigner-passport") appState.booking.verification.foreignerPassportPhoto = null;
+    if (docType === "verify-foreigner-visa") appState.booking.verification.foreignerVisaPhoto = null;
+  }
+
+  const label = DOC_TYPE_LABELS[docType] || docType;
+  showToast(`Removed ${label} photo.`, "info");
+}
+
+// Customer Residency & Hotel Details (Step 2)
+let customerResidency = 'indian';
+
+function setCustomerResidency(type) {
+  customerResidency = type;
+  if (!appState.booking) appState.booking = {};
+  appState.booking.residency = type;
+
+  const indianCard = document.getElementById('residency-option-indian');
+  const foreignerCard = document.getElementById('residency-option-foreigner');
+  const stayContainer = document.getElementById('foreigner-stay-container');
+  const indianDeliveryCard = document.getElementById('indian-delivery-address-card');
+
+  if (type === 'foreigner') {
+    if (indianCard) {
+      indianCard.className = 'residency-card flex items-center gap-3 p-4 rounded-xl border-2 border-outline-variant bg-white cursor-pointer transition-all hover:border-violet-400 hover:bg-violet-50/30';
+      const rad = indianCard.querySelector('input[type="radio"]');
+      if (rad) rad.checked = false;
+    }
+    if (foreignerCard) {
+      foreignerCard.className = 'residency-card flex items-center gap-3 p-4 rounded-xl border-2 border-violet-600 bg-violet-50/60 cursor-pointer transition-all shadow-sm';
+      const rad = foreignerCard.querySelector('input[type="radio"]');
+      if (rad) rad.checked = true;
+    }
+    if (stayContainer) stayContainer.classList.remove('hidden');
+    if (indianDeliveryCard) indianDeliveryCard.classList.add('hidden');
+    switchVerificationType('foreigner');
+    syncHotelToDeliveryAddress();
+  } else {
+    if (foreignerCard) {
+      foreignerCard.className = 'residency-card flex items-center gap-3 p-4 rounded-xl border-2 border-outline-variant bg-white cursor-pointer transition-all hover:border-violet-400 hover:bg-violet-50/30';
+      const rad = foreignerCard.querySelector('input[type="radio"]');
+      if (rad) rad.checked = false;
+    }
+    if (indianCard) {
+      indianCard.className = 'residency-card flex items-center gap-3 p-4 rounded-xl border-2 border-secondary bg-orange-50/40 cursor-pointer transition-all hover:bg-orange-50/70 shadow-sm';
+      const rad = indianCard.querySelector('input[type="radio"]');
+      if (rad) rad.checked = true;
+    }
+    if (stayContainer) stayContainer.classList.add('hidden');
+    if (indianDeliveryCard) indianDeliveryCard.classList.remove('hidden');
+    switchVerificationType('indian');
+  }
+}
+
+function syncHotelToDeliveryAddress() {
+  const hotelName = getValue('foreigner-hotel-name');
+  const hotelAddress = getValue('foreigner-hotel-address');
+
+  if (!appState.booking.stayDetails) appState.booking.stayDetails = {};
+  appState.booking.stayDetails.hotelName = hotelName;
+  appState.booking.stayDetails.hotelAddress = hotelAddress;
+
+  if (hotelName || hotelAddress) {
+    const fullHotelAddr = [hotelName, hotelAddress].filter(Boolean).join(", ");
+    setText('summary-delivery-address', fullHotelAddr);
+    appState.booking.formattedDeliveryAddress = fullHotelAddr;
+  }
+}
+
+function proceedToKYCStep() {
+  if (customerResidency === 'foreigner') {
+    const hotelName = getValue('foreigner-hotel-name');
+    const hotelAddr = getValue('foreigner-hotel-address');
+    
+    // Auto-populate sample stay details if left blank for smooth testing
+    if (!hotelName) {
+      setValue('foreigner-hotel-name', 'The Taj Mahal Palace, Mumbai');
+    }
+    if (!hotelAddr) {
+      setValue('foreigner-hotel-address', 'Apollo Bunder, Colaba, Mumbai - Room 402');
+    }
+    syncHotelToDeliveryAddress();
+
+    if (!appState.booking.stayDetails?.hotelBillPhoto) {
+      loadSampleDoc('foreigner-hotel-bill');
+    }
+    switchVerificationType('foreigner');
+  } else {
+    switchVerificationType('indian');
+  }
+
+  renderBookingStep(3);
+}
+
+// Verification Type Toggle (Indian / Foreigner)
+let activeVerificationType = 'indian';
+
+function switchVerificationType(type) {
+  activeVerificationType = type;
+  const indianSection = document.getElementById('verify-indian-section');
+  const foreignerSection = document.getElementById('verify-foreigner-section');
+  const indianTab = document.getElementById('verify-tab-indian');
+  const foreignerTab = document.getElementById('verify-tab-foreigner');
+
+  if (type === 'indian') {
+    indianSection?.classList.remove('hidden');
+    foreignerSection?.classList.add('hidden');
+    if (indianTab) indianTab.className = 'verify-tab-btn bg-primary text-on-primary font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center gap-1.5';
+    if (foreignerTab) foreignerTab.className = 'verify-tab-btn bg-surface-container-low text-on-surface-variant font-medium px-5 py-2.5 rounded-xl text-xs hover:bg-surface-container transition-all flex items-center gap-1.5';
+  } else {
+    indianSection?.classList.add('hidden');
+    foreignerSection?.classList.remove('hidden');
+    if (foreignerTab) foreignerTab.className = 'verify-tab-btn bg-violet-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center gap-1.5';
+    if (indianTab) indianTab.className = 'verify-tab-btn bg-surface-container-low text-on-surface-variant font-medium px-5 py-2.5 rounded-xl text-xs hover:bg-surface-container transition-all flex items-center gap-1.5';
+  }
 }
 
 function validateAndProceedToPayment() {
@@ -1834,15 +2406,30 @@ function validateAndProceedToPayment() {
     return;
   }
 
-  // Ensure documents are uploaded (or auto-populate sample if skipped for ease of demo)
-  if (!appState.booking.undertaking?.aadharPhoto) {
-    loadSampleDoc("aadhar");
-  }
-  if (!appState.booking.undertaking?.dlPhoto) {
-    loadSampleDoc("dl");
+  // Auto-populate verification docs if not uploaded (demo convenience)
+  if (!appState.booking.verification) appState.booking.verification = {};
+  if (activeVerificationType === 'indian') {
+    if (!appState.booking.verification.indianAadharPhoto) loadSampleDoc('verify-indian-aadhar');
+    if (!appState.booking.verification.indianDlPhoto) loadSampleDoc('verify-indian-dl');
+    if (!appState.booking.verification.customerPhoto) loadSampleDoc('verify-indian-photo');
+    if (!appState.booking.undertaking) appState.booking.undertaking = {};
+    appState.booking.undertaking.aadharPhoto = appState.booking.verification.indianAadharPhoto;
+    appState.booking.undertaking.dlPhoto = appState.booking.verification.indianDlPhoto;
+    appState.booking.undertaking.customerPhoto = appState.booking.verification.customerPhoto;
+  } else {
+    if (!appState.booking.verification.foreignerPassportPhoto) loadSampleDoc('verify-foreigner-passport');
+    if (!appState.booking.verification.foreignerVisaPhoto) loadSampleDoc('verify-foreigner-visa');
+    if (!appState.booking.verification.customerPhoto) loadSampleDoc('verify-foreigner-photo');
+    if (!appState.booking.undertaking) appState.booking.undertaking = {};
+    appState.booking.undertaking.passportPhoto = appState.booking.verification.foreignerPassportPhoto;
+    appState.booking.undertaking.visaPhoto = appState.booking.verification.foreignerVisaPhoto;
+    appState.booking.undertaking.customerPhoto = appState.booking.verification.customerPhoto;
+    appState.booking.undertaking.aadharPhoto = appState.booking.verification.foreignerPassportPhoto;
+    appState.booking.undertaking.dlPhoto = appState.booking.verification.foreignerVisaPhoto;
   }
 
   appState.booking.undertaking = {
+    ...appState.booking.undertaking,
     agreed: true,
     customerName: custName,
     mobileNumber: custMobile,
@@ -1856,8 +2443,23 @@ function validateAndProceedToPayment() {
     date: getValue("undertaking-date"),
     companyName: getValue("undertaking-company-name"),
     customerSignature: signatureText,
-    aadharPhoto: appState.booking.undertaking?.aadharPhoto || null,
-    dlPhoto: appState.booking.undertaking?.dlPhoto || null
+    customerPhoto: appState.booking.verification?.customerPhoto || null
+  };
+
+  // Save verification details
+  appState.booking.verification = {
+    ...appState.booking.verification,
+    type: activeVerificationType,
+    indianName: getValue("verify-indian-name"),
+    indianAge: getValue("verify-indian-age"),
+    indianFatherName: getValue("verify-indian-father"),
+    indianMotherName: getValue("verify-indian-mother"),
+    foreignerName: getValue("verify-foreigner-name"),
+    foreignerAge: getValue("verify-foreigner-age"),
+    foreignerFatherName: getValue("verify-foreigner-father"),
+    foreignerMotherName: getValue("verify-foreigner-mother"),
+    foreignerNationality: getValue("verify-foreigner-nationality"),
+    foreignerPassportNumber: getValue("verify-foreigner-passport-num")
   };
 
   showToast("Customer Undertaking & Documents Accepted! Proceeding to Payment.");
