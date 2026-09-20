@@ -298,44 +298,54 @@ h1, h2, h3, h4, h5, h6, .font-headline {
   border-radius: 9999px;
 }
 
-/* Mobile Responsiveness for AI Chat Panel */
+/* ==========================================================================
+   RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS (PHONES, TABLETS & LAPTOPS)
+   ========================================================================== */
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+img, video, iframe, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Touch targets and smooth scrolling */
+button, a {
+  touch-action: manipulation;
+}
+
+/* Step Indicator Mobile Adjustment */
 @media (max-width: 640px) {
-  #ai-chat-panel {
-    width: calc(100vw - 1.5rem) !important;
-    height: calc(100vh - 5rem) !important;
-    bottom: 4.5rem !important;
-    right: 0.75rem !important;
+  .step-item:not(:last-child)::after {
+    margin: 0 0.25rem !important;
+  }
+  .step-number {
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+    font-size: 0.75rem !important;
   }
 }
 
-/* ================= ZOMATO-STYLE VIDEO INTRO SPLASH SCREEN ================= */
-#intro-splash {
-  background-color: #000000;
-  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1), transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), filter 0.65s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform, filter;
-}
-
-#intro-splash.splash-dismissing {
-  opacity: 0;
-  transform: scale(1.05);
-  filter: blur(8px);
-  pointer-events: none;
-}
-
-#splash-video {
-  object-fit: cover;
+/* Table Overflow Wrapper */
+.table-responsive {
   width: 100%;
-  height: 100%;
-  filter: brightness(0.95) contrast(1.05);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-@keyframes splashPulseGlow {
-  0%, 100% { box-shadow: 0 0 15px rgba(251, 120, 0, 0.4); }
-  50% { box-shadow: 0 0 35px rgba(251, 120, 0, 0.85); }
+/* Responsive Modal Dialog Containers */
+@media (max-width: 640px) {
+  .toast {
+    min-width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    font-size: 0.8125rem !important;
+  }
 }
 
-.splash-glow-btn {
-  animation: splashPulseGlow 3s infinite ease-in-out;
-}
 
 
