@@ -125,6 +125,16 @@
         <span>My Bookings</span>
       </a>
 
+      <a href="about.html" onclick="closeHamburgerMenu()" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">info</span>
+        <span>About Us</span>
+      </a>
+
+      <a href="terms.html" onclick="closeHamburgerMenu()" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">gavel</span>
+        <span>Terms &amp; Conditions</span>
+      </a>
+
       <hr class="border-outline-variant/40 my-3"/>
 
       <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3 pb-1">Grievance & Support</div>
@@ -723,6 +733,18 @@
                   <input type="checkbox" id="undertaking-terms-agree" onchange="appState.booking.undertaking.agreed = this.checked;" class="w-5 h-5 text-secondary rounded cursor-pointer mt-0.5 accent-secondary"/>
                   <label for="undertaking-terms-agree" class="text-xs sm:text-sm font-bold text-primary cursor-pointer select-none">
                     I have read and understood the above terms and voluntarily agree to comply with them. <span class="text-rose-600">*</span>
+                  </label>
+                </div>
+                <!-- Agree to Terms & Conditions Link -->
+                <div class="flex items-center gap-2 mt-3 pt-3 border-t border-blue-100">
+                  <input type="checkbox" id="agree-all-terms" onchange="appState.booking.undertaking.agreedTerms = this.checked;" class="w-4 h-4 rounded accent-secondary cursor-pointer"/>
+                  <label for="agree-all-terms" class="text-xs font-semibold text-on-surface-variant cursor-pointer select-none">
+                    Agree to all
+                    <a href="terms.html" class="text-secondary hover:text-secondary-hover font-bold underline underline-offset-2 transition-colors inline-flex items-center gap-0.5">
+                      Terms &amp; Conditions
+                      <span class="material-symbols-outlined text-xs">open_in_new</span>
+                    </a>
+                    of DriveX Vehicle Rental. <span class="text-rose-600">*</span>
                   </label>
                 </div>
               </div>
@@ -1353,6 +1375,7 @@
   <!-- ================= FOOTER ================= -->
   <footer class="bg-primary text-on-primary border-t border-white/10 mt-20 pt-12 pb-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      <!-- Column 1: Brand Info -->
       <div>
         <div class="flex items-center gap-3 mb-4">
           <img src="images/favicon.png" alt="DriveX Emblem" class="w-10 h-10 object-contain drop-shadow-md rounded-full bg-white p-0.5"/>
@@ -1361,12 +1384,110 @@
             <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-0.5">RENT. RIDE. REPEAT.</span>
           </div>
         </div>
-        <p class="text-xs text-blue-200 leading-relaxed mb-4">Doorstep vehicle rental platform offering Scooties, Bikes, EVs, SUVs & Luxury Cars across Delhi NCR, Maharashtra & Gujarat.</p>
-        <span class="text-xs text-secondary font-semibold">24/7 Support Helpline: 1800-DRIVEX-IN (1800-374839)</span>
+        <p class="text-xs text-blue-200 leading-relaxed mb-4">Doorstep vehicle rental platform offering Scooties, Bikes, EVs, SUVs &amp; Luxury Cars across Delhi NCR, Maharashtra &amp; Gujarat.</p>
+        <span class="text-xs text-secondary font-bold block">24/7 Support Helpline: 1800-DRIVEX-IN</span>
+      </div>
+
+      <!-- Column 2: COMPANY -->
+      <div>
+        <h4 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-4 pb-1 border-b border-white/10">COMPANY</h4>
+        <ul class="space-y-2.5 text-xs text-blue-200">
+          <li>
+            <a href="about.html" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">info</span>
+              About Us
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="navigateTo('fleet')" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">directions_car</span>
+              Fleet Catalog
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="navigateTo('why-us')" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">verified_user</span>
+              Why DriveX
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="window.aiAssistant.openComplaintModal()" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">support_agent</span>
+              Customer Support
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 3: POLICIES -->
+      <div>
+        <h4 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-4 pb-1 border-b border-white/10">POLICIES</h4>
+        <ul class="space-y-2.5 text-xs text-blue-200">
+          <li>
+            <a href="terms.html" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">gavel</span>
+              Terms &amp; Conditions
+            </a>
+          </li>
+          <li>
+            <a href="terms.html#section-10" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">shield</span>
+              Privacy Policy
+            </a>
+          </li>
+          <li>
+            <a href="terms.html#section-1" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">currency_exchange</span>
+              Refund Policy
+            </a>
+          </li>
+          <li>
+            <a href="terms.html#section-3" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">security</span>
+              Risk &amp; Safety Clause
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 4: QUICK LINKS -->
+      <div>
+        <h4 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-4 pb-1 border-b border-white/10">QUICK LINKS</h4>
+        <ul class="space-y-2.5 text-xs text-blue-200">
+          <li>
+            <a href="#" onclick="navigateTo('fleet')" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">moped</span>
+              Scooties &amp; Bikes
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="navigateTo('fleet')" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">car_rental</span>
+              Hatchbacks &amp; SUVs
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="navigateTo('fleet')" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">ev_station</span>
+              EV Rentals
+            </a>
+          </li>
+          <li>
+            <a href="about.html#section-11" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">headset_mic</span>
+              24/7 Roadside Assistance
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-white/10 text-center text-xs text-blue-300">
-      © 2026 DriveX Vehicle Rental Systems Pvt. Ltd. All rights reserved. • RENT. RIDE. REPEAT.
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-300">
+      <div class="flex items-center gap-3">
+        <img src="images/favicon.png" alt="DriveX" class="w-7 h-7 object-contain rounded-full bg-white p-0.5"/>
+        <span class="font-headline font-extrabold text-white">DRIVEX</span>
+        <span class="text-secondary font-extrabold">RENT. RIDE. REPEAT.</span>
+      </div>
+      <p>© 2026 DriveX Vehicle Rental Systems Pvt. Ltd. All rights reserved.</p>
     </div>
   </footer>
 
@@ -1436,7 +1557,7 @@
       </div>
 
       <div class="mt-5 pt-4 border-t border-outline-variant/50 text-center">
-        <p class="text-[10px] text-on-surface-variant">By continuing, you agree to DriveX <a href="#" class="text-secondary font-bold hover:underline">Terms of Service</a> and <a href="#" class="text-secondary font-bold hover:underline">Privacy Policy</a>.</p>
+        <p class="text-[10px] text-on-surface-variant">By continuing, you agree to DriveX <a href="terms.html" class="text-secondary font-bold hover:underline">Terms &amp; Conditions</a> and <a href="terms.html" class="text-secondary font-bold hover:underline">Privacy Policy</a>.</p>
       </div>
     </div>
   </div>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us — DriveX Vehicle Rental | Rent. Ride. Repeat.</title>
+  <meta name="description" content="Discover DriveX — India's premier self-drive vehicle rental ecosystem. Learn about our vision, 40-point safety audits, instant deposit refunds, fleet portfolio, and nationwide footprint."/>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png"/>
+  <meta name="theme-color" content="#001136"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#001136','primary-container': '#0a2558','on-primary': '#ffffff',
+            'secondary': '#fb7800','secondary-hover': '#e06900','on-secondary': '#ffffff',
+            'background': '#f8f9ff','surface': '#ffffff','surface-container': '#e5eeff',
+            'surface-container-low': '#eff4ff','on-surface': '#0b1c30',
+            'on-surface-variant': '#44464f','outline-variant': '#c5c6d1'
+          },
+          fontFamily: { headline: ['Plus Jakarta Sans','sans-serif'], body: ['Inter','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .toc-link { transition:all .2s ease; display:flex; align-items:center; gap:.5rem; padding:.5rem .75rem; border-radius:.625rem; font-size:.8125rem; font-weight:600; color:#44464f; text-decoration:none; }
+    .toc-link:hover { background:#eff4ff; color:#001136; }
+    .toc-link.active { background:#e5eeff; color:#001136; font-weight:700; }
+    .section-card { background:white; border:1px solid rgba(197,198,209,.5); border-radius:1.5rem; padding:2rem; margin-bottom:2rem; box-shadow:0 4px 16px -4px rgba(10,37,88,.08); scroll-margin-top:6rem; }
+    .section-number { display:inline-flex; align-items:center; justify-content:center; width:2.25rem; height:2.25rem; background:linear-gradient(135deg,#001136,#0a2558); color:white; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.875rem; border-radius:.75rem; flex-shrink:0; }
+    .feature-check-list { list-style:none; padding:0; }
+    .feature-check-list li { position:relative; padding-left:1.5rem; margin-bottom:.75rem; line-height:1.7; font-size:.875rem; color:#44464f; }
+    .feature-check-list li::before { content:'check_circle'; font-family:'Material Symbols Outlined'; position:absolute; left:0; top:.15rem; color:#fb7800; font-size:1.1rem; }
+    .value-card { background:#eff4ff; border:1px solid rgba(197,198,209,.5); border-radius:1.25rem; padding:1.25rem; transition:transform .2s ease, box-shadow .2s ease; }
+    .value-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px -6px rgba(10,37,88,.12); }
+    .pillar-row { transition:background-color .2s ease; }
+    .pillar-row:hover { background:#eff4ff; }
+    @media print { .no-print{display:none!important;} .section-card{box-shadow:none;border:1px solid #ccc;} }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased">
+
+  <!-- STICKY HEADER -->
+  <header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/60 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-3 py-4">
+      <a href="index.html" class="flex items-center gap-2.5 group select-none">
+        <div class="w-9 h-9 bg-surface-container rounded-xl flex items-center justify-center hover:bg-surface-container-low transition-colors border border-outline-variant/60">
+          <span class="material-symbols-outlined text-xl text-primary group-hover:text-secondary transition-colors">arrow_back</span>
+        </div>
+        <img src="images/favicon.png" alt="DriveX" class="w-9 h-9 object-contain"/>
+        <div>
+          <span class="font-headline font-black text-xl text-primary tracking-tight leading-none block">DRIVE<span class="text-blue-600 italic">X</span></span>
+          <span class="text-[9px] font-black text-secondary tracking-widest uppercase block">RENT. RIDE. REPEAT.</span>
+        </div>
+      </a>
+      <div class="hidden sm:flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary">info</span>
+        <span class="font-headline font-bold text-base text-primary">About DriveX</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="terms.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-secondary bg-surface-container-low hover:bg-surface-container border border-outline-variant/60 px-3.5 py-2 rounded-full transition-all">
+          <span class="material-symbols-outlined text-sm text-secondary">gavel</span>
+          Terms &amp; Conditions
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO BANNER -->
+  <div class="bg-gradient-to-r from-primary via-primary-container to-primary text-white py-12 md:py-16 relative overflow-hidden no-print">
+    <div class="absolute top-0 right-0 w-64 h-64 rounded-full border border-white/5 transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 rounded-full border border-secondary/10 transform -translate-x-1/3 translate-y-1/2 pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-secondary/20 border border-secondary/30 text-secondary text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-widest">Corporate Profile</span>
+        <span class="bg-white/10 border border-white/20 text-white/80 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-widest">Official Company Overview</span>
+      </div>
+      <h1 class="font-headline font-extrabold text-3xl sm:text-4xl md:text-5xl text-white leading-tight mb-3">About DriveX</h1>
+      <p class="text-blue-200 text-sm md:text-base font-medium mb-6 max-w-2xl">India's fastest-growing multi-modal self-drive vehicle rental ecosystem. Empowering riders with instant doorstep delivery, 40-point safety audits, and transparent zero-friction rentals.</p>
+      
+      <!-- Key Stat Badges -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-bold">
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 p-3 rounded-2xl text-center">
+          <span class="font-headline text-xl text-secondary block font-extrabold">50,000+</span>
+          <span class="text-blue-200 text-[11px] font-medium">Happy Riders</span>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 p-3 rounded-2xl text-center">
+          <span class="font-headline text-xl text-secondary block font-extrabold">41+</span>
+          <span class="text-blue-200 text-[11px] font-medium">Curated Vehicles</span>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 p-3 rounded-2xl text-center">
+          <span class="font-headline text-xl text-secondary block font-extrabold">100+</span>
+          <span class="text-blue-200 text-[11px] font-medium">Hubs &amp; Cities</span>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 p-3 rounded-2xl text-center">
+          <span class="font-headline text-xl text-secondary block font-extrabold">4.8 / 5</span>
+          <span class="text-blue-200 text-[11px] font-medium">User Rating</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+    <div class="flex gap-8 lg:gap-12 items-start">
+
+      <!-- TOC SIDEBAR -->
+      <aside class="hidden lg:block w-64 shrink-0 sticky top-24 no-print">
+        <div class="bg-white border border-outline-variant/60 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center gap-2 text-xs font-headline font-extrabold text-primary uppercase tracking-wider mb-3 px-2">
+            <span class="material-symbols-outlined text-secondary text-base">toc</span>
+            On This Page
+          </div>
+          <nav id="toc-nav" class="space-y-1">
+            <a href="#section-1" class="toc-link active"><span class="material-symbols-outlined text-sm">badge</span>1. Executive Summary</a>
+            <a href="#section-2" class="toc-link"><span class="material-symbols-outlined text-sm">history_edu</span>2. Our Origin Story</a>
+            <a href="#section-3" class="toc-link"><span class="material-symbols-outlined text-sm">track_changes</span>3. Vision &amp; Mission</a>
+            <a href="#section-4" class="toc-link"><span class="material-symbols-outlined text-sm">verified_user</span>4. 6 Pillars of Advantage</a>
+            <a href="#section-5" class="toc-link"><span class="material-symbols-outlined text-sm">directions_car</span>5. Fleet Portfolio (41+)</a>
+            <a href="#section-6" class="toc-link"><span class="material-symbols-outlined text-sm">map</span>6. Operational Hubs</a>
+            <a href="#section-7" class="toc-link"><span class="material-symbols-outlined text-sm">memory</span>7. Tech &amp; Telematics</a>
+            <a href="#section-8" class="toc-link"><span class="material-symbols-outlined text-sm">eco</span>8. Green Mobility</a>
+            <a href="#section-9" class="toc-link"><span class="material-symbols-outlined text-sm">analytics</span>9. Key Milestones</a>
+            <a href="#section-10" class="toc-link"><span class="material-symbols-outlined text-sm">gavel</span>10. Governance &amp; Legal</a>
+            <a href="#section-11" class="toc-link"><span class="material-symbols-outlined text-sm">business</span>11. Headquarters &amp; Contact</a>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- CONTENT BODY -->
+      <div class="flex-1 min-w-0">
+
+        <!-- SECTION 1: EXECUTIVE SUMMARY -->
+        <div id="section-1" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">1</span>
+            <div>
+              <span class="section-badge">Brand Identity</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Executive Summary &amp; Brand Identity</h2>
+            </div>
+          </div>
+          
+          <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+            <strong>DriveX</strong> (operated by <em>DriveX Vehicle Rental Systems Pvt. Ltd.</em>) is India's fastest-growing on-demand multi-modal vehicle rental ecosystem, built to empower commuters, weekend wanderers, travelers, and businesses with flexible, transparent, and technology-driven mobility solutions.
+          </p>
+          <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+            Operating under our guiding ethos — <strong class="text-primary">"Rent. Ride. Repeat."</strong> — DriveX removes the friction, exorbitant deposits, hidden maintenance costs, and bureaucratic red tape traditionally associated with self-drive rentals and personal vehicle ownership in India.
+          </p>
+
+          <!-- PROMISE BOX -->
+          <div class="bg-gradient-to-r from-surface-container-low to-surface-container border border-secondary/30 rounded-2xl p-5 text-center mt-5">
+            <span class="text-xs font-headline font-black text-secondary uppercase tracking-widest block mb-2">THE DRIVEX PROMISE</span>
+            <div class="flex flex-wrap justify-center gap-4 text-xs font-bold text-primary">
+              <span class="bg-white px-3 py-1.5 rounded-full border border-outline-variant/60 shadow-sm flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">moped</span> 12+ Scooties</span>
+              <span class="bg-white px-3 py-1.5 rounded-full border border-outline-variant/60 shadow-sm flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">two_wheeler</span> 13+ Bikes</span>
+              <span class="bg-white px-3 py-1.5 rounded-full border border-outline-variant/60 shadow-sm flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">directions_car</span> 16+ Cars &amp; SUVs</span>
+              <span class="bg-white px-3 py-1.5 rounded-full border border-outline-variant/60 shadow-sm flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">currency_rupee</span> 100% Instant Refund</span>
+              <span class="bg-white px-3 py-1.5 rounded-full border border-outline-variant/60 shadow-sm flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">badge</span> 2-Min KYC</span>
+              <span class="bg-white px-3 py-1.5 rounded-full border border-outline-variant/60 shadow-sm flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">local_shipping</span> Doorstep Delivery</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: ORIGIN STORY -->
+        <div id="section-2" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">2</span>
+            <div>
+              <span class="section-badge">Why We Started</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Our Origin Story: Why We Built DriveX</h2>
+            </div>
+          </div>
+
+          <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+            For decades, urban mobility in India has been plagued by a stark dilemma:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div class="bg-rose-50/50 border border-rose-200/60 rounded-2xl p-4">
+              <div class="flex items-center gap-2 text-rose-800 font-headline font-bold text-sm mb-2">
+                <span class="material-symbols-outlined text-base">money_off</span>
+                1. The Ownership Burden
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">High down payments, crippling loan EMIs, rapid vehicle depreciation, annual insurance renewals, unpredictable maintenance costs, and severe parking scarcity in tier-1 and tier-2 metros.</p>
+            </div>
+            <div class="bg-amber-50/50 border border-amber-200/60 rounded-2xl p-4">
+              <div class="flex items-center gap-2 text-amber-800 font-headline font-bold text-sm mb-2">
+                <span class="material-symbols-outlined text-base">warning</span>
+                2. The Legacy Rental Nightmare
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">Traditional rental operators notorious for holding security deposits for weeks, hidden fuel clawbacks, vehicle breakdowns without RSA, and clunky physical paperwork.</p>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-primary to-primary-container text-white p-5 rounded-2xl">
+            <p class="text-xs sm:text-sm font-medium italic text-blue-100 mb-2">
+              "Why shouldn't renting a pristine, sanitized, and insured vehicle be as seamless, instant, and trustworthy as ordering a meal or booking a cab?"
+            </p>
+            <p class="text-[11px] font-bold text-secondary uppercase tracking-wider">— The DriveX Founding Vision</p>
+          </div>
+        </div>
+
+        <!-- SECTION 3: VISION, MISSION & VALUES -->
+        <div id="section-3" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">3</span>
+            <div>
+              <span class="section-badge">Purpose &amp; Ethos</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Vision, Mission &amp; Core Values</h2>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h3 class="sub-heading"><span class="sub-num">3.1</span>Our Vision</h3>
+            <p class="text-sm text-on-surface-variant leading-relaxed">To build India's most trusted, sustainable, and technologically progressive shared-mobility network — unlocking absolute freedom of movement for every Indian citizen without the financial liability of vehicle ownership.</p>
+          </div>
+
+          <div class="mb-6">
+            <h3 class="sub-heading"><span class="sub-num">3.2</span>Our Mission</h3>
+            <ul class="feature-check-list">
+              <li><strong>Democratize Personal Mobility:</strong> Deliver affordable, high-quality, and on-demand self-drive mobility options across two-wheelers, four-wheelers, and electric vehicles.</li>
+              <li><strong>Set the Gold Standard for Transparency:</strong> Eliminate hidden surcharges, surprise deductions, and delayed refunds with automated digital settlement.</li>
+              <li><strong>Drive the Green Transition:</strong> Accelerate electric mobility (EV) adoption across India by integrating high-efficiency EV scooties and electric passenger cars with verified charging networks.</li>
+              <li><strong>Pioneer Rider Safety:</strong> Guarantee unmatched road safety through rigorous 40-point mechanical audits, 24/7 live roadside assistance (RSA), and standard insurance on every booking.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="sub-heading mb-3"><span class="sub-num">3.3</span>Core Values That Drive Us</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="value-card">
+                <div class="font-headline font-bold text-sm text-primary flex items-center gap-1.5 mb-1">
+                  <span class="material-symbols-outlined text-secondary text-base">verified</span>Integrity First
+                </div>
+                <p class="text-xs text-on-surface-variant">What you see is what you pay. Transparent pricing in INR inclusive of GST, standard insurance, and Fastag capability.</p>
+              </div>
+              <div class="value-card">
+                <div class="font-headline font-bold text-sm text-primary flex items-center gap-1.5 mb-1">
+                  <span class="material-symbols-outlined text-secondary text-base">sentiment_very_satisfied</span>Customer Obsession
+                </div>
+                <p class="text-xs text-on-surface-variant">From our 24/7 Zip AI support to doorstep delivery within 45 minutes, every workflow is tailored around customer convenience.</p>
+              </div>
+              <div class="value-card">
+                <div class="font-headline font-bold text-sm text-primary flex items-center gap-1.5 mb-1">
+                  <span class="material-symbols-outlined text-secondary text-base">build</span>Relentless Reliability
+                </div>
+                <p class="text-xs text-on-surface-variant">Every vehicle is mechanically certified, deep-cleaned, sanitised, and tested before handing over keys.</p>
+              </div>
+              <div class="value-card">
+                <div class="font-headline font-bold text-sm text-primary flex items-center gap-1.5 mb-1">
+                  <span class="material-symbols-outlined text-secondary text-base">bolt</span>Technological Agility
+                </div>
+                <p class="text-xs text-on-surface-variant">Powered by paperless DigiLocker KYC, instant UPI checkouts, and GPS-enabled emergency support.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: 6 PILLARS OF ADVANTAGE -->
+        <div id="section-4" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">4</span>
+            <div>
+              <span class="section-badge">Product Pillars</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">The 6 Pillars of the DriveX Advantage</h2>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-primary text-white font-headline">
+                  <th class="p-3 rounded-tl-xl font-bold">Pillar</th>
+                  <th class="p-3 font-bold">How DriveX Solves It</th>
+                  <th class="p-3 rounded-tr-xl font-bold">Customer Benefit</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-outline-variant/40">
+                <tr class="pillar-row">
+                  <td class="p-3 font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">bolt</span>1. Instant Refund</td>
+                  <td class="p-3 text-on-surface-variant">Automated release of security deposit within 2 hours of drop-off audit.</td>
+                  <td class="p-3 font-semibold text-emerald-700">Zero financial anxiety; no follow-up delays.</td>
+                </tr>
+                <tr class="pillar-row">
+                  <td class="p-3 font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">badge</span>2. 2-Min KYC</td>
+                  <td class="p-3 text-on-surface-variant">Instant Aadhaar &amp; License verification via DigiLocker / OCR integration.</td>
+                  <td class="p-3 font-semibold text-emerald-700">Zero paperwork; start riding in minutes.</td>
+                </tr>
+                <tr class="pillar-row">
+                  <td class="p-3 font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">local_shipping</span>3. 98% On-Time Delivery</td>
+                  <td class="p-3 text-on-surface-variant">Trained executives deliver vehicle to home, office, airport, or hotel.</td>
+                  <td class="p-3 font-semibold text-emerald-700">No commuting to distant rental hubs.</td>
+                </tr>
+                <tr class="pillar-row">
+                  <td class="p-3 font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">verified</span>4. 40-Point Safety Check</td>
+                  <td class="p-3 text-on-surface-variant">Brakes, tyre depth, fluids, battery voltage, and engine health checked every trip.</td>
+                  <td class="p-3 font-semibold text-emerald-700">Maximum reliability and peace of mind.</td>
+                </tr>
+                <tr class="pillar-row">
+                  <td class="p-3 font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">payments</span>5. Transparent Tariffs</td>
+                  <td class="p-3 text-on-surface-variant">Flat hourly, daily, and weekly rates with free cancellation up to 6 hours.</td>
+                  <td class="p-3 font-semibold text-emerald-700">No fuel penalties or surprise surcharges.</td>
+                </tr>
+                <tr class="pillar-row">
+                  <td class="p-3 font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">headset_mic</span>6. 24/7 Roadside RSA</td>
+                  <td class="p-3 text-on-surface-variant">Pan-India on-demand mechanical dispatch, towing support, and puncture repair.</td>
+                  <td class="p-3 font-semibold text-emerald-700">Never stranded in city alleys or ghat passes.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SECTION 5: FLEET PORTFOLIO -->
+        <div id="section-5" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">5</span>
+            <div>
+              <span class="section-badge">41+ Curated Vehicles</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Our Fleet Portfolio across India</h2>
+            </div>
+          </div>
+
+          <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+            DriveX maintains a young, meticulously serviced fleet representing India's most acclaimed automobile manufacturers (Honda, TVS, Suzuki, Royal Enfield, Yamaha, KTM, Hyundai, Tata Motors, and Toyota).
+          </p>
+
+          <div class="space-y-4">
+            <div class="bg-surface-container-low border border-outline-variant/60 rounded-2xl p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-headline font-bold text-sm text-primary flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary">moped</span> Scooties &amp; Urban Commuters (12 Models)
+                </span>
+                <span class="text-xs font-extrabold text-secondary">From ₹289 / day</span>
+              </div>
+              <p class="text-xs text-on-surface-variant mb-2"><strong>Top Picks:</strong> Honda Activa 6G, TVS Jupiter 125, Suzuki Access 125, TVS Ntorq 125 Race Edition, Honda Dio, Ather 450X, Ola S1 Pro.</p>
+              <p class="text-[11px] text-gray-500 font-medium">Ideal For: Daily office commutes, college runs, grocery errands, metro traffic.</p>
+            </div>
+
+            <div class="bg-surface-container-low border border-outline-variant/60 rounded-2xl p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-headline font-bold text-sm text-primary flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary">two_wheeler</span> Performance &amp; Touring Motorcycles (13 Models)
+                </span>
+                <span class="text-xs font-extrabold text-secondary">From ₹349 / day</span>
+              </div>
+              <p class="text-xs text-on-surface-variant mb-2"><strong>Top Picks:</strong> Royal Enfield Classic 350, Hunter 350, Himalayan 450, Yamaha R15 V4, MT-15, KTM Duke 390, Hero Xtreme 160R, Pulsar NS200.</p>
+              <p class="text-[11px] text-gray-500 font-medium">Ideal For: Weekend getaways, coastal touring, highway cruises, road trips.</p>
+            </div>
+
+            <div class="bg-surface-container-low border border-outline-variant/60 rounded-2xl p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-headline font-bold text-sm text-primary flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary">directions_car</span> Hatchbacks, Sedans, SUVs &amp; EVs (16 Models)
+                </span>
+                <span class="text-xs font-extrabold text-secondary">From ₹1,149 / day</span>
+              </div>
+              <p class="text-xs text-on-surface-variant mb-2"><strong>Top Picks:</strong> Hyundai Grand i10, Swift, Honda City, Verna, Creta, Seltos, Thar 4x4, Nexon EV Max, Fortuner Legender.</p>
+              <p class="text-[11px] text-gray-500 font-medium">Ideal For: Family vacations, corporate travel, outstation road trips, EV fast-charging rides.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 6: OPERATIONAL FOOTPRINT -->
+        <div id="section-6" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">6</span>
+            <div>
+              <span class="section-badge">Nationwide Presence</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Operational Footprint &amp; Hubs</h2>
+            </div>
+          </div>
+
+          <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+            DriveX currently operates across major metropolitan, industrial, and tourist centers in three core operational zones, with rapid nationwide rollout underway:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white border border-outline-variant/60 p-4 rounded-2xl shadow-sm">
+              <div class="font-headline font-bold text-xs text-secondary uppercase tracking-wider mb-1">Zone 1</div>
+              <h4 class="font-headline font-extrabold text-sm text-primary mb-2">Delhi NCR</h4>
+              <p class="text-xs text-on-surface-variant leading-relaxed">New Delhi Station, Connaught Place, South Extension, Noida Sec 18, Cyber City Gurugram, Golf Course Rd, Ghaziabad, IGI Airport (T1, T2 &amp; T3).</p>
+            </div>
+
+            <div class="bg-white border border-outline-variant/60 p-4 rounded-2xl shadow-sm">
+              <div class="font-headline font-bold text-xs text-secondary uppercase tracking-wider mb-1">Zone 2</div>
+              <h4 class="font-headline font-extrabold text-sm text-primary mb-2">Maharashtra</h4>
+              <p class="text-xs text-on-surface-variant leading-relaxed">Mumbai Downtown (BKC, Colaba, Andheri), Chhatrapati Shivaji Airport (BOM), Pune (Koregaon Park, Viman Nagar, Hinjewadi), Nashik &amp; Nagpur.</p>
+            </div>
+
+            <div class="bg-white border border-outline-variant/60 p-4 rounded-2xl shadow-sm">
+              <div class="font-headline font-bold text-xs text-secondary uppercase tracking-wider mb-1">Zone 3</div>
+              <h4 class="font-headline font-extrabold text-sm text-primary mb-2">Gujarat</h4>
+              <p class="text-xs text-on-surface-variant leading-relaxed">Ahmedabad (SG Highway, Sabarmati, Airport), Gandhinagar, Surat (Adajan), Vadodara (Alkapuri, Railway Hub) &amp; Rajkot.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 7: TECH & TELEMATICS -->
+        <div id="section-7" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">7</span>
+            <div>
+              <span class="section-badge">Infrastructure</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Technology &amp; Safety Infrastructure</h2>
+            </div>
+          </div>
+
+          <div class="space-y-4 text-xs text-on-surface-variant">
+            <div class="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant/40">
+              <div class="font-headline font-bold text-sm text-primary flex items-center gap-1.5 mb-1"><span class="material-symbols-outlined text-secondary text-base">lock</span>Bank-Grade Digital KYC</div>
+              <p class="leading-relaxed">Instant Driving License validation against Sarathi database. Aadhaar-based OTP and DigiLocker verification without storing sensitive credentials.</p>
+            </div>
+            <div class="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant/40">
+              <div class="font-headline font-bold text-sm text-primary flex items-center gap-1.5 mb-1"><span class="material-symbols-outlined text-secondary text-base">share_location</span>Live Telematics &amp; Geo-Fencing</div>
+              <p class="leading-relaxed">Tamper-proof GPS units fitted in cars and bikes. Real-time telemetry to ensure safe speed compliance and instant accident alert dispatch.</p>
+            </div>
+            <div class="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant/40">
+              <div class="font-headline font-bold text-sm text-primary flex items-center gap-1.5 mb-1"><span class="material-symbols-outlined text-secondary text-base">smart_toy</span>Zip AI Assistant</div>
+              <p class="leading-relaxed">24/7 instant booking assistance, document status tracking, policy guidance, and automated complaint resolution across English and regional languages.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 8: GREEN MOBILITY -->
+        <div id="section-8" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">8</span>
+            <div>
+              <span class="section-badge">Sustainability</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Green Mobility &amp; Sustainability Commitment</h2>
+            </div>
+          </div>
+
+          <ul class="feature-check-list">
+            <li><strong>30% Electric by 2027:</strong> Actively scaling our inventory of electric two-wheelers and electric passenger cars with fast-charging access.</li>
+            <li><strong>Zero-Paper Operations:</strong> 100% digital rental agreements, digital inspection logs, and paperless invoicing.</li>
+            <li><strong>Eco-Fleet Maintenance:</strong> Partnered with eco-conscious service hubs utilizing waterless vehicle washing solutions and responsible battery recycling vendors.</li>
+          </ul>
+        </div>
+
+        <!-- SECTION 9: KEY MILESTONES -->
+        <div id="section-9" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">9</span>
+            <div>
+              <span class="section-badge">By The Numbers</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Key Milestones &amp; Achievement</h2>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+              <span class="font-bold text-emerald-900 block text-sm mb-0.5">4.2+ Million Kilometers</span>
+              <span class="text-emerald-800">Logged safely across state and national highways.</span>
+            </div>
+            <div class="p-3.5 bg-blue-50 border border-blue-200 rounded-xl">
+              <span class="font-bold text-blue-900 block text-sm mb-0.5">98.4% On-Time Delivery</span>
+              <span class="text-blue-800">Verified fulfillment rating across doorstep bookings.</span>
+            </div>
+            <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl">
+              <span class="font-bold text-amber-900 block text-sm mb-0.5">&lt; 90 Min Refund Time</span>
+              <span class="text-amber-800">Average security deposit refund speed from vehicle audit.</span>
+            </div>
+            <div class="p-3.5 bg-purple-50 border border-purple-200 rounded-xl">
+              <span class="font-bold text-purple-900 block text-sm mb-0.5">Zero Hidden Charges</span>
+              <span class="text-purple-800">100% strict adherence to disclosed all-inclusive rental rates.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 10: GOVERNANCE & LEGAL -->
+        <div id="section-10" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">10</span>
+            <div>
+              <span class="section-badge">Compliance</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Corporate Governance &amp; Legal Compliance</h2>
+            </div>
+          </div>
+
+          <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+            DriveX operates in strict adherence to:
+          </p>
+          <ul class="clause-list mb-5">
+            <li><strong>The Motor Vehicles Act, 1988</strong> and Rent-a-Cab / Rent-a-Motorcycle Scheme regulations.</li>
+            <li><strong>The Information Technology Act, 2000</strong> for electronic records and click-wrap legal contracts.</li>
+            <li>Commercial third-party motor insurance policies underwritten by leading IRDAI-registered Indian insurers.</li>
+          </ul>
+
+          <div class="legal-highlight flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <span class="font-headline font-bold text-xs text-secondary uppercase tracking-wider block">Companion Document</span>
+              <span class="font-headline font-bold text-sm text-primary">Read DriveX Terms &amp; Conditions</span>
+            </div>
+            <a href="terms.html" class="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-container text-white font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md">
+              <span class="material-symbols-outlined text-sm text-secondary">gavel</span>
+              View Terms &amp; Conditions
+            </a>
+          </div>
+        </div>
+
+        <!-- SECTION 11: HEADQUARTERS & CONTACT -->
+        <div id="section-11" class="section-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="section-number">11</span>
+            <div>
+              <span class="section-badge">Get In Touch</span>
+              <h2 class="font-headline font-extrabold text-xl text-primary mt-1">Contact &amp; Corporate Headquarters</h2>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant/60">
+              <span class="font-headline font-bold text-primary text-sm flex items-center gap-1.5 mb-2">
+                <span class="material-symbols-outlined text-secondary">location_city</span> Corporate HQ (Mumbai)
+              </span>
+              <p class="text-on-surface-variant leading-relaxed">
+                DriveX Vehicle Rental Systems Pvt. Ltd.<br/>
+                Tech &amp; Mobility Hub, Level 4, Platina Towers,<br/>
+                Bandra Kurla Complex (BKC), Mumbai, MH - 400051
+              </p>
+            </div>
+
+            <div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant/60">
+              <span class="font-headline font-bold text-primary text-sm flex items-center gap-1.5 mb-2">
+                <span class="material-symbols-outlined text-secondary">apartment</span> Delhi NCR Regional Office
+              </span>
+              <p class="text-on-surface-variant leading-relaxed">
+                DLF Cyber City, Tower B, Phase II,<br/>
+                Gurugram, Haryana - 122002, India
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4 p-4 bg-white border border-outline-variant/60 rounded-2xl shadow-sm text-xs">
+            <div class="font-headline font-bold text-primary mb-2 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-secondary">support_agent</span> 24/7 Helpline &amp; Official Desks
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-on-surface-variant">
+              <div><strong>Helpline:</strong> 1800-DRIVEX-IN (1800-374-839)</div>
+              <div><strong>WhatsApp:</strong> +91 98765 43210</div>
+              <div><strong>General Support:</strong> support@drivexrentals.in</div>
+              <div><strong>Corporate Leases:</strong> corporate@drivexrentals.in</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINAL CTA BANNER -->
+        <div class="bg-gradient-to-r from-primary to-primary-container rounded-3xl p-7 text-white relative overflow-hidden mb-6">
+          <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <h3 class="font-headline font-extrabold text-xl text-white mb-1">Ready to Ride with DriveX?</h3>
+              <p class="text-blue-200 text-xs">Explore 41+ verified vehicles delivered directly to your doorstep.</p>
+            </div>
+            <a href="index.html" class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-hover text-white font-bold px-6 py-3 rounded-full text-sm transition-all shadow-lg active:scale-95 shrink-0">
+              <span class="material-symbols-outlined text-sm">directions_car</span>Book Your Vehicle
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <!-- FOOTER -->
+  <footer class="bg-primary text-on-primary border-t border-white/10 pt-12 pb-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      <!-- Column 1: Brand Info -->
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <img src="images/favicon.png" alt="DriveX Emblem" class="w-10 h-10 object-contain drop-shadow-md rounded-full bg-white p-0.5"/>
+          <div>
+            <span class="font-headline font-black text-xl tracking-tight text-white block leading-none">DRIVEX</span>
+            <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-0.5">RENT. RIDE. REPEAT.</span>
+          </div>
+        </div>
+        <p class="text-xs text-blue-200 leading-relaxed mb-4">Doorstep vehicle rental platform offering Scooties, Bikes, EVs, SUVs &amp; Luxury Cars across Delhi NCR, Maharashtra &amp; Gujarat.</p>
+        <span class="text-xs text-secondary font-bold block">24/7 Support Helpline: 1800-DRIVEX-IN</span>
+      </div>
+
+      <!-- Column 2: COMPANY -->
+      <div>
+        <h4 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-4 pb-1 border-b border-white/10">COMPANY</h4>
+        <ul class="space-y-2.5 text-xs text-blue-200">
+          <li>
+            <a href="about.html" class="text-white font-bold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-xs text-secondary">info</span>
+              About Us
+            </a>
+          </li>
+          <li>
+            <a href="index.html#fleet" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">directions_car</span>
+              Fleet Catalog
+            </a>
+          </li>
+          <li>
+            <a href="index.html#why-us" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">verified_user</span>
+              Why DriveX
+            </a>
+          </li>
+          <li>
+            <a href="about.html#section-11" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">support_agent</span>
+              Customer Support
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 3: POLICIES -->
+      <div>
+        <h4 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-4 pb-1 border-b border-white/10">POLICIES</h4>
+        <ul class="space-y-2.5 text-xs text-blue-200">
+          <li>
+            <a href="terms.html" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">gavel</span>
+              Terms &amp; Conditions
+            </a>
+          </li>
+          <li>
+            <a href="terms.html#section-10" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">shield</span>
+              Privacy Policy
+            </a>
+          </li>
+          <li>
+            <a href="terms.html#section-1" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">currency_exchange</span>
+              Refund Policy
+            </a>
+          </li>
+          <li>
+            <a href="terms.html#section-3" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">security</span>
+              Risk &amp; Safety Clause
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 4: QUICK LINKS -->
+      <div>
+        <h4 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-4 pb-1 border-b border-white/10">QUICK LINKS</h4>
+        <ul class="space-y-2.5 text-xs text-blue-200">
+          <li>
+            <a href="index.html#fleet" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">moped</span>
+              Scooties &amp; Bikes
+            </a>
+          </li>
+          <li>
+            <a href="index.html#fleet" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">car_rental</span>
+              Hatchbacks &amp; SUVs
+            </a>
+          </li>
+          <li>
+            <a href="about.html#section-8" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">ev_station</span>
+              EV Rentals
+            </a>
+          </li>
+          <li>
+            <a href="about.html#section-11" class="hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <span class="material-symbols-outlined text-xs text-secondary">headset_mic</span>
+              24/7 Roadside Assistance
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-300">
+      <div class="flex items-center gap-3">
+        <img src="images/favicon.png" alt="DriveX" class="w-7 h-7 object-contain rounded-full bg-white p-0.5"/>
+        <span class="font-headline font-extrabold text-white">DRIVEX</span>
+        <span class="text-secondary font-extrabold">RENT. RIDE. REPEAT.</span>
+      </div>
+      <p>© 2026 DriveX Vehicle Rental Systems Pvt. Ltd. All rights reserved.</p>
+      <a href="index.html" class="text-secondary hover:text-secondary-hover font-semibold flex items-center gap-1 transition-colors">
+        <span class="material-symbols-outlined text-sm">home</span>Back to Main Site
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('#toc-nav .toc-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+    const sections = document.querySelectorAll('[id^="section-"]');
+    const tocLinks = document.querySelectorAll('#toc-nav .toc-link');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          tocLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sections.forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
