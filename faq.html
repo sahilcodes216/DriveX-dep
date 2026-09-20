@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Frequently Asked Questions (FAQs) — DriveX Vehicle Rental</title>
+  <meta name="description" content="Got questions about renting a vehicle with DriveX? Read answers to FAQs about KYC, security deposits, doorstep delivery, insurance, and franchise partnerships."/>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png"/>
+  <meta name="theme-color" content="#001136"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#001136','primary-container': '#0a2558','on-primary': '#ffffff',
+            'secondary': '#fb7800','secondary-hover': '#e06900','on-secondary': '#ffffff',
+            'background': '#f8f9ff','surface': '#ffffff','surface-container': '#e5eeff',
+            'surface-container-low': '#eff4ff','on-surface': '#0b1c30',
+            'on-surface-variant': '#44464f','outline-variant': '#c5c6d1'
+          },
+          fontFamily: { headline: ['Plus Jakarta Sans','sans-serif'], body: ['Inter','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .faq-item { transition: all 0.2s ease; border: 1px solid rgba(197, 198, 209, 0.6); background: white; border-radius: 1rem; overflow: hidden; margin-bottom: 0.75rem; }
+    .faq-item[open] { border-color: #fb7800; box-shadow: 0 4px 16px -4px rgba(251, 120, 0, 0.15); }
+    .faq-summary { list-style: none; padding: 1.25rem; font-weight: 700; font-size: 0.9375rem; color: #001136; cursor: pointer; display: flex; items-center; justify-content: space-between; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .faq-summary::-webkit-details-marker { display: none; }
+    .faq-content { padding: 0 1.25rem 1.25rem 1.25rem; font-size: 0.875rem; color: #44464f; line-height: 1.6; border-t: 1px border-gray-100; }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased">
+
+  <!-- STICKY HEADER -->
+  <header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/60 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3 py-4">
+      <a href="index.html" class="flex items-center gap-2.5 group select-none">
+        <div class="w-9 h-9 bg-surface-container rounded-xl flex items-center justify-center hover:bg-surface-container-low transition-colors border border-outline-variant/60">
+          <span class="material-symbols-outlined text-xl text-primary group-hover:text-secondary transition-colors">arrow_back</span>
+        </div>
+        <img src="images/favicon.png" alt="DriveX" class="w-9 h-9 object-contain"/>
+        <div>
+          <span class="font-headline font-black text-xl text-primary tracking-tight leading-none block">DRIVE<span class="text-blue-600 italic">X</span></span>
+          <span class="text-[9px] font-black text-secondary tracking-widest uppercase block">FREQUENTLY ASKED QUESTIONS</span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-4 text-xs font-bold text-primary">
+        <a href="index.html" class="hover:text-secondary transition-colors">Home</a>
+        <a href="about.html" class="hover:text-secondary transition-colors">About Us</a>
+        <a href="franchise.html" class="hover:text-secondary transition-colors">Own a Franchise</a>
+        <a href="terms.html" class="hover:text-secondary transition-colors">Terms &amp; Conditions</a>
+      </div>
+
+      <a href="index.html" class="bg-primary hover:bg-primary-container text-white font-bold text-xs px-4 py-2.5 rounded-full transition-all flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-sm">directions_car</span>
+        Book a Ride
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO BANNER -->
+  <section class="bg-gradient-to-r from-primary via-primary-container to-primary text-white py-12 md:py-16 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <span class="bg-secondary/20 border border-secondary/30 text-secondary text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-3">
+        Help Center &amp; Support
+      </span>
+      <h1 class="font-headline font-extrabold text-3xl sm:text-5xl text-white leading-tight mb-3">
+        Frequently Asked Questions
+      </h1>
+      <p class="text-blue-200 text-xs sm:text-sm font-medium max-w-xl mx-auto mb-6">
+        Have questions about booking a scooty, bike, car or EV? Find instant answers to all common queries below.
+      </p>
+
+      <!-- Search Box -->
+      <div class="max-w-md mx-auto relative">
+        <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-gray-400">search</span>
+        <input type="text" id="faq-search" oninput="filterFaqs(this.value)" placeholder="Search questions (e.g. deposit, KYC, delivery)..." class="w-full bg-white text-primary rounded-full pl-11 pr-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-secondary shadow-lg"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ CONTENT -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- CATEGORY: BOOKINGS & KYC -->
+    <div class="mb-10 faq-category">
+      <h2 class="font-headline font-bold text-lg text-primary mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+        <span class="material-symbols-outlined text-secondary">assignment_ind</span>
+        Booking, Documents &amp; Digital KYC
+      </h2>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          What documents are required to rent a vehicle with DriveX?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          You need a valid original Driving Licence (appropriate for the vehicle category) and Aadhaar Card. Our 2-minute digital KYC validates your documents paperlessly via DigiLocker / OCR without storing confidential login credentials.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          What is the minimum age to book a vehicle?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          For non-geared scooties (110cc-125cc), the minimum age is 18 years with a valid driving license. For performance motorcycles and four-wheeler passenger cars, the minimum age is 21 years with at least 1 year of driving experience.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          Can I book a vehicle for someone else?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          The person who performs the KYC and signs the digital undertaking must be present at the time of vehicle delivery to inspect and receive the vehicle keys.
+        </div>
+      </details>
+    </div>
+
+    <!-- CATEGORY: DEPOSITS & REFUNDS -->
+    <div class="mb-10 faq-category">
+      <h2 class="font-headline font-bold text-lg text-primary mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+        <span class="material-symbols-outlined text-secondary">account_balance_wallet</span>
+        Security Deposit &amp; Refunds
+      </h2>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          When is my security deposit refunded?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          DriveX processes automated security deposit refunds within 2 hours of vehicle drop-off audit. The amount is credited directly back to your original UPI ID or bank account.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          Are there any hidden fuel or cancellation charges?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          No hidden fees! All tariffs are transparent and inclusive of standard insurance. Cancellations made up to 6 hours before the rental start time receive a 100% full refund.
+        </div>
+      </details>
+    </div>
+
+    <!-- CATEGORY: DOORSTEP DELIVERY -->
+    <div class="mb-10 faq-category">
+      <h2 class="font-headline font-bold text-lg text-primary mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+        <span class="material-symbols-outlined text-secondary">local_shipping</span>
+        Doorstep Delivery &amp; Pickup
+      </h2>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          How does Doorstep Delivery work?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          Select "Doorstep Delivery" during checkout and enter your exact address (Home, Office, Airport, Hotel). A trained DriveX fleet executive delivers the sanitized vehicle directly to your doorstep within your chosen delivery window.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          What happens if I return the vehicle late?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          A grace period of 30 minutes is allowed. Late returns beyond 30 minutes are charged at standard hourly rates plus nominal late fee to accommodate the next scheduled reservation.
+        </div>
+      </details>
+    </div>
+
+    <!-- CATEGORY: FRANCHISE -->
+    <div class="mb-10 faq-category">
+      <h2 class="font-headline font-bold text-lg text-primary mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+        <span class="material-symbols-outlined text-secondary">storefront</span>
+        Franchise &amp; Business Partnerships
+      </h2>
+
+      <details class="faq-item">
+        <summary class="faq-summary">
+          How can I apply for a DriveX Franchise?
+          <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </summary>
+        <div class="faq-content pt-2">
+          Visit our <a href="franchise.html" class="text-secondary font-bold underline">Own a Franchise</a> page and click "Apply for Franchise" to open the official Google Form application. Our team will review your application and contact you within 24 hours.
+        </div>
+      </details>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-primary text-on-primary border-t border-white/10 pt-12 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-300">
+      <div class="flex items-center gap-3">
+        <img src="images/favicon.png" alt="DriveX" class="w-7 h-7 object-contain rounded-full bg-white p-0.5"/>
+        <span class="font-headline font-extrabold text-white">DRIVEX</span>
+        <span class="text-secondary font-extrabold">RENT. RIDE. REPEAT.</span>
+      </div>
+      <p>© 2026 DriveX Vehicle Rental Systems Pvt. Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function filterFaqs(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -170,9 +170,11 @@ function navigateTo(viewId) {
 function initRouting() {
   document.querySelectorAll(".nav-link").forEach(link => {
     link.addEventListener("click", (e) => {
-      e.preventDefault();
       const targetView = link.dataset.view;
-      if (targetView) navigateTo(targetView);
+      if (targetView) {
+        e.preventDefault();
+        navigateTo(targetView);
+      }
     });
   });
 }

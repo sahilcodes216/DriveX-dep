@@ -125,12 +125,22 @@
         <span>My Bookings</span>
       </a>
 
-      <a href="about.html" onclick="closeHamburgerMenu()" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+      <a href="about.html" onclick="closeHamburgerMenu()" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
         <span class="material-symbols-outlined text-xl text-secondary">info</span>
         <span>About Us</span>
       </a>
 
-      <a href="terms.html" onclick="closeHamburgerMenu()" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+      <a href="franchise.html" onclick="closeHamburgerMenu()" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">storefront</span>
+        <span>Own a Franchise</span>
+      </a>
+
+      <a href="faq.html" onclick="closeHamburgerMenu()" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-xl text-secondary">help_outline</span>
+        <span>FAQs</span>
+      </a>
+
+      <a href="terms.html" onclick="closeHamburgerMenu()" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all">
         <span class="material-symbols-outlined text-xl text-secondary">gavel</span>
         <span>Terms &amp; Conditions</span>
       </a>
@@ -173,6 +183,63 @@
             </div>
             <span class="text-[9px] font-black text-secondary tracking-widest uppercase block mt-1">RENT. RIDE. REPEAT.</span>
           </div>
+        </a>
+      </div>
+
+      <!-- Top Middle: Rent Plans, Own a Franchise & FAQs -->
+      <div class="hidden md:flex items-center gap-1 lg:gap-2 text-xs font-bold text-primary">
+        <!-- Rent Plans Dropdown -->
+        <div class="relative group">
+          <button class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-primary hover:text-secondary hover:bg-surface-container-low transition-all font-extrabold cursor-pointer">
+            <span class="material-symbols-outlined text-secondary text-lg">two_wheeler</span>
+            <span>Rent Plans</span>
+            <span class="material-symbols-outlined text-xs text-gray-400 group-hover:rotate-180 transition-transform">keyboard_arrow_down</span>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div class="absolute left-0 top-full mt-1 w-56 bg-white border border-outline-variant/60 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-2 space-y-1">
+            <a href="#" onclick="navigateTo('fleet')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-surface-container-low text-primary transition-colors">
+              <span class="material-symbols-outlined text-secondary text-base">moped</span>
+              <div>
+                <span class="block text-xs font-bold">Scooties &amp; Commuters</span>
+                <span class="block text-[10px] text-gray-500 font-normal">From ₹289 / day</span>
+              </div>
+            </a>
+            <a href="#" onclick="navigateTo('fleet')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-surface-container-low text-primary transition-colors">
+              <span class="material-symbols-outlined text-secondary text-base">two_wheeler</span>
+              <div>
+                <span class="block text-xs font-bold">Bikes &amp; Motorcycles</span>
+                <span class="block text-[10px] text-gray-500 font-normal">From ₹349 / day</span>
+              </div>
+            </a>
+            <a href="#" onclick="navigateTo('fleet')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-surface-container-low text-primary transition-colors">
+              <span class="material-symbols-outlined text-secondary text-base">directions_car</span>
+              <div>
+                <span class="block text-xs font-bold">Hatchbacks &amp; SUVs</span>
+                <span class="block text-[10px] text-gray-500 font-normal">From ₹1,149 / day</span>
+              </div>
+            </a>
+            <a href="#" onclick="navigateTo('fleet')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-surface-container-low text-primary transition-colors">
+              <span class="material-symbols-outlined text-secondary text-base">ev_station</span>
+              <div>
+                <span class="block text-xs font-bold">Electric Vehicles (EVs)</span>
+                <span class="block text-[10px] text-gray-500 font-normal">Eco &amp; Zero Fuel</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Own a Franchise -->
+        <a href="franchise.html" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-primary hover:text-secondary hover:bg-surface-container-low transition-all font-extrabold group">
+          <span class="material-symbols-outlined text-secondary text-lg group-hover:scale-110 transition-transform">storefront</span>
+          <span>Own a Franchise</span>
+          <span class="bg-secondary/15 text-secondary text-[9px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider">Partner</span>
+        </a>
+
+        <!-- FAQs -->
+        <a href="faq.html" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-primary hover:text-secondary hover:bg-surface-container-low transition-all font-extrabold">
+          <span class="material-symbols-outlined text-secondary text-lg">help_outline</span>
+          <span>FAQs</span>
         </a>
       </div>
 
