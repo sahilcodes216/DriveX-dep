@@ -235,10 +235,11 @@ h1, h2, h3, h4, h5, h6, .font-headline {
 
 .ai-trigger-container:hover #ai-trigger-tooltip,
 .ai-trigger-container:focus-within #ai-trigger-tooltip,
-#ai-trigger-tooltip.flash-active {
-  opacity: 1;
-  transform: translateX(0) scale(1);
-  pointer-events: auto;
+#ai-trigger-tooltip.flash-active,
+#ai-trigger-tooltip.mobile-visible {
+  opacity: 1 !important;
+  transform: translateX(0) scale(1) !important;
+  pointer-events: auto !important;
   animation: aiTooltipFlash 1.6s infinite ease-in-out;
 }
 

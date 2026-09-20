@@ -39,6 +39,7 @@ class DriveXAIAssistant {
     const trigger = document.getElementById('ai-chat-trigger');
     const tooltip = document.getElementById('ai-trigger-tooltip');
     if (trigger && tooltip) {
+      // Laptop / Desktop Mouse Hover
       trigger.addEventListener('mouseenter', () => {
         if (!this.isOpen) {
           tooltip.classList.add('flash-active');
@@ -47,6 +48,24 @@ class DriveXAIAssistant {
       trigger.addEventListener('mouseleave', () => {
         tooltip.classList.remove('flash-active');
       });
+
+      // Mobile Phone Touch & Periodic Auto-Flash Behavior
+      const showMobileFlash = () => {
+        if (!this.isOpen) {
+          tooltip.classList.add('flash-active', 'mobile-visible');
+          setTimeout(() => {
+            if (!this.isOpen) {
+              tooltip.classList.remove('flash-active', 'mobile-visible');
+            }
+          }, 3800);
+        }
+      };
+
+      // Initial auto-flash on mobile after 1.5s
+      setTimeout(showMobileFlash, 1500);
+
+      // Periodic auto-flash every 8s on touch / mobile screens
+      setInterval(showMobileFlash, 8000);
     }
   }
 
